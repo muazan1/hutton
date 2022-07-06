@@ -28,7 +28,7 @@ class HuttonScopeProvider extends ServiceProvider
             'migrations'
         );
 
-        $this->loadRoutesFrom(__DIR__ . '/../routes/api.php');
+        $this->loadRoutesFrom(__DIR__ . '/../Routes/api.php');
 
         $this->loadViewsFrom(__DIR__ . '/../Resources/views', 'Hutton');
     }

@@ -18,7 +18,7 @@ class CreateSitesTable extends Migration
 
             $table->string('uuid')->unique();
 
-            $table->foreignId('builder_id');
+            $table->foreignId('customer_id');
 
             $table->string('builder_name');
 

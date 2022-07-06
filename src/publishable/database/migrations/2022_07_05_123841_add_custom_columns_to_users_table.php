@@ -14,9 +14,15 @@ class AddCustomColumnsToUsersTable extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->uuid('uuid')->unique();
+            $table
+                ->uuid('uuid')
+                ->unique()
+                ->after('id');
 
-            $table->foreignId('role_id')->default(2);
+            $table
+                ->foreignId('role_id')
+                ->default(2)
+                ->after('uuid');
 
             $table->string('first_name')->after('role_id');
 
