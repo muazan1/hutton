@@ -1,0 +1,16 @@
+{
+    "name": "sty/hutton",
+    "description": "Hutton Scope Package",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Sty\\Hutton\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Muazan"
+        }
+    ],
+    "require": {}
+}

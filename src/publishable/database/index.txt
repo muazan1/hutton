@@ -1,0 +1,1 @@
+Migrations will running automatically when package will be installed in Laravel
