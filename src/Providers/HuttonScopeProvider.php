@@ -14,6 +14,7 @@ class HuttonScopeProvider extends ServiceProvider
     public function register()
     {
         // dd('Package is Working');
+        // dd(database_path('seeders'));
     }
 
     /**
@@ -31,5 +32,11 @@ class HuttonScopeProvider extends ServiceProvider
         $this->loadRoutesFrom(__DIR__ . '/../Routes/api.php');
 
         $this->loadViewsFrom(__DIR__ . '/../Resources/views', 'Hutton');
+
+        $this->publishes([
+            __DIR__ . '/../publishable/database/seeders' => database_path(
+                'seeders'
+            ),
+        ]);
     }
 }

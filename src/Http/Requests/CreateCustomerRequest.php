@@ -2,11 +2,11 @@
 
 namespace Sty\Hutton\Http\Requests;
 
-use Illuminate\Support\Str;
-use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
+// use Str;
+use Illuminate\Support\Str;
 
-class UpdateBuilderRequest extends FormRequest
+class CreateCustomerRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -21,7 +21,8 @@ class UpdateBuilderRequest extends FormRequest
     protected function prepareForValidation()
     {
         $this->merge([
-            'slug' => Str::slug($this->builder_name),
+            'uuid' => (string) Str::uuid(),
+            'slug' => Str::slug($this->customer_name),
         ]);
     }
 
@@ -33,26 +34,30 @@ class UpdateBuilderRequest extends FormRequest
     public function rules()
     {
         return [
-            'builder_name' => [
+            'customer_name' => [
                 'required',
                 'string',
                 'max:255',
-                'unique:builders,builder_name',
+                'unique:customers,customer_name',
             ],
-            // 'uuid' => ['required', 'string', 'max:255', 'unique:builders,uuid'],
+            'uuid' => [
+                'required',
+                'string',
+                'max:255',
+                'unique:customers,uuid',
+            ],
             'slug' => [
                 'required',
                 'string',
                 'max:255',
-                Rule::unique('builders')->ignore($this->builder),
+                'unique:customers,slug',
             ],
             'email' => [
-                // 'required',
-                // 'string',
-                // 'email',
-                // 'max:255',
-                // 'unique:builders,email',
-                'required|email|unique:builders,email,' . $this->request()->route,
+                'required',
+                'string',
+                'email',
+                'max:255',
+                'unique:customers,email',
             ],
             'street_1' => ['required', 'string', 'max:255'],
             'street_2' => ['nullable', 'string', 'max:255'],

@@ -2,11 +2,11 @@
 
 namespace Sty\Hutton\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
-// use Str;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
+use Illuminate\Foundation\Http\FormRequest;
 
-class CreateBuilderRequest extends FormRequest
+class UpdateCustomerRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -21,7 +21,6 @@ class CreateBuilderRequest extends FormRequest
     protected function prepareForValidation()
     {
         $this->merge([
-            'uuid' => (string) Str::uuid(),
             'slug' => Str::slug($this->builder_name),
         ]);
     }
@@ -40,14 +39,21 @@ class CreateBuilderRequest extends FormRequest
                 'max:255',
                 'unique:builders,builder_name',
             ],
-            'uuid' => ['required', 'string', 'max:255', 'unique:builders,uuid'],
-            'slug' => ['required', 'string', 'max:255', 'unique:builders,slug'],
-            'email' => [
+            // 'uuid' => ['required', 'string', 'max:255', 'unique:builders,uuid'],
+            'slug' => [
                 'required',
                 'string',
-                'email',
                 'max:255',
-                'unique:builders,email',
+                Rule::unique('builders')->ignore($this->builder),
+            ],
+            'email' => [
+                // 'required',
+                // 'string',
+                // 'email',
+                // 'max:255',
+                // 'unique:builders,email',
+                'required|email|unique:builders,email,' .
+                $this->request()->route,
             ],
             'street_1' => ['required', 'string', 'max:255'],
             'street_2' => ['nullable', 'string', 'max:255'],

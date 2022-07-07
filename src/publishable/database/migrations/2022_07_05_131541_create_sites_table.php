@@ -20,7 +20,7 @@ class CreateSitesTable extends Migration
 
             $table->foreignId('customer_id');
 
-            $table->string('builder_name');
+            $table->string('site_name');
 
             $table->string('slug')->index();
 
