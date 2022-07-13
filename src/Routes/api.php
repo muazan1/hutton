@@ -7,8 +7,9 @@ use Sty\Hutton\Http\Controllers\Api\V1\CustomerController;
 use Sty\Hutton\Http\Controllers\Api\V1\SiteController;
 use Sty\Hutton\Http\Controllers\Api\V1\BuildingTypeController;
 use Sty\Hutton\Http\Controllers\Api\V1\PlotsController;
-use Sty\Hutton\Http\Controllers\Api\V1\ServiceController;
 use Sty\Hutton\Http\Controllers\Api\V1\JoinerController;
+use Sty\Hutton\Http\Controllers\Api\V1\ServiceController;
+use Sty\Hutton\Http\Controllers\Api\V1\ServicePricingController;
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
@@ -37,6 +38,9 @@ Route::group(['prefix' => 'api/v1', 'as' => 'api/v1'], function () {
     // Routes for services Crud
     Route::resource('services', ServiceController::class);
 
+    // Routes for services pricing  Crud
+    Route::resource('service-pricings', ServicePricingController::class);
+
     // Route for builder sites || Customer sites
     Route::get('customer/{customer}/sites', [
         SiteController::class,
@@ -54,4 +58,10 @@ Route::group(['prefix' => 'api/v1', 'as' => 'api/v1'], function () {
         PlotsController::class,
         'BuildingTypePlots',
     ])->name('buildingTypes.plots');
+
+    // route for getting building types service pricing
+    Route::get('building/{btId}/pricings', [
+        ServicePricingController::class,
+        'servicePricings',
+    ])->name('bt.sp');
 });
