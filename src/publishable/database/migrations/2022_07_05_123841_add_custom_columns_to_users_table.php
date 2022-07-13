@@ -24,13 +24,19 @@ class AddCustomColumnsToUsersTable extends Migration
                 ->default(2)
                 ->after('uuid');
 
-            $table->string('first_name')->after('role_id');
+            $table
+                ->string('phone')
+                ->after('email')
+                ->nullable();
 
-            $table->string('last_name')->after('first_name');
+            $table
+                ->string('address')
+                ->after('password')
+                ->nullable();
 
             $table
                 ->string('two_factor_secret')
-                ->after('password')
+                ->after('address')
                 ->nullable();
 
             $table

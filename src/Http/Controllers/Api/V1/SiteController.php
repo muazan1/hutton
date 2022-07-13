@@ -92,11 +92,61 @@ class SiteController extends Controller
     public function update(Request $request, $siteId)
     {
         try {
-            dd('hello world');
+            $request->merge([
+                'slug' => Str::slug($request->site_name),
+            ]);
+
+            $validator = Validator::make($request->all(), [
+                'customer_id' => ['required'],
+                'site_name' => ['required'],
+                'slug' => ['required'],
+                'street_1' => ['required'],
+                'street_2' => ['nullable'],
+                'city' => ['required'],
+                'postcode' => ['required'],
+                'county' => ['required'],
+                'telephone' => ['required'],
+            ]);
+
+            if ($validator->fails()) {
+                $errors = $validator->errors();
+
+                return response()->json([
+                    'type' => 'error',
+                    'message' => $errors,
+                    'data' => '',
+                ]);
+            }
+
+            $site = Site::findOrFail($siteId);
+
+            $data = [
+                'customer_id' => $request->customer_id,
+                'site_name' => $request->site_name,
+                'slug' => $request->slug,
+                'street_1' => $request->street_1,
+                'street_2' => $request->street_2,
+                'city' => $request->city,
+                'postcode' => $request->postcode,
+                'county' => $request->county,
+                'telephone' => $request->telephone,
+            ];
+
+            $site->update($data);
+
+            $message = 'Site Updated Successfully';
+
+            return response()->json([
+                'type' => 'success',
+                'message' => $message,
+                'data' => '',
+            ]);
         } catch (\Throwable $th) {
+            $message = $th->getMessage();
+
             return response()->json([
                 'type' => 'error',
-                'message' => $th->getMessage(),
+                'message' => $message,
                 'data' => '',
             ]);
         }

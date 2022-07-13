@@ -2,52 +2,31 @@
 
 namespace Sty\Hutton\Http\Controllers\Api\V1;
 
-use Illuminate\Routing\Controller;
-
-use Sty\Hutton\Models\BuildingType;
-
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rule;
 use DataTables;
 use DB;
 use Str;
 use Exception;
+use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules\Password;
 
-class BuildingTypeController extends Controller
+use App\Models\User;
+
+class JoinerController extends Controller
 {
-    public function SiteBuildingTypes(Request $request, $siteId)
-    {
-        try {
-            $buildingTypes = BuildingType::where('site_id', $siteId)->get();
-
-            return response()->json([
-                'type' => 'success',
-                'message' => '',
-                'data' => ['building_types' => $buildingTypes],
-            ]);
-        } catch (\Throwable $th) {
-            $message = $th->getMessage();
-
-            return response()->json([
-                'type' => 'error',
-                'message' => $message,
-                'data' => '',
-            ]);
-        }
-    }
-
     public function index(Request $request)
     {
         try {
-            $buildingTypes = BuildingType::all();
+            $joiners = User::where('role_id', 2)->get();
 
             return response()->json([
                 'type' => 'success',
                 'message' => '',
-                'data' => ['building_types' => $buildingTypes],
+                'data' => ['joiner' => $joiners],
             ]);
         } catch (\Throwable $th) {
             $message = $th->getMessage();
@@ -59,33 +38,50 @@ class BuildingTypeController extends Controller
             ]);
         }
     }
-
     public function store(Request $request)
     {
         try {
+            $request->merge([
+                'uuid' => (string) Str::uuid(),
+                'role_id' => 2,
+            ]);
+
             $validator = Validator::make($request->all(), [
-                'site_id' => ['required'],
-                'building_type_name' => ['required', 'string', 'max:255'],
+                'uuid' => 'required',
+                'role_id' => 'required',
+                'name' => 'required',
+                'email' => 'required|unique:users',
+                'phone' => 'required|unique:users',
+                'password' => ['required', Password::min(8)],
+                'confirm_password' => [
+                    'required_with:password',
+                    'same:password',
+                    Password::min(8),
+                ],
+                'address' => 'nullable',
             ]);
 
             if ($validator->fails()) {
-                $errors = $validator->errors();
-
                 return response()->json([
                     'type' => 'error',
-                    'message' => $errors,
+                    'message' => $validator->errors(),
                     'data' => '',
                 ]);
             }
 
             $data = [
-                'site_id' => $request->site_id,
-                'building_type_name' => $request->building_type_name,
+                'uuid' => $request->uuid,
+                'role_id' => $request->role_id,
+                'name' => $request['name'],
+                'email' => $request['email'],
+                'phone' => $request['phone'],
+                'password' => Hash::make($request['password']),
+                'address' => $request->address,
             ];
 
-            $buildingType = BuildingType::create($data);
+            $user = User::create($data);
 
-            $message = 'Building Type Added Successfully';
+            $message = 'Joiner Added Successfully';
 
             return response()->json([
                 'type' => 'success',
@@ -103,15 +99,15 @@ class BuildingTypeController extends Controller
         }
     }
 
-    public function edit(Request $request, $btId)
+    public function edit(Request $request, $joinerId)
     {
         try {
-            $buildingType = BuildingType::findOrFail($btId);
+            $joiner = User::findOrFail($joinerId);
 
             return response()->json([
                 'type' => 'success',
                 'message' => '',
-                'data' => ['building_type' => $buildingType],
+                'data' => ['joiner' => $joiner],
             ]);
         } catch (\Throwable $th) {
             $message = $th->getMessage();
@@ -124,41 +120,55 @@ class BuildingTypeController extends Controller
         }
     }
 
-    public function update(Request $request, $btId)
+    public function update(Request $request, $joinerId)
     {
         try {
+            $request->merge([
+                'role_id' => 2,
+            ]);
+
             $validator = Validator::make($request->all(), [
-                'site_id' => ['required'],
-                'building_type_name' => ['required', 'string', 'max:255'],
+                'role_id' => 'required',
+                'name' => 'required',
+                'email' => 'required|unique:users',
+                'phone' => 'required|unique:users',
+                'password' => ['required', Password::min(8)],
+                'confirm_password' => [
+                    'required_with:password',
+                    'same:password',
+                    Password::min(8),
+                ],
+                'address' => 'nullable',
             ]);
 
             if ($validator->fails()) {
-                $errors = $validator->errors();
-
                 return response()->json([
                     'type' => 'error',
-                    'message' => $errors,
+                    'message' => $validator->errors(),
                     'data' => '',
                 ]);
             }
 
             $data = [
-                'site_id' => $request->site_id,
-                'building_type_name' => $request->building_type_name,
+                'role_id' => $request->role_id,
+                'name' => $request['name'],
+                'email' => $request['email'],
+                'phone' => $request['phone'],
+                'password' => Hash::make($request['password']),
+                'address' => $request->address,
             ];
 
-            $buildingType = BuildingType::findOrFail($btId);
+            $joiner = User::findOrFail($joinerId);
 
-            $buildingType->update($data);
+            $joiner->update($data);
 
-            $message = 'Building Type Updated Successfully';
+            $message = 'Joiner Updated Successfully';
 
             return response()->json([
                 'type' => 'success',
                 'message' => $message,
                 'data' => '',
             ]);
-            
         } catch (\Throwable $th) {
             $message = $th->getMessage();
 
@@ -170,14 +180,14 @@ class BuildingTypeController extends Controller
         }
     }
 
-    public function destroy(Request $request, $btId)
+    public function destroy(Request $request, $joinerId)
     {
         try {
-            $buildingType = BuildingType::findOrFail($btId);
+            $joiner = User::findOrFail($joinerId);
 
-            $buildingType->delete();
+            $joiner->delete();
 
-            $message = 'Building Type Deleted';
+            $message = 'Joiner Deleted Successfully';
 
             return response()->json([
                 'type' => 'success',

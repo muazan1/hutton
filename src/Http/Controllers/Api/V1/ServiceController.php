@@ -2,31 +2,34 @@
 
 namespace Sty\Hutton\Http\Controllers\Api\V1;
 
-use Illuminate\Routing\Controller;
-
-use Sty\Hutton\Models\BuildingType;
-
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rule;
 use DataTables;
 use DB;
 use Str;
 use Exception;
+use Illuminate\Validation\Rule;
+use Mockery\Container;
 
-class BuildingTypeController extends Controller
+use Sty\Hutton\Http\Requests\CreateSiteRequest;
+use Sty\Hutton\Models\Site;
+use Sty\Hutton\Models\Customer;
+use Sty\Hutton\Models\Service;
+
+class ServiceController extends Controller
 {
-    public function SiteBuildingTypes(Request $request, $siteId)
+    public function index(Request $request)
     {
         try {
-            $buildingTypes = BuildingType::where('site_id', $siteId)->get();
+            $services = Service::all();
 
             return response()->json([
                 'type' => 'success',
                 'message' => '',
-                'data' => ['building_types' => $buildingTypes],
+                'data' => ['services' => $services],
             ]);
         } catch (\Throwable $th) {
             $message = $th->getMessage();
@@ -39,15 +42,15 @@ class BuildingTypeController extends Controller
         }
     }
 
-    public function index(Request $request)
+    public function show(Request $request, $sId)
     {
         try {
-            $buildingTypes = BuildingType::all();
+            $service = Service::findOrFail($sId);
 
             return response()->json([
                 'type' => 'success',
                 'message' => '',
-                'data' => ['building_types' => $buildingTypes],
+                'data' => ['service' => $service],
             ]);
         } catch (\Throwable $th) {
             $message = $th->getMessage();
@@ -64,28 +67,26 @@ class BuildingTypeController extends Controller
     {
         try {
             $validator = Validator::make($request->all(), [
-                'site_id' => ['required'],
-                'building_type_name' => ['required', 'string', 'max:255'],
+                'service_name' => 'required',
+                'description' => 'nullable',
             ]);
 
             if ($validator->fails()) {
-                $errors = $validator->errors();
-
                 return response()->json([
                     'type' => 'error',
-                    'message' => $errors,
+                    'message' => $validator->errors(),
                     'data' => '',
                 ]);
             }
 
             $data = [
-                'site_id' => $request->site_id,
-                'building_type_name' => $request->building_type_name,
+                'service_name' => $request->service_name,
+                'description' => $request->description,
             ];
 
-            $buildingType = BuildingType::create($data);
+            $service = Service::create($data);
 
-            $message = 'Building Type Added Successfully';
+            $message = 'Service Added Successfully';
 
             return response()->json([
                 'type' => 'success',
@@ -103,15 +104,15 @@ class BuildingTypeController extends Controller
         }
     }
 
-    public function edit(Request $request, $btId)
+    public function edit(Request $request, $sId)
     {
         try {
-            $buildingType = BuildingType::findOrFail($btId);
+            $service = Service::findOrFail($sId);
 
             return response()->json([
                 'type' => 'success',
                 'message' => '',
-                'data' => ['building_type' => $buildingType],
+                'data' => ['service' => $service],
             ]);
         } catch (\Throwable $th) {
             $message = $th->getMessage();
@@ -124,41 +125,38 @@ class BuildingTypeController extends Controller
         }
     }
 
-    public function update(Request $request, $btId)
+    public function update(Request $request, $sId)
     {
         try {
+            $service = Service::findOrFail($sId);
+
             $validator = Validator::make($request->all(), [
-                'site_id' => ['required'],
-                'building_type_name' => ['required', 'string', 'max:255'],
+                'service_name' => 'required',
+                'description' => 'nullable',
             ]);
 
             if ($validator->fails()) {
-                $errors = $validator->errors();
-
                 return response()->json([
                     'type' => 'error',
-                    'message' => $errors,
+                    'message' => $validator->errors(),
                     'data' => '',
                 ]);
             }
 
             $data = [
-                'site_id' => $request->site_id,
-                'building_type_name' => $request->building_type_name,
+                'service_name' => $request->service_name,
+                'description' => $request->description,
             ];
 
-            $buildingType = BuildingType::findOrFail($btId);
+            $service->update($data);
 
-            $buildingType->update($data);
-
-            $message = 'Building Type Updated Successfully';
+            $message = 'Service Updated Successfully';
 
             return response()->json([
                 'type' => 'success',
                 'message' => $message,
                 'data' => '',
             ]);
-            
         } catch (\Throwable $th) {
             $message = $th->getMessage();
 
@@ -170,15 +168,14 @@ class BuildingTypeController extends Controller
         }
     }
 
-    public function destroy(Request $request, $btId)
+    public function destroy(Request $request, $sId)
     {
         try {
-            $buildingType = BuildingType::findOrFail($btId);
+            $service = Service::findOrFail($sId);
 
-            $buildingType->delete();
+            $service->delete();
 
-            $message = 'Building Type Deleted';
-
+            $message = 'Service Deleted Successfully';
             return response()->json([
                 'type' => 'success',
                 'message' => $message,
