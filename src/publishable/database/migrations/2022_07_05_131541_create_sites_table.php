@@ -16,7 +16,7 @@ class CreateSitesTable extends Migration
         Schema::create('sites', function (Blueprint $table) {
             $table->id();
 
-            $table->string('uuid')->unique();
+            // $table->string('uuid')->unique();
 
             $table->foreignId('customer_id');
 

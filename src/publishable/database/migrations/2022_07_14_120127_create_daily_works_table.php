@@ -1,0 +1,46 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+class CreateDailyWorksTable extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::create('daily_works', function (Blueprint $table) {
+            $table->id();
+
+            $table->integer('week_id');
+
+            $table->integer('site_id');
+
+            $table->integer('plot_id');
+
+            $table->integer('day');
+
+            $table->text('work_carried')->nullable();
+
+            $table->time('time_taken');
+
+            $table->decimal('amount', $precision = 8, $scale = 2)->default(0.0);
+
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('daily_works');
+    }
+}

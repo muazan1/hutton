@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
-class RolesSeeder extends Seeder
+class MasterAdmin extends Seeder
 {
     /*
      *
@@ -22,6 +22,7 @@ class RolesSeeder extends Seeder
     {
         User::create([
             'role_id' => 1,
+            'uuid' => (string) Str::uuid(),
             'name' => 'Master Admin',
             'email' => 'admin@admin.com',
             'phone' => '+923001234567',

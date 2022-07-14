@@ -1,0 +1,65 @@
+<?php
+
+namespace Database\Seeders;
+use Illuminate\Database\Seeder;
+
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
+
+use Sty\Hutton\Models\{Customer, Plot, Site, BuildingType, Service};
+
+class DummyData extends Seeder
+{
+    /*
+     *
+     * Run the database seeds.
+     *
+     * @return void
+     */
+
+    public function run()
+    {
+        for ($i = 0; $i <= 9; $i++) {
+            Customer::create([
+                'customer_name' => 'Customer ' . $i,
+                'uuid' => (string) Str::uuid(),
+                'slug' => Str::slug('Customer ' . $i),
+                'email' => 'customer' . $i . '@gmail.com',
+                'street_1' => 'Main University Road',
+                'street_2' => '',
+                'city' => 'Karachi',
+                'postcode' => '7650' . $i,
+                'telephone_number' => '+92312021021' . $i,
+                'county' => 'Sindh',
+            ]);
+
+            Service::create([
+                'service_name' => 'Service ' . $i,
+                'description' => 'Lorem Ipsum dolor sit amit',
+            ]);
+
+            Site::create([
+                'customer_id' => $i,
+                'site_name' => 'Site ' . $i,
+                'slug' => Str::slug('Site ' . $i),
+                'street_1' => 'Main University Road',
+                'street_2' => '',
+                'city' => 'Karachi',
+                'postcode' => '76500',
+                'county' => 'Sindh',
+                'telephone' => '+9231202102' . $i . '0',
+            ]);
+
+            Plot::create([
+                'building_type_id' => $i,
+                'plot_name' => 'PL-00' . $i,
+            ]);
+
+            BuildingType::create([
+                'site_id' => $i,
+                'building_type_name' => 'Building ' . $i,
+            ]);
+        }
+    }
+}

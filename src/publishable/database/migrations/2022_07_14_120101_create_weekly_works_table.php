@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateJoinersPricingsTable extends Migration
+class CreateWeeklyWorksTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,20 @@ class CreateJoinersPricingsTable extends Migration
      */
     public function up()
     {
-        Schema::create('joiner_pricings', function (Blueprint $table) {
+        Schema::create('weekly_works', function (Blueprint $table) {
             $table->id();
 
-            $table->integer('builder_id');
+            $table->integer('user_id');
 
-            $table->integer('service_id');
+            $table->date('week_start');
 
-            $table->decimal('price', $precision = 8, $scale = 2)->default(0.0);
+            $table->date('week_end');
+
+            $table->enum('status', [
+                'completed',
+                'in-progress',
+                'not-completed',
+            ]);
 
             $table->timestamps();
         });
@@ -33,6 +39,6 @@ class CreateJoinersPricingsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('joiner_pricings');
+        Schema::dropIfExists('weekly_works');
     }
 }

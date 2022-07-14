@@ -3,13 +3,19 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-use Sty\Hutton\Http\Controllers\Api\V1\CustomerController;
-use Sty\Hutton\Http\Controllers\Api\V1\SiteController;
-use Sty\Hutton\Http\Controllers\Api\V1\BuildingTypeController;
-use Sty\Hutton\Http\Controllers\Api\V1\PlotsController;
-use Sty\Hutton\Http\Controllers\Api\V1\JoinerController;
-use Sty\Hutton\Http\Controllers\Api\V1\ServiceController;
-use Sty\Hutton\Http\Controllers\Api\V1\ServicePricingController;
+use Sty\Hutton\Http\Controllers\Api\V1\{
+    CustomerController,
+    SiteController,
+    BuildingTypeController,
+    JoinerPricingController,
+    PlotsController,
+    JoinerController,
+    ServiceController,
+    ServicePricingController,
+    TaskController,
+    WeeklyWorkController,
+    DailyWorkController
+};
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
@@ -41,6 +47,9 @@ Route::group(['prefix' => 'api/v1', 'as' => 'api/v1'], function () {
     // Routes for services pricing  Crud
     Route::resource('service-pricings', ServicePricingController::class);
 
+    // Route for Joiner Pricing CRUD
+    Route::resource('joiner-pricings', JoinerPricingController::class);
+
     // Route for builder sites || Customer sites
     Route::get('customer/{customer}/sites', [
         SiteController::class,
@@ -64,4 +73,33 @@ Route::group(['prefix' => 'api/v1', 'as' => 'api/v1'], function () {
         ServicePricingController::class,
         'servicePricings',
     ])->name('bt.sp');
+
+    // route for getting building types service pricing
+    Route::get('builder/{builderId}/joiner-pricings', [
+        JoinerPricingController::class,
+        'builderJoinerPricings',
+    ])->name('bld.jp');
+
+    // Route for generating the Jobs || Tasks
+    Route::post('generate-jobs', [TaskController::class, 'GenerateJobs'])->name(
+        'generate.jobs'
+    );
+
+    // Route for generating Weekly work
+    Route::post('generate-weekly-work', [
+        WeeklyWorkController::class,
+        'StartWeek',
+    ])->name('generate.weeklyWork');
+
+    // Route for end Weeklky Work
+    Route::post('end-weekly-work/{weekId}', [
+        WeeklyWorkController::class,
+        'EndWeek',
+    ])->name('end.weeklyWork');
+
+    //
+    Route::post('generate-daily-work', [
+        DailyWorkController::class,
+        'dailyWork',
+    ])->name('generate.dailyWork');
 });

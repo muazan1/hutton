@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateHsJobsTable extends Migration
+class CreateTasksTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,16 @@ class CreateHsJobsTable extends Migration
      */
     public function up()
     {
-        Schema::create('hs_jobs', function (Blueprint $table) {
+        Schema::create('tasks', function (Blueprint $table) {
             $table->id();
 
-            $table->uuid('uuid')->unique();
+            $table->integer('plot_id');
 
-            $table->string('title');
+            $table->integer('service_id');
 
-            $table->text('detail');
+            $table->integer('user_id')->nullable();
+
+            $table->integer('assigned_user_id')->nullable();
 
             $table
                 ->decimal('percent_complete', $precision = 3, $scale = 2)
@@ -34,25 +36,9 @@ class CreateHsJobsTable extends Migration
                 ])
                 ->default('not-started');
 
-            $table->tinyInteger('private')->default(1);
-
             $table->date('date_start')->nullable();
 
             $table->date('date_due')->nullable();
-
-            $table->tinyInteger('billable')->default(1);
-
-            $table
-                ->decimal('hourly_rate', $precision = 8, $scale = 2)
-                ->default(0.0);
-
-            $table->dateTime('date_started')->nullable();
-
-            $table->dateTime('date_complete')->nullable();
-
-            $table->integer('user_id');
-
-            $table->integer('assigned_user_id');
 
             $table->timestamps();
 
@@ -67,6 +53,6 @@ class CreateHsJobsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('hs_jobs');
+        Schema::dropIfExists('tasks');
     }
 }
