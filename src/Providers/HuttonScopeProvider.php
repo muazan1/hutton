@@ -28,6 +28,11 @@ class HuttonScopeProvider extends ServiceProvider
             __DIR__ . '/../publishable/database/migrations',
             'migrations'
         );
+        // $this->publishes([
+        //     __DIR__ . '/../publishable/database/migrations' => database_path(
+        //         'migrations'
+        //     ),
+        // ]);
 
         $this->loadRoutesFrom(__DIR__ . '/../Routes/api.php');
 

@@ -20,10 +20,11 @@ class DummyData extends Seeder
 
     public function run()
     {
-        for ($i = 0; $i <= 9; $i++) {
+        for ($i = 1; $i <= 20; $i++) {
             Customer::create([
-                'customer_name' => 'Customer ' . $i,
                 'uuid' => (string) Str::uuid(),
+                'customer_name' => 'Customer ' . $i,
+
                 'slug' => Str::slug('Customer ' . $i),
                 'email' => 'customer' . $i . '@gmail.com',
                 'street_1' => 'Main University Road',
@@ -40,6 +41,7 @@ class DummyData extends Seeder
             ]);
 
             Site::create([
+                'uuid' => (string) Str::uuid(),
                 'customer_id' => $i,
                 'site_name' => 'Site ' . $i,
                 'slug' => Str::slug('Site ' . $i),
@@ -48,7 +50,7 @@ class DummyData extends Seeder
                 'city' => 'Karachi',
                 'postcode' => '76500',
                 'county' => 'Sindh',
-                'telephone' => '+9231202102' . $i . '0',
+                'telephone_number' => '+9231202102' . $i . '0',
             ]);
 
             Plot::create([

@@ -11,6 +11,7 @@ class CreateServicesTable extends Migration
      *
      * @return void
      */
+
     public function up()
     {
         Schema::create('services', function (Blueprint $table) {

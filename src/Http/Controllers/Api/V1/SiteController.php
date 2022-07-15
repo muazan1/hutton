@@ -55,7 +55,7 @@ class SiteController extends Controller
                 'city' => $request->city,
                 'postcode' => $request->postcode,
                 'county' => $request->county,
-                'telephone' => $request->telephone,
+                'telephone_number' => $request->telephone_number,
             ];
 
             Site::create($data);

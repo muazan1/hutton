@@ -49,7 +49,8 @@ class JoinerController extends Controller
             $validator = Validator::make($request->all(), [
                 'uuid' => 'required',
                 'role_id' => 'required',
-                'name' => 'required',
+                'first_name' => 'required',
+                'last_name' => 'required',
                 'email' => 'required|unique:users',
                 'phone' => 'required|unique:users',
                 'password' => ['required', Password::min(8)],
@@ -72,7 +73,8 @@ class JoinerController extends Controller
             $data = [
                 'uuid' => $request->uuid,
                 'role_id' => $request->role_id,
-                'name' => $request['name'],
+                'first_name' => $request['first_name'],
+                'last_name' => $request['last_name'],
                 'email' => $request['email'],
                 'phone' => $request['phone'],
                 'password' => Hash::make($request['password']),
@@ -129,7 +131,8 @@ class JoinerController extends Controller
 
             $validator = Validator::make($request->all(), [
                 'role_id' => 'required',
-                'name' => 'required',
+                'first_name' => 'required',
+                'last_name' => 'required',
                 'email' => 'required|unique:users',
                 'phone' => 'required|unique:users',
                 'password' => ['required', Password::min(8)],
@@ -151,7 +154,8 @@ class JoinerController extends Controller
 
             $data = [
                 'role_id' => $request->role_id,
-                'name' => $request['name'],
+                'first_name' => $request['first_name'],
+                'last_name' => $request['last_name'],
                 'email' => $request['email'],
                 'phone' => $request['phone'],
                 'password' => Hash::make($request['password']),

@@ -14,31 +14,31 @@ class CreateSitesTable extends Migration
     public function up()
     {
         Schema::create('sites', function (Blueprint $table) {
-            $table->id();
+            // $table->id();
 
             // $table->string('uuid')->unique();
 
-            $table->foreignId('customer_id');
+            // $table->foreignId('customer_id');
 
-            $table->string('site_name');
+            // $table->string('site_name');
 
-            $table->string('slug')->index();
+            // $table->string('slug')->index();
 
-            $table->string('street_1');
+            // $table->string('street_1');
 
-            $table->string('street_2')->nullable();
+            // $table->string('street_2')->nullable();
 
-            $table->string('city');
+            // $table->string('city');
 
-            $table->string('postcode');
+            // $table->string('postcode');
 
-            $table->string('county')->nullable();
+            // $table->string('county')->nullable();
 
-            $table->string('telephone');
+            // $table->string('telephone');
 
-            $table->timestamps();
+            // $table->timestamps();
 
-            $table->softDeletes();
+            // $table->softDeletes();
         });
     }
 

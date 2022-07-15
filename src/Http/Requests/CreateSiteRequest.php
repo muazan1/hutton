@@ -42,7 +42,7 @@ class CreateSiteRequest extends FormRequest
             'city' => ['required'],
             'postcode' => ['required'],
             'county' => ['required'],
-            'telephone' => ['required'],
+            'telephone_number' => ['required'],
         ];
     }
 }
