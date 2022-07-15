@@ -83,4 +83,29 @@ class DailyWorkController extends Controller
             ]);
         }
     }
+
+    public function deleteDailyWork(Request $request, $workId)
+    {
+        try {
+            $dailyWork = DailyWork::find($workId);
+
+            $dailyWork->delete();
+
+            $message = 'Work Removed Successfully';
+
+            return response()->json([
+                'type' => 'success',
+                'message' => $message,
+                'data' => '',
+            ]);
+        } catch (\Throwable $th) {
+            $message = $th->getMessage();
+
+            return response()->json([
+                'type' => 'error',
+                'message' => $message,
+                'data' => '',
+            ]);
+        }
+    }
 }

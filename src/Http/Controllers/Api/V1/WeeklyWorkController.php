@@ -90,4 +90,25 @@ class WeeklyWorkController extends Controller
             ]);
         }
     }
+
+    public function joinerWeeklyWork(Request $request, $joinerId, $weekId)
+    {
+        try {
+            $weeklyWork = WeeklyWork::with('dailyWork')->findOrFail($weekId);
+
+            return response()->json([
+                'type' => 'success',
+                'message' => '',
+                'data' => $weeklyWork,
+            ]);
+        } catch (\Throwable $th) {
+            $message = $th->getMessage();
+
+            return response()->json([
+                'type' => 'error',
+                'message' => $message,
+                'data' => '',
+            ]);
+        }
+    }
 }

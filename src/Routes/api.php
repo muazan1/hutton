@@ -14,7 +14,8 @@ use Sty\Hutton\Http\Controllers\Api\V1\{
     ServicePricingController,
     TaskController,
     WeeklyWorkController,
-    DailyWorkController
+    DailyWorkController,
+    WageSheetController
 };
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
@@ -97,9 +98,26 @@ Route::group(['prefix' => 'api/v1', 'as' => 'api/v1'], function () {
         'EndWeek',
     ])->name('end.weeklyWork');
 
-    //
+    // route for saving daily work
     Route::post('generate-daily-work', [
         DailyWorkController::class,
         'dailyWork',
     ])->name('generate.dailyWork');
+
+    // Route for removing || Deleting daily work
+    Route::delete('daily-work/{workId}', [
+        DailyWorkController::class,
+        'deleteDailyWork',
+    ])->name('delete.dailyWork');
+
+    // Route for viewing joiner weekly work
+    Route::get('joiner/{joinerId}/week/{weekId}/work', [
+        WeeklyWorkController::class,
+        'joinerWeeklyWork',
+    ])->name('joiner.weeklyWork');
+
+    //Route for Wage Sheet
+    Route::get('wage-sheet', [WageSheetController::class, 'wageSheet'])->name(
+        'wage-sheet'
+    );
 });
