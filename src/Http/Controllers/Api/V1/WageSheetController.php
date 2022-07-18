@@ -17,7 +17,7 @@ use Sty\Hutton\Http\Requests\CreateSiteRequest;
 
 // use App\Models\User;
 
-use Sty\Hutton\Models\{Task, User, Plot, Site, WeeklyWork, DailyWork};
+use Sty\Hutton\Models\{HsJobs, User, Plot, Site, WeeklyWork, DailyWork};
 
 class WageSheetController extends Controller
 {

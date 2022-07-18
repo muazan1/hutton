@@ -15,7 +15,14 @@ use Mockery\Container;
 
 use Sty\Hutton\Http\Requests\CreateSiteRequest;
 
-use Sty\Hutton\Models\{Task, Plot, Site, Customer, ServicePricing, WeeklyWork};
+use Sty\Hutton\Models\{
+    HsJobs,
+    Plot,
+    Site,
+    Customer,
+    ServicePricing,
+    WeeklyWork
+};
 
 class WeeklyWorkController extends Controller
 {

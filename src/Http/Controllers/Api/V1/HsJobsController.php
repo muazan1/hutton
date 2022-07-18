@@ -15,9 +15,9 @@ use Mockery\Container;
 
 use Sty\Hutton\Http\Requests\CreateSiteRequest;
 
-use Sty\Hutton\Models\{Task, Plot, Site, Customer, ServicePricing};
+use Sty\Hutton\Models\{HsJob, Plot, Site, Customer, ServicePricing};
 
-class TaskController extends Controller
+class HsJobsController extends Controller
 {
     public function GenerateJobs(Request $request)
     {
@@ -44,8 +44,7 @@ class TaskController extends Controller
                 )->get();
 
                 foreach ($services as $service) {
-                    Task::create([
-                        'uuid' => (string) Str::uuid(),
+                    HsJob::create([
                         'plot_id' => $plot->id,
                         'service_id' => $service->service_id,
                         'percent_complete' => 0.0,
@@ -59,6 +58,26 @@ class TaskController extends Controller
             return response()->json([
                 'type' => 'success',
                 'message' => $message,
+            ]);
+        } catch (\Throwable $th) {
+            $message = $th->getMessage();
+
+            return response()->json([
+                'type' => 'error',
+                'message' => $message,
+            ]);
+        }
+    }
+
+    public function jobsOnPlot(Request $request, $plotId)
+    {
+        try {
+            $jobs = HsJob::where('plot_id', $plotId)->get();
+
+            return response()->json([
+                'type' => 'success',
+                'message' => '',
+                'data' => ['jobs' => $jobs],
             ]);
         } catch (\Throwable $th) {
             $message = $th->getMessage();

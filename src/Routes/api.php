@@ -12,10 +12,11 @@ use Sty\Hutton\Http\Controllers\Api\V1\{
     JoinerController,
     ServiceController,
     ServicePricingController,
-    TaskController,
+    HsJobsController,
     WeeklyWorkController,
     DailyWorkController,
-    WageSheetController
+    WageSheetController,
+    JobFilterController
 };
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
@@ -82,9 +83,10 @@ Route::group(['prefix' => 'api/v1', 'as' => 'api/v1'], function () {
     ])->name('bld.jp');
 
     // Route for generating the Jobs || Tasks
-    Route::post('generate-jobs', [TaskController::class, 'GenerateJobs'])->name(
-        'generate.jobs'
-    );
+    Route::post('generate-jobs', [
+        HsJobsController::class,
+        'GenerateJobs',
+    ])->name('generate.jobs');
 
     // Route for generating Weekly work
     Route::post('generate-weekly-work', [
@@ -120,4 +122,27 @@ Route::group(['prefix' => 'api/v1', 'as' => 'api/v1'], function () {
     Route::get('wage-sheet', [WageSheetController::class, 'wageSheet'])->name(
         'wage-sheet'
     );
+
+    /* Routes for jobs filters */
+
+    // route for getting building typpes by site
+
+    // Route::get('site/{siteId}/building-type', [
+    //     JobFilterController::class,
+    //     'buildingTypeBySite',
+    // ])->name('jf.get_bt');
+
+    // route for completed jobs
+    Route::get('jobs/completed', [
+        JobFilterController::class,
+        'completedJobs',
+    ])->name('completed.jobs');
+
+    // route for getting
+    Route::get('plot/{plot}/jobs', [
+        HsJobsController::class,
+        'jobsOnPlot',
+    ])->name('jobPlots');
+
+    /* Routes end for job fileters */
 });
