@@ -38,6 +38,8 @@ class HuttonScopeProvider extends ServiceProvider
 
         $this->loadViewsFrom(__DIR__ . '/../Resources/views', 'Hutton');
 
+        // $this->loadViewsFrom(__DIR__ . '/../resources/views', 'blogpackage');
+
         $this->publishes([
             __DIR__ . '/../publishable/database/seeders' => database_path(
                 'seeders'

@@ -15,6 +15,8 @@ use Mockery\Container;
 
 use Sty\Hutton\Http\Requests\CreateSiteRequest;
 
+use Sty\Hutton\Mail\Work\WorkSend;
+
 use Sty\Hutton\Models\{
     HsJobs,
     Plot,
@@ -79,6 +81,8 @@ class WeeklyWorkController extends Controller
             $week = WeeklyWork::findOrFail($weekId)->update([
                 'status' => 'completed',
             ]);
+
+            $mail = Mail::to('admin@admin.com')->send(new WorkSend());
 
             $message = 'Week Ended Successfully';
 

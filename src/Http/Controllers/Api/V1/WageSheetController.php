@@ -29,12 +29,38 @@ class WageSheetController extends Controller
             return response()->json([
                 'type' => 'success',
                 'message' => '',
-                'data' => $joiners,
+                'data' => ['joiners' => $joiners],
             ]);
-
-
         } catch (\Throwable $th) {
-            
+            $message = $th->getMessage();
+
+            return response()->json([
+                'type' => 'error',
+                'message' => $message,
+                'data' => '',
+            ]);
+        }
+    }
+
+    public function wageSheetByWeek(Request $request)
+    {
+        try {
+            $weekCommencing = $request->week;
+
+            $joiners = User::with([
+                'weeklyWork' => function ($query) use ($weekCommencing) {
+                    return $query->whereDate('week_start', $weekCommencing);
+                },
+            ])
+                ->where('role_id', 2)
+                ->get();
+
+            return response()->json([
+                'type' => 'success',
+                'message' => '',
+                'data' => ['joiners' => $joiners],
+            ]);
+        } catch (\Throwable $th) {
             $message = $th->getMessage();
 
             return response()->json([

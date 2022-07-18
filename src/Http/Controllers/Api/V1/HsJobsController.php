@@ -88,4 +88,38 @@ class HsJobsController extends Controller
             ]);
         }
     }
+
+    public function assignJobToJoiner(Request $request, $jobId)
+    {
+        try {
+            $job = HsJob::find($jobId);
+
+            // if ($job->assigned_user_id != null) {
+            //     $message = 'Another Joiner Already Assigned to Job';
+
+            //     return response()->json([
+            //         'type' => 'error',
+            //         'message' => $message,
+            //         'data' => '',
+            //     ]);
+            // }
+
+            $job->update(['assigned_user_id' => $request->joiner_id]);
+
+            $message = 'Joiner Successfully Assigned to Job';
+
+            return response()->json([
+                'type' => 'success',
+                'message' => $message,
+                'data' => '',
+            ]);
+        } catch (\Throwable $th) {
+            $message = $th->getMessage();
+
+            return response()->json([
+                'type' => 'error',
+                'message' => $message,
+            ]);
+        }
+    }
 }

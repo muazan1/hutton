@@ -16,7 +16,8 @@ use Sty\Hutton\Http\Controllers\Api\V1\{
     WeeklyWorkController,
     DailyWorkController,
     WageSheetController,
-    JobFilterController
+    JobFilterController,
+    WorkController
 };
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
@@ -123,6 +124,12 @@ Route::group(['prefix' => 'api/v1', 'as' => 'api/v1'], function () {
         'wage-sheet'
     );
 
+    //route for weekly wage sheet
+    Route::post('weekly/wage-sheet', [
+        WageSheetController::class,
+        'wageSheetByWeek',
+    ])->name('weekly.wage-sheet');
+
     /* Routes for jobs filters */
 
     // route for getting building typpes by site
@@ -145,4 +152,16 @@ Route::group(['prefix' => 'api/v1', 'as' => 'api/v1'], function () {
     ])->name('jobPlots');
 
     /* Routes end for job fileters */
+
+    // route for assigning job to joiner
+    Route::post('job/{jobId}/assign-joiner', [
+        HsJobsController::class,
+        'assignJobToJoiner',
+    ])->name('assign.joiner');
+
+    // Route for Joiner Work History
+    Route::get('joiner/{joinerId}/work-history', [
+        WorkController::class,
+        'JoinerWorkHistory',
+    ])->name('work.history');
 });
