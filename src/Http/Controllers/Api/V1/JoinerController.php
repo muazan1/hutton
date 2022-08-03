@@ -13,16 +13,35 @@ use Str;
 use Exception;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
+use Illuminate\Database\Eloquent\Collection;
 
 use App\Models\User;
+// use Ramsey\Collection\Collection;
 
 class JoinerController extends Controller
 {
+    public function paginate($items, $perPage = 50, $page = null, $options = [])
+    {
+        $page = $page ?: (Paginator::resolveCurrentPage() ?: 1);
+        $items =
+            $items instanceof Collection ? $items : Collection::make($items);
+        return new LengthAwarePaginator(
+            $items->forPage($page, $perPage),
+            $items->count(),
+            $perPage,
+            $page,
+            $options
+        );
+    }
     public function index(Request $request)
     {
         try {
-            $joiners = User::where('role_id', 2)->get();
+            $joiners = User::where('role_id', 2)->all();
+            $meta = User::where('role_id', 2)->paginate(10);
+            // ->paginate(10)
+            // ->withQueryString();
 
+            // return $joiners;
             return response()->json([
                 'type' => 'success',
                 'message' => '',

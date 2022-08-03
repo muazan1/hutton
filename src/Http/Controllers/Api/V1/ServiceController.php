@@ -26,10 +26,12 @@ class ServiceController extends Controller
         try {
             $services = Service::all();
 
+            $meta = Service::paginate(10);
+
             return response()->json([
                 'type' => 'success',
                 'message' => '',
-                'data' => ['services' => $services],
+                'data' => ['services' => $services, 'meta' => $meta],
             ]);
         } catch (\Throwable $th) {
             $message = $th->getMessage();
