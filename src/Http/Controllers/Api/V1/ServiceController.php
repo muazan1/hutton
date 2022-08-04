@@ -24,9 +24,16 @@ class ServiceController extends Controller
     public function index(Request $request)
     {
         try {
+            $search = $request->search ?? '';
+            // dd($search);
+
             $services = Service::all();
 
-            $meta = Service::paginate(10);
+            $meta = Service::where(function ($query) use ($search) {
+                $query
+                    ->where('service_name', 'LIKE', '%' . $search . '%')
+                    ->orWhere('description', 'LIKE', '%' . $search . '%');
+            })->paginate(10);
 
             return response()->json([
                 'type' => 'success',
