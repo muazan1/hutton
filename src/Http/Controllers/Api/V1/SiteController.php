@@ -20,9 +20,11 @@ use Sty\Hutton\Models\Customer;
 
 class SiteController extends Controller
 {
-    public function customerSites(Request $request, $customerId)
+    public function customerSites(Request $request, $customerSlug)
     {
-        $sites = Site::where('customer_id', $customerId)->get();
+        $customer = Customer::where('slug', $customerSlug)->first();
+
+        $sites = Site::where('customer_id', $customer->id)->get();
 
         return response()->json([
             'type' => 'success',
