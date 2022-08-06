@@ -171,7 +171,7 @@ class SiteController extends Controller
     public function destroy(Request $request, $siteId)
     {
         try {
-            $site = Site::findOrFail($siteId);
+            $site = Site::where('uuid', $siteId)->first();
 
             $site->delete();
 
