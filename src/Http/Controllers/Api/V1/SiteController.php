@@ -29,8 +29,8 @@ class SiteController extends Controller
         $meta = Site::where('customer_id', $customer->id)
             ->where(function ($query) use ($search) {
                 $query
-                    ->where('service_name', 'LIKE', '%' . $search . '%')
-                    ->orWhere('description', 'LIKE', '%' . $search . '%');
+                    ->where('site_name', 'LIKE', '%' . $search . '%')
+                    ->orWhere('telephone_number', 'LIKE', '%' . $search . '%');
             })
             ->paginate(10);
         // $meta = Site::where('customer_id', $customer->id)->paginate(10);
