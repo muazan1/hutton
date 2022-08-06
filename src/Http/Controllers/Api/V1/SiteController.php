@@ -45,9 +45,10 @@ class SiteController extends Controller
     public function store(CreateSiteRequest $request)
     {
         try {
+            $customer = Customer::where('uuid', $request->customer_id)->first();
             $data = [
                 'uuid' => $request->uuid,
-                'customer_id' => $request->customer_id,
+                'customer_id' => $customer->id,
                 'site_name' => $request->site_name,
                 'slug' => $request->slug,
                 'street_1' => $request->street_1,
