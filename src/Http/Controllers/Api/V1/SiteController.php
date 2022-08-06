@@ -22,9 +22,18 @@ class SiteController extends Controller
 {
     public function customerSites(Request $request, $customerSlug)
     {
+        $search = $request->search ?? '';
+
         $customer = Customer::where('slug', $customerSlug)->first();
 
-        $meta = Site::where('customer_id', $customer->id)->paginate(10);
+        $meta = Site::where('customer_id', $customer->id)
+            ->where(function ($query) use ($search) {
+                $query
+                    ->where('service_name', 'LIKE', '%' . $search . '%')
+                    ->orWhere('description', 'LIKE', '%' . $search . '%');
+            })
+            ->paginate(10);
+        // $meta = Site::where('customer_id', $customer->id)->paginate(10);
 
         return response()->json([
             'type' => 'success',
