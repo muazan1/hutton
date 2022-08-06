@@ -35,12 +35,12 @@ class SiteController extends Controller
 
     public function index(Request $request)
     {
-        $sites = Site::all();
+        $meta = Site::paginate(10);
 
         return response()->json([
             'type' => 'success',
             'message' => '',
-            'data' => ['sites' => $sites],
+            'data' => ['meta' => $meta],
         ]);
     }
 
