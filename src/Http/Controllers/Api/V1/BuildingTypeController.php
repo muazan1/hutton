@@ -79,6 +79,7 @@ class BuildingTypeController extends Controller
             }
 
             $data = [
+                'uuid' => Str::uuid(),
                 'site_id' => $request->site_id,
                 'building_type_name' => $request->building_type_name,
             ];
@@ -158,7 +159,6 @@ class BuildingTypeController extends Controller
                 'message' => $message,
                 'data' => '',
             ]);
-            
         } catch (\Throwable $th) {
             $message = $th->getMessage();
 
