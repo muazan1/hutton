@@ -30,10 +30,14 @@ class SiteController extends Controller
             ->where(function ($query) use ($search) {
                 $query
                     ->where('site_name', 'LIKE', '%' . $search . '%')
-                    ->orWhere('telephone_number', 'LIKE', '%' . $search . '%');
+                    ->orWhere('telephone_number', 'LIKE', '%' . $search . '%')
+                    ->orWhere('street_1', 'LIKE', '%' . $search . '%')
+                    ->orWhere('street_1', 'LIKE', '%' . $search . '%')
+                    ->orWhere('postcode', 'LIKE', '%' . $search . '%')
+                    ->orWhere('county', 'LIKE', '%' . $search . '%')
+                    ->orWhere('city', 'LIKE', '%' . $search . '%');
             })
             ->paginate(10);
-        // $meta = Site::where('customer_id', $customer->id)->paginate(10);
 
         return response()->json([
             'type' => 'success',
