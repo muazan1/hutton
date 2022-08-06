@@ -24,12 +24,12 @@ class SiteController extends Controller
     {
         $customer = Customer::where('slug', $customerSlug)->first();
 
-        $sites = Site::where('customer_id', $customer->id)->get();
+        $meta = Site::where('customer_id', $customer->id)->paginate(10);
 
         return response()->json([
             'type' => 'success',
             'message' => '',
-            'data' => ['sites' => $sites],
+            'data' => ['meta' => $meta],
         ]);
     }
 
