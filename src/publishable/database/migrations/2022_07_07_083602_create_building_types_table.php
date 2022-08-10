@@ -22,6 +22,8 @@ class CreateBuildingTypesTable extends Migration
 
             $table->string('building_type_name');
 
+            $table->text('description')->nullable();
+
             $table->timestamps();
 
             $table->softDeletes();
