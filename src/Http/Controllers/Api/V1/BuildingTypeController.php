@@ -21,7 +21,9 @@ class BuildingTypeController extends Controller
     public function SiteBuildingTypes(Request $request, $siteId)
     {
         try {
-            $buildingTypes = BuildingType::where('site_id', $siteId)->get();
+            $buildingTypes = BuildingType::where('site_id', $siteId)->paginate(
+                10
+            );
 
             return response()->json([
                 'type' => 'success',
@@ -66,6 +68,7 @@ class BuildingTypeController extends Controller
             $validator = Validator::make($request->all(), [
                 'site_id' => ['required'],
                 'building_type_name' => ['required', 'string', 'max:255'],
+                'description' => ['nullable'],
             ]);
 
             if ($validator->fails()) {
@@ -82,6 +85,7 @@ class BuildingTypeController extends Controller
                 'uuid' => Str::uuid(),
                 'site_id' => $request->site_id,
                 'building_type_name' => $request->building_type_name,
+                'description' => $request->description,
             ];
 
             $buildingType = BuildingType::create($data);
@@ -131,6 +135,7 @@ class BuildingTypeController extends Controller
             $validator = Validator::make($request->all(), [
                 'site_id' => ['required'],
                 'building_type_name' => ['required', 'string', 'max:255'],
+                'description' => ['nullable'],
             ]);
 
             if ($validator->fails()) {
@@ -146,6 +151,7 @@ class BuildingTypeController extends Controller
             $data = [
                 'site_id' => $request->site_id,
                 'building_type_name' => $request->building_type_name,
+                'description' => $request->description,
             ];
 
             $buildingType = BuildingType::findOrFail($btId);
