@@ -12,6 +12,6 @@ class ServicePricing extends Model
 
     public function service()
     {
-        return $this->belongsTo(Service::class, 'id', 'service_id');
+        return $this->belongsTo(Service::class, 'service_id', 'id');
     }
 }
