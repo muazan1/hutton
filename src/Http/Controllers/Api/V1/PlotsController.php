@@ -83,7 +83,7 @@ class PlotsController extends Controller
     public function BuildingTypePlots(Request $request, $btId)
     {
         try {
-            $plots = Plot::where('building_type_id', $btId)->get();
+            $plots = Plot::where('building_type_id', $btId)->paginate(10);
 
             return response()->json([
                 'type' => 'success',
