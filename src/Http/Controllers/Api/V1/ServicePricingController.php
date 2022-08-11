@@ -144,4 +144,34 @@ class ServicePricingController extends Controller
             ]);
         }
     }
+
+    public function servicesWithPricings(Request $request, $btId)
+    {
+        try {
+            $buildingType = BuildingType::find($btId);
+
+            $services = Service::with([
+                'pricings' => function ($query) use ($btId) {
+                    $query->where('building_type_id', $btId);
+                },
+            ])->get();
+
+            return response()->json([
+                'type' => 'success',
+                'message' => '',
+                'data' => [
+                    'pricings' => $services,
+                    'buildingType' => $buildingType,
+                ],
+            ]);
+        } catch (\Throwable $th) {
+            $message = $th->getMessage();
+
+            return response()->json([
+                'type' => 'error',
+                'message' => $message,
+                'data' => '',
+            ]);
+        }
+    }
 }

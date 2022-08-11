@@ -77,6 +77,11 @@ Route::group(['prefix' => 'api/v1', 'as' => 'api/v1'], function () {
         'servicePricings',
     ])->name('bt.sp');
 
+    Route::get('building/{btId}/pricings/services', [
+        ServicePricingController::class,
+        'servicesWithPricings',
+    ])->name('bt.wsp');
+
     // route for getting building types service pricing
     Route::get('builder/{builderId}/joiner-pricings', [
         JoinerPricingController::class,

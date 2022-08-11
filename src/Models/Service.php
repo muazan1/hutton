@@ -9,4 +9,9 @@ class Service extends Model
     use HasFactory;
 
     protected $guarded = ['id', 'created_at', 'updated_at'];
+
+    public function pricings()
+    {
+        return $this->hasMany(ServicePricing::class);
+    }
 }
