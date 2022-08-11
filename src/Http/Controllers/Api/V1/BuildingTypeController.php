@@ -21,9 +21,19 @@ class BuildingTypeController extends Controller
     public function SiteBuildingTypes(Request $request, $siteId)
     {
         try {
-            $buildingTypes = BuildingType::where('site_id', $siteId)->paginate(
-                10
-            );
+            $search = $request->search ?? '';
+
+            $buildingTypes = BuildingType::where('site_id', $siteId)
+                ->where(function ($query) use ($search) {
+                    $query
+                        ->where(
+                            'building_type_name',
+                            'LIKE',
+                            '%' . $search . '%'
+                        )
+                        ->orWhere('description', 'LIKE', '%' . $search . '%');
+                })
+                ->paginate(10);
 
             return response()->json([
                 'type' => 'success',
