@@ -124,7 +124,7 @@ class ServicePricingController extends Controller
 
             $pricings = ServicePricing::with('service')
                 ->where('building_type_id', $btId)
-                ->get();
+                ->paginate();
 
             return response()->json([
                 'type' => 'success',
@@ -154,7 +154,7 @@ class ServicePricingController extends Controller
                 'pricings' => function ($query) use ($btId) {
                     $query->where('building_type_id', $btId);
                 },
-            ])->get();
+            ])->paginate(5);
 
             return response()->json([
                 'type' => 'success',
