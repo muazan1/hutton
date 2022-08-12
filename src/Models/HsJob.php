@@ -9,4 +9,14 @@ class HsJob extends Model
     use HasFactory;
 
     protected $guarded = ['id', 'created_at', 'updated_at'];
+
+    public function plot()
+    {
+        return $this->belongsTo(Plot::class, 'plot_id', 'id');
+    }
+
+    public function service()
+    {
+        return $this->belongsTo(Service::class, 'service_id', 'id');
+    }
 }

@@ -77,7 +77,14 @@ class HsJobsController extends Controller
     public function jobsOnPlot(Request $request, $plotId)
     {
         try {
-            $jobs = HsJob::where('plot_id', $plotId)->get();
+            $search = $request->search ?? '';
+
+            $jobs = HsJob::with('job', 'plot')
+                ->where('plot_id', $plotId)
+                // ->where(function ($query) use ($search) {
+                //     $query->where('plot_name', 'LIKE', '%' . $search . '%');
+                // })
+                ->paginate(10);
 
             return response()->json([
                 'type' => 'success',
@@ -127,4 +134,33 @@ class HsJobsController extends Controller
             ]);
         }
     }
+
+    // public function JobsOnPlot(Request $request, $plotId)
+    // {
+    //     dd($plotId);
+
+    //     try {
+    //         $search = $request->search ?? '';
+    //         $plots = Plot::with('job')
+    //             ->where('building_type_id', $btId)
+    //             ->where(function ($query) use ($search) {
+    //                 $query->where('plot_name', 'LIKE', '%' . $search . '%');
+    //             })
+    //             ->paginate(10);
+
+    //         return response()->json([
+    //             'type' => 'success',
+    //             'message' => '',
+    //             'data' => ['plots' => $plots],
+    //         ]);
+    //     } catch (\Exception $e) {
+    //         $message = $th->getMessage();
+
+    //         return response()->json([
+    //             'type' => 'error',
+    //             'message' => $message,
+    //             'data' => '',
+    //         ]);
+    //     }
+    // }
 }
