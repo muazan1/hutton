@@ -52,6 +52,7 @@ class HsJobsController extends Controller
                             'plot_id' => $plot->id,
                             'service_id' => $service->service_id,
                             'percent_complete' => 0.0,
+                            'amount' => $service->price,
                             'status' => 'not-started',
                         ]);
                     }
