@@ -84,7 +84,8 @@ class PlotsController extends Controller
     {
         try {
             $search = $request->search ?? '';
-            $plots = Plot::where('building_type_id', $btId)
+            $plots = Plot::with('job')
+                ->where('building_type_id', $btId)
                 ->where(function ($query) use ($search) {
                     $query->where('plot_name', 'LIKE', '%' . $search . '%');
                 })
