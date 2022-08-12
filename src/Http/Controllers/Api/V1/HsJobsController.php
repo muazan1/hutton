@@ -44,7 +44,7 @@ class HsJobsController extends Controller
                 )->get();
 
                 foreach ($services as $service) {
-                    dd($service->price);
+                    // dd($service->price);
 
                     $job = HsJob::where('plot_id', $plot->id)
                         ->where('service_id', $service->service_id)
