@@ -25,7 +25,7 @@ class CreateHsJobsTable extends Migration
             $table->integer('assigned_user_id')->nullable();
 
             $table
-                ->decimal('percent_complete', $precision = 100, $scale = 2)
+                ->decimal('percent_complete', $precision = 10, $scale = 2)
                 ->default(0.0);
 
             $table->decimal('amount', $precision = 3, $scale = 2)->default(0.0);
