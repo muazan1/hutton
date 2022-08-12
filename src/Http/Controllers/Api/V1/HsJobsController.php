@@ -44,12 +44,17 @@ class HsJobsController extends Controller
                 )->get();
 
                 foreach ($services as $service) {
-                    HsJob::create([
-                        'plot_id' => $plot->id,
-                        'service_id' => $service->service_id,
-                        'percent_complete' => 0.0,
-                        'status' => 'not-started',
-                    ]);
+                    $job = HsJob::where('plot_id', $plot->id)
+                        ->where('service_id', $service->service_id)
+                        ->first();
+                    if (!$job) {
+                        HsJob::create([
+                            'plot_id' => $plot->id,
+                            'service_id' => $service->service_id,
+                            'percent_complete' => 0.0,
+                            'status' => 'not-started',
+                        ]);
+                    }
                 }
             }
 
