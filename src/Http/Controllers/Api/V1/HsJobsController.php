@@ -79,7 +79,7 @@ class HsJobsController extends Controller
         try {
             $search = $request->search ?? '';
 
-            $jobs = HsJob::with('job', 'plot')
+            $jobs = HsJob::with('service', 'plot')
                 ->where('plot_id', $plotId)
                 // ->where(function ($query) use ($search) {
                 //     $query->where('plot_name', 'LIKE', '%' . $search . '%');
