@@ -44,8 +44,6 @@ class HsJobsController extends Controller
                 )->get();
 
                 foreach ($services as $service) {
-                    // dd($service->price);
-
                     $job = HsJob::where('plot_id', $plot->id)
                         ->where('service_id', $service->service_id)
                         ->first();
@@ -90,10 +88,23 @@ class HsJobsController extends Controller
                 // })
                 ->paginate(10);
 
+            $completed = $jobs->where('status', 'completed')->count();
+
+            $partCompleted = $jobs
+                ->where('status', 'partial-complete')
+                ->count();
+
+            $notStarted = $jobs->where('status', 'not-started')->count();
+
             return response()->json([
                 'type' => 'success',
                 'message' => '',
-                'data' => ['jobs' => $jobs],
+                'data' => [
+                    'jobs' => $jobs,
+                    'completed' => $completed,
+                    'partCompleted' => $partCompleted,
+                    'notStarted' => $notStarted,
+                ],
             ]);
         } catch (\Throwable $th) {
             $message = $th->getMessage();
