@@ -13,7 +13,7 @@ class CreateHsJobsTable extends Migration
      */
     public function up()
     {
-        Schema::create('hs_jobs', function (Blueprint $table) {
+        Schema::create('plot_jobs', function (Blueprint $table) {
             $table->id();
 
             $table->integer('plot_id');
@@ -27,6 +27,8 @@ class CreateHsJobsTable extends Migration
             $table
                 ->decimal('percent_complete', $precision = 3, $scale = 2)
                 ->default(0.0);
+
+            $table->decimal('amount', $precision = 3, $scale = 2)->default(0.0);
 
             $table
                 ->enum('status', [
@@ -55,6 +57,6 @@ class CreateHsJobsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('hs_jobs');
+        Schema::dropIfExists('plot_jobs');
     }
 }
