@@ -15,4 +15,9 @@ class Plot extends Model
     {
         return $this->hasMany(HsJob::class, 'plot_id', 'id');
     }
+
+    public function buildingType()
+    {
+        return $this->belongsTo(BuildingType::class, 'building_type_id', 'id');
+    }
 }

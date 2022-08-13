@@ -154,7 +154,12 @@ class HsJobsController extends Controller
     {
         try {
             $search = $request->search ?? '';
-            $jobs = HsJob::with('plot', 'service')
+            $jobs = HsJob::with(
+                'plot',
+                'plot.buildingType',
+                'plot.buildingType.site',
+                'service'
+            )
                 // ->where('building_type_id', $btId)
                 // ->where(function ($query) use ($search) {
                 //     $query->where('plot_name', 'LIKE', '%' . $search . '%');
