@@ -162,7 +162,7 @@ class HsJobsController extends Controller
                 'service'
             );
 
-            if ($status) {
+            if ($status != null) {
                 $jobs = $jobs->where('status', $status);
             }
             // ->where('building_type_id', $btId)
