@@ -72,7 +72,7 @@ Route::group(['prefix' => 'api/v1', 'as' => 'api/v1'], function () {
     ])->name('buildingTypes.plots');
 
     Route::get('plot/{plotId}/services', [
-        PlotsController::class,
+        HsJobsController::class,
         'servicesByPlot',
     ])->name('servicesbyPlots');
 

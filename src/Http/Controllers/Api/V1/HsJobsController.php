@@ -186,4 +186,27 @@ class HsJobsController extends Controller
             ]);
         }
     }
+
+    public function servicesByPlot(Request $request, $plotId)
+    {
+        try {
+            $services = HsJob::with('service')
+                ->where('plot_id', $plotId)
+                ->get();
+
+            return response()->json([
+                'type' => 'success',
+                'message' => '',
+                'data' => ['services' => $services],
+            ]);
+        } catch (\Throwable $th) {
+            $message = $th->getMessage();
+
+            return response()->json([
+                'type' => 'error',
+                'message' => $message,
+                'data' => '',
+            ]);
+        }
+    }
 }
