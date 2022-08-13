@@ -154,17 +154,22 @@ class HsJobsController extends Controller
     {
         try {
             $search = $request->search ?? '';
+            $status = $request->status ?? '';
             $jobs = HsJob::with(
                 'plot',
                 'plot.buildingType',
                 'plot.buildingType.site',
                 'service'
-            )
-                // ->where('building_type_id', $btId)
-                // ->where(function ($query) use ($search) {
-                //     $query->where('plot_name', 'LIKE', '%' . $search . '%');
-                // })
-                ->paginate(10);
+            );
+
+            if ($status) {
+                $jobs = $jobs->where('status', $status);
+            }
+            // ->where('building_type_id', $btId)
+            // ->where(function ($query) use ($search) {
+            //     $query->where('plot_name', 'LIKE', '%' . $search . '%');
+            // })
+            $jobs->paginate(10);
 
             return response()->json([
                 'type' => 'success',
