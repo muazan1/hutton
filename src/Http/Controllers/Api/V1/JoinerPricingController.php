@@ -131,7 +131,7 @@ class JoinerPricingController extends Controller
                 'type' => 'success',
                 'message' => '',
                 'data' => [
-                    'joiner-pricing' => $joinerPricings,
+                    'joiner_pricing' => $joinerPricings,
                     'builder' => $builder,
                 ],
             ]);
