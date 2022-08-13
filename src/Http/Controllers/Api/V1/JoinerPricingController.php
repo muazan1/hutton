@@ -147,4 +147,37 @@ class JoinerPricingController extends Controller
             ]);
         }
     }
+    public function builderJoinerPricingsServices(
+        Request $request,
+        $builderslug
+    ) {
+        try {
+            $builder = Customer::select('id')
+                ->where('slug', $builderslug)
+                ->first();
+
+            $services = Service::with([
+                'joinerPricings' => function ($query) use ($builder) {
+                    $query->where('builder_id', $builder->id);
+                },
+            ])->paginate(10);
+
+            return response()->json([
+                'type' => 'success',
+                'message' => '',
+                'data' => [
+                    'services' => $services,
+                    'builder' => $builder,
+                ],
+            ]);
+        } catch (\Throwable $th) {
+            $message = $th->getMessage();
+
+            return response()->json([
+                'type' => 'error',
+                'message' => $message,
+                'data' => '',
+            ]);
+        }
+    }
 }

@@ -14,4 +14,8 @@ class Service extends Model
     {
         return $this->hasMany(ServicePricing::class);
     }
+    public function joinerPricings()
+    {
+        return $this->hasMany(JoinerPricing::class);
+    }
 }

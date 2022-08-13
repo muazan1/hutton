@@ -92,6 +92,10 @@ Route::group(['prefix' => 'api/v1', 'as' => 'api/v1'], function () {
         JoinerPricingController::class,
         'builderJoinerPricings',
     ])->name('bld.jp');
+    Route::get('builder/{builderId}/joiner-pricings/services', [
+        JoinerPricingController::class,
+        'builderJoinerPricingsServices',
+    ])->name('bld.jps');
 
     // Route for generating the Jobs || Tasks
     Route::post('generate-jobs', [
