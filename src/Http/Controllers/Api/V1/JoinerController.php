@@ -36,12 +36,10 @@ class JoinerController extends Controller
     public function index(Request $request)
     {
         try {
-            $joiners = User::where('role_id', 2)->all();
-            $meta = User::where('role_id', 2)->paginate(10);
-            // ->paginate(10)
-            // ->withQueryString();
+            $role = Role::where('name', 'joiner')->first();
+            $joiners = User::where('role_id', $role->id)->all();
+            $meta = User::where('role_id', $role->id)->paginate(10);
 
-            // return $joiners;
             return response()->json([
                 'type' => 'success',
                 'message' => '',
