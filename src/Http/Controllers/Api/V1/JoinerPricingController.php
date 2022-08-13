@@ -121,7 +121,9 @@ class JoinerPricingController extends Controller
     public function builderJoinerPricings(Request $request, $builderId)
     {
         try {
-            $builder = Customer::select('id')->find($builderId);
+            $builder = Customer::select('id')
+                ->where('slug', $builderId)
+                ->first();
 
             $joinerPricings = JoinerPricing::with('service')
                 ->where('builder_id', $builder->id)
