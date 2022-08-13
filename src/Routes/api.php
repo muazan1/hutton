@@ -169,4 +169,10 @@ Route::group(['prefix' => 'api/v1', 'as' => 'api/v1'], function () {
         WorkController::class,
         'JoinerWorkHistory',
     ])->name('work.history');
+
+    /* Admin Jobs Controller*/
+
+    Route::get('admin/jobs', [HsJobsController::class, 'adminJobs'])->name(
+        'admin.jobs'
+    );
 });
