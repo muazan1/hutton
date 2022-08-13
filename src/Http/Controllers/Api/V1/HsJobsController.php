@@ -169,7 +169,7 @@ class HsJobsController extends Controller
             // ->where(function ($query) use ($search) {
             //     $query->where('plot_name', 'LIKE', '%' . $search . '%');
             // })
-            $jobs->paginate(10);
+            $jobs = $jobs->paginate(10);
 
             return response()->json([
                 'type' => 'success',
