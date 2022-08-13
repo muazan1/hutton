@@ -37,6 +37,26 @@ class PlotsController extends Controller
             ]);
         }
     }
+    public function servicesByPlot(Request $request, $plotId)
+    {
+        try {
+            $services = Plot::with('jobs', 'jobs.service')->find(10);
+
+            return response()->json([
+                'type' => 'success',
+                'message' => '',
+                'data' => ['services' => $services],
+            ]);
+        } catch (\Throwable $th) {
+            $message = $th->getMessage();
+
+            return response()->json([
+                'type' => 'error',
+                'message' => $message,
+                'data' => '',
+            ]);
+        }
+    }
     public function store(Request $request)
     {
         try {

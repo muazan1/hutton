@@ -71,6 +71,11 @@ Route::group(['prefix' => 'api/v1', 'as' => 'api/v1'], function () {
         'BuildingTypePlots',
     ])->name('buildingTypes.plots');
 
+    Route::get('plot/{plotId}/services', [
+        PlotsController::class,
+        'servicesByPlot',
+    ])->name('servicesbyPlots');
+
     // route for getting building types service pricing
     Route::get('building/{btId}/pricings', [
         ServicePricingController::class,

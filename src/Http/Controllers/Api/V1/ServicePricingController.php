@@ -174,4 +174,6 @@ class ServicePricingController extends Controller
             ]);
         }
     }
+
+   
 }
