@@ -18,6 +18,7 @@ use Sty\Hutton\Models\JoinerPricing;
 
 use App\Models\User;
 use Sty\Hutton\Models\Customer;
+use Sty\Hutton\Models\Service;
 
 class JoinerPricingController extends Controller
 {
