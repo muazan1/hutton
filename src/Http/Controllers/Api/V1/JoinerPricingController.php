@@ -24,7 +24,9 @@ class JoinerPricingController extends Controller
     public function store(Request $request)
     {
         try {
-            $builder = Customer::where('slug', $request->builder_id)->first();
+            $builder = Customer::select('id')
+                ->where('slug', $request->builder_id)
+                ->first();
 
             $jp = JoinerPricing::where('builder_id', $builder->id)
                 ->where('service_id', $request->service_id)
