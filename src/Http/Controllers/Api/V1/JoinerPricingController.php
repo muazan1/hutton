@@ -28,7 +28,9 @@ class JoinerPricingController extends Controller
                 ->where('slug', $request->builder_id)
                 ->first();
 
-            $jp = JoinerPricing::where('builder_id', $builder->id)
+            $bid = $builder['id'];
+
+            $jp = JoinerPricing::where('builder_id', $bid)
                 ->where('service_id', $request->service_id)
                 ->count();
 
@@ -43,7 +45,7 @@ class JoinerPricingController extends Controller
             }
 
             $data = [
-                'builder_id' => $request->builder_id,
+                'builder_id' => $bid,
                 'service_id' => $request->service_id,
                 'price' => $request->price,
             ];
