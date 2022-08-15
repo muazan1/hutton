@@ -59,9 +59,10 @@ class JoinerController extends Controller
     public function store(Request $request)
     {
         try {
+            $role = Role::where('name', 'joiner')->first();
             $request->merge([
                 'uuid' => (string) Str::uuid(),
-                'role_id' => 2,
+                'role_id' => $role->id,
             ]);
 
             $validator = Validator::make($request->all(), [
@@ -143,8 +144,10 @@ class JoinerController extends Controller
     public function update(Request $request, $joinerId)
     {
         try {
+            $role = Role::where('name', 'joiner')->first();
+
             $request->merge([
-                'role_id' => 2,
+                'role_id' => $role->id,
             ]);
 
             $validator = Validator::make($request->all(), [
