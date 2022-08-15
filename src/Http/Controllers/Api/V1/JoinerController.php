@@ -14,10 +14,8 @@ use Exception;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\Database\Eloquent\Collection;
-
 use App\Models\User;
 use App\Models\Role;
-// use Ramsey\Collection\Collection;
 
 class JoinerController extends Controller
 {
@@ -159,6 +157,7 @@ class JoinerController extends Controller
                 'first_name' => 'required',
                 'last_name' => 'required',
                 'email' => 'required|unique:users',
+                // 'email' => Rule::unique('users')->ignore($joinerId),
                 'phone' => 'required|unique:users',
                 'password' => ['required', Password::min(8)],
                 'confirm_password' => [
@@ -182,8 +181,8 @@ class JoinerController extends Controller
                 'first_name' => $request['first_name'],
                 'last_name' => $request['last_name'],
                 'email' => $request['email'],
-                'phone' => $request['phone'],
                 'password' => Hash::make($request['password']),
+                'phone' => $request['phone'],
                 'address' => $request->address,
             ];
 
