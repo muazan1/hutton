@@ -120,12 +120,8 @@ class HsJobsController extends Controller
                     ->where('service_id', $job->service_id)
                     ->first();
 
-                dump($joinerPricing);
-
-                $joinerPay += 10;
+                $joinerPay += $joinerPricing->price;
             }
-
-            // $joinerPay = $jobs->sum('amount');
 
             $profit = $totalAmount - $joinerPay;
 
