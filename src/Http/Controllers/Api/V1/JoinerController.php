@@ -58,8 +58,10 @@ class JoinerController extends Controller
     }
     public function store(Request $request)
     {
+        // dd($request);
         try {
             $role = Role::where('name', 'joiner')->first();
+
             $request->merge([
                 'uuid' => (string) Str::uuid(),
                 'role_id' => $role->id,
@@ -151,21 +153,28 @@ class JoinerController extends Controller
             $request->merge([
                 'role_id' => $role->id,
             ]);
+            $joiner = User::findOrFail($joinerId);
+
+            //     $request->password == null &&
+            // if (
+            //     $request->cofirm_password == null
+            // ) {
+            //     // $request->password == $joiner->
+            // }
 
             $validator = Validator::make($request->all(), [
                 'role_id' => 'required',
                 'first_name' => 'required',
                 'last_name' => 'required',
-                'email' => 'required|unique:users',
-                // 'email' => Rule::unique('users')->ignore($joinerId),
-                'phone' => 'required|unique:users',
-                'password' => ['required', Password::min(8)],
-                'confirm_password' => [
-                    'required_with:password',
-                    'same:password',
-                    Password::min(8),
-                ],
-                'address' => 'nullable',
+                'email' => Rule::unique('users')->ignore($joinerId),
+                // 'phone' => 'required|unique:users',
+                // 'password' => ['required', Password::min(8)],
+                // 'confirm_password' => [
+                //     'required_with:password',
+                //     'same:password',
+                //     Password::min(8),
+                // ],
+                // 'address' => 'nullable',
             ]);
 
             if ($validator->fails()) {
@@ -186,9 +195,12 @@ class JoinerController extends Controller
                 'address' => $request->address,
             ];
 
-            $joiner = User::findOrFail($joinerId);
-
             $joiner->update($data);
+
+            $joiner->address = $request->address;
+            $joiner->phone = $request->phone;
+
+            $joiner->save();
 
             $message = 'Joiner Updated Successfully';
 
