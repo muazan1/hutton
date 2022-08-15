@@ -105,10 +105,6 @@ class JoinerController extends Controller
             $user->phone = $request->phone;
 
             $user->save();
-            // $user->address([
-            //     'address' => $request->address,
-            //     'phone' => $request->phone,
-            // ]);
 
             $message = 'Joiner Added Successfully';
 
