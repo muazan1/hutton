@@ -89,6 +89,12 @@ class HsJobsController extends Controller
             // dd('Muazan');
             $search = $request->search ?? '';
 
+            $alljobs = HsJob::with('service', 'plot')
+                ->where('plot_id', $plotId)
+                // ->where(function ($query) use ($search) {
+                //     $query->where('plot_name', 'LIKE', '%' . $search . '%');
+                // })
+                ->get();
             $jobs = HsJob::with('service', 'plot')
                 ->where('plot_id', $plotId)
                 // ->where(function ($query) use ($search) {
@@ -96,19 +102,19 @@ class HsJobsController extends Controller
                 // })
                 ->paginate(10);
 
-            $completed = $jobs->where('status', 'completed')->count();
+            $completed = $alljobs->where('status', 'completed')->count();
 
-            $partCompleted = $jobs
+            $partCompleted = $alljobs
                 ->where('status', 'partial-complete')
                 ->count();
 
-            $notStarted = $jobs->where('status', 'not-started')->count();
+            $notStarted = $alljobs->where('status', 'not-started')->count();
 
-            $totalAmount = $jobs->sum('amount');
+            $totalAmount = $alljobs->sum('amount');
 
             $joinerPay = 0;
 
-            foreach ($jobs as $job) {
+            foreach ($alljobs as $job) {
                 $buidlingType = BuildingType::find(
                     $job->plot->building_type_id
                 );
@@ -130,6 +136,7 @@ class HsJobsController extends Controller
                 'message' => '',
                 'data' => [
                     'jobs' => $jobs,
+                    'alljobs' => $alljobs,
                     'completed' => $completed,
                     'partCompleted' => $partCompleted,
                     'notStarted' => $notStarted,
