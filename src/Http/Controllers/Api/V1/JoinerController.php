@@ -46,7 +46,7 @@ class JoinerController extends Controller
             return response()->json([
                 'type' => 'success',
                 'message' => '',
-                'data' => ['joiner' => $joiners],
+                'data' => ['joiner' => $joiners, 'meta' => $meta],
             ]);
         } catch (\Throwable $th) {
             $message = $th->getMessage();
