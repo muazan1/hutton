@@ -107,4 +107,25 @@ class PlotsController extends Controller
             ]);
         }
     }
+
+    public function edit(Request $request, $plotId)
+    {
+        try {
+            $plot = Plot::findOrFail($plotId);
+
+            return response()->json([
+                'type' => 'success',
+                'message' => '',
+                'data' => ['plot' => $plot],
+            ]);
+        } catch (\Throwable $th) {
+            $message = $th->getMessage();
+
+            return response()->json([
+                'type' => 'error',
+                'message' => $message,
+                'data' => '',
+            ]);
+        }
+    }
 }
