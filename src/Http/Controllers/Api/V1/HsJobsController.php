@@ -15,7 +15,7 @@ use Mockery\Container;
 
 use Sty\Hutton\Http\Requests\CreateSiteRequest;
 
-use Sty\Hutton\Models\{HsJob, Plot, Site, Customer, ServicePricing};
+use Sty\Hutton\Models\{HsJob, Plot, Site, BuildingType, ServicePricing};
 
 class HsJobsController extends Controller
 {
@@ -102,7 +102,18 @@ class HsJobsController extends Controller
             $joinerPay = 0;
 
             foreach ($jobs as $job) {
-                dump($job);
+                $buidlingType = BuildingType::find(
+                    $job->plot->building_type_id
+                );
+
+                $joinerPricing = JoinerPricing::where(
+                    'builder_id',
+                    $buidlingType->site->customer_id
+                )
+                    ->where('service_id', $job->service_id)
+                    ->first();
+
+                dump($joinerPricing);
 
                 $joinerPay += 10;
             }
