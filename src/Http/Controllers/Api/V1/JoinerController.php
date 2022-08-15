@@ -91,32 +91,24 @@ class JoinerController extends Controller
                 ]);
             }
 
-            // $user = new User();
-            // $user->uuid = $request->uuid;
-            // $user->role_id = $request->role_id;
-            // $user->first_name = $request->first_name;
-            // $user->last_name = $request->last_name;
-            // $user->uuid = $request->uuid;
-            // $user->uuid = $request->uuid;
-            // $user->uuid = $request->uuid;
-            // $user->uuid = $request->uuid;
             $data = [
                 'uuid' => $request->uuid,
                 'role_id' => $request->role_id,
                 'first_name' => $request['first_name'],
                 'last_name' => $request['last_name'],
                 'email' => $request['email'],
-                // 'phone' => $request['phone'],
                 'password' => Hash::make($request['password']),
-                // 'address' => $request->address,
             ];
 
             $user = User::create($data);
+            $user->address = $request->address;
+            $user->phone = $request->phone;
 
-            $user->update([
-                'address' => $request->address,
-                'phone' => $request->phone,
-            ]);
+            $user->save();
+            // $user->address([
+            //     'address' => $request->address,
+            //     'phone' => $request->phone,
+            // ]);
 
             $message = 'Joiner Added Successfully';
 
