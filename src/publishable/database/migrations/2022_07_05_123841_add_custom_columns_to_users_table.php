@@ -29,10 +29,10 @@ class AddCustomColumnsToUsersTable extends Migration
                 ->after('email')
                 ->nullable();
 
-            // $table
-            //     ->string('address')
-            //     ->after('password')
-            //     ->nullable();
+            $table
+                ->string('address')
+                ->after('phone')
+                ->nullable();
 
             // $table
             //     ->string('two_factor_secret')
