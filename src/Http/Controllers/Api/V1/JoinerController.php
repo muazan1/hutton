@@ -16,6 +16,7 @@ use Illuminate\Validation\Rules\Password;
 use Illuminate\Database\Eloquent\Collection;
 
 use App\Models\User;
+use App\Models\Role;
 // use Ramsey\Collection\Collection;
 
 class JoinerController extends Controller
