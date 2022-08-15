@@ -102,7 +102,8 @@ class HsJobsController extends Controller
             $joinerPay = 0;
 
             foreach ($jobs as $job) {
-                dd($job);
+                dump($job);
+
                 $joinerPay += 10;
             }
 
