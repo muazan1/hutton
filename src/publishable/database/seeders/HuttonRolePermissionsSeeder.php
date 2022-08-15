@@ -42,6 +42,11 @@ class HuttonRolePermissionsSeeder extends Seeder
                 'permissionable_id' => '1',
                 'permissionable_type' => 'App\Models\Role',
             ], // ..      delete
+            [
+                'permission_id' => 42,
+                'permissionable_id' => '3',
+                'permissionable_type' => 'App\Models\Role',
+            ], // ..      delete
         ]);
     }
 }
