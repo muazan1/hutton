@@ -15,7 +15,14 @@ use Mockery\Container;
 
 use Sty\Hutton\Http\Requests\CreateSiteRequest;
 
-use Sty\Hutton\Models\{HsJob, Plot, Site, BuildingType, ServicePricing};
+use Sty\Hutton\Models\{
+    HsJob,
+    Plot,
+    Site,
+    BuildingType,
+    JoinerPricing,
+    ServicePricing
+};
 
 class HsJobsController extends Controller
 {
