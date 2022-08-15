@@ -99,7 +99,14 @@ class HsJobsController extends Controller
 
             $totalAmount = $jobs->sum('amount');
 
-            $joinerPay = $jobs->sum('amount');
+            $joinerPay = 0;
+
+            foreach ($jobs as $job) {
+                dd($job);
+                $joinerPay += 10;
+            }
+
+            // $joinerPay = $jobs->sum('amount');
 
             $profit = $totalAmount - $joinerPay;
 
