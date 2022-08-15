@@ -79,6 +79,7 @@ class HsJobsController extends Controller
     public function jobsOnPlot(Request $request, $plotId)
     {
         try {
+            // dd('Muazan');
             $search = $request->search ?? '';
 
             $jobs = HsJob::with('service', 'plot')
@@ -96,6 +97,12 @@ class HsJobsController extends Controller
 
             $notStarted = $jobs->where('status', 'not-started')->count();
 
+            $totalAmount = $jobs->sum('amount');
+
+            $joinerPay = $jobs->sum('amount');
+
+            $profit = $totalAmount - $joinerPay;
+
             return response()->json([
                 'type' => 'success',
                 'message' => '',
@@ -104,6 +111,9 @@ class HsJobsController extends Controller
                     'completed' => $completed,
                     'partCompleted' => $partCompleted,
                     'notStarted' => $notStarted,
+                    'totalAmount' => $totalAmount,
+                    'joinerPay' => $joinerPay,
+                    'profit' => $profit,
                 ],
             ]);
         } catch (\Throwable $th) {
