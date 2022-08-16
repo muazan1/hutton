@@ -270,14 +270,14 @@ class HuttonPermissionsSeeder extends Seeder
 
             // Jobs module
             [
-                'id' => 80,
+                'id' => 85,
                 'name' => 'Jobs',
                 'module' => 'jobs',
                 'permission' => 'joiner-jobs',
                 'api_permission' => 'joiner:jobs',
             ],
             [
-                'id' => 81,
+                'id' => 86,
                 'name' => 'Admin Jobs',
                 'module' => 'jobs',
                 'permission' => 'admin-jobs',
@@ -286,21 +286,21 @@ class HuttonPermissionsSeeder extends Seeder
 
             // work module
             [
-                'id' => 51,
+                'id' => 90,
                 'name' => 'Weekly Work',
                 'module' => 'work',
                 'permission' => 'weekly-work',
                 'api_permission' => 'work:weekly',
             ],
             [
-                'id' => 52,
+                'id' => 91,
                 'name' => 'My Work History',
                 'module' => 'work',
                 'permission' => 'work-history',
                 'api_permission' => 'work:history',
             ],
             [
-                'id' => 53,
+                'id' => 92,
                 'name' => 'Daily Work',
                 'module' => 'work',
                 'permission' => 'daily-work',
