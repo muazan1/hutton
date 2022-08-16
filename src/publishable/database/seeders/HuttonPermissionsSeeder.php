@@ -16,75 +16,91 @@ class HuttonPermissionsSeeder extends Seeder
     {
         //
         DB::table('permissions')->insert([
-            // Joiners
+            /*  dashboards module */
+
+            // Admin Dashboard
             [
-                'id' => 37,
+                'id' => 50,
+                'name' => 'Admin Dashboard',
+                'module' => 'dashboard',
+                'permission' => 'adminDashboard',
+                'api_permission' => 'admin:dashboard',
+            ],
+            // Builder Dashboard
+            [
+                'id' => 51,
+                'name' => 'Builder Dashboard',
+                'module' => 'dashboard',
+                'permission' => 'buildersDashboard',
+                'api_permission' => 'builder:dashboard',
+            ],
+            // site Dashboard
+            [
+                'id' => 52,
+                'name' => 'Site Dashboard',
+                'module' => 'dashboard',
+                'permission' => 'sitesDashboard',
+                'api_permission' => 'site:dashboard',
+            ],
+            // JOiner Dashboard
+            [
+                'id' => 53,
+                'name' => 'Joiner Dashboard',
+                'module' => 'dashboard',
+                'permission' => 'joinerDashboard',
+                'api_permission' => 'joiner:dashboard',
+            ],
+
+            // Joiners module
+            [
+                'id' => 55,
                 'name' => 'Joiners view',
                 'module' => 'joiners',
                 'permission' => 'view',
                 'api_permission' => 'joiners:view',
             ],
             [
-                'id' => 38,
+                'id' => 56,
                 'name' => 'Joiners create',
                 'module' => 'joiners',
                 'permission' => 'create',
                 'api_permission' => 'joiners:create',
             ],
             [
-                'id' => 39,
+                'id' => 57,
                 'name' => 'Joiners edit',
                 'module' => 'joiners',
                 'permission' => 'edit',
                 'api_permission' => 'joiners:edit',
             ],
             [
-                'id' => 40,
+                'id' => 58,
                 'name' => 'Joiners delete',
                 'module' => 'joiners',
                 'permission' => 'delete',
                 'api_permission' => 'joiners:delete',
             ],
             [
-                'id' => 41,
+                'id' => 59,
                 'name' => 'Joiners browse',
                 'module' => 'joiners',
                 'permission' => 'browse',
                 'api_permission' => 'joiners:browse',
             ],
 
-            // Admin Dashboard
-            [
-                'id' => 47,
-                'name' => 'Admin Dashboard',
-                'module' => 'dashboard',
-                'permission' => 'admin-dashboard',
-                'api_permission' => 'admin:dashboard',
-            ],
-            // Builder Dashboard
-            [
-                'id' => 48,
-                'name' => 'Builder Dashboard',
-                'module' => 'dashboard',
-                'permission' => 'builder-dashboard',
-                'api_permission' => 'builder:dashboard',
-            ],
-            // site Dashboard
-            [
-                'id' => 49,
-                'name' => 'Site Dashboard',
-                'module' => 'dashboard',
-                'permission' => 'site-dashboard',
-                'api_permission' => 'site:dashboard',
-            ],
-            // JOiner Dashboard
-            [
-                'id' => 50,
-                'name' => 'Joiner Dashboard',
-                'module' => 'dashbaord',
-                'permission' => 'joiner-dashboard',
-                'api_permission' => 'joiner:dashboard',
-            ],
+            // Builders module
+
+            // Sites Module module
+
+            // Building types module
+
+            // Plots module
+
+            // Service Pricings module
+
+            // joiners Pricings module
+
+            // work module
             [
                 'id' => 51,
                 'name' => 'Weekly Work',
@@ -106,6 +122,9 @@ class HuttonPermissionsSeeder extends Seeder
                 'permission' => 'daily-work',
                 'api_permission' => 'work:daily',
             ],
+
+            /* permissions end here */
+
             [
                 'id' => 54,
                 'name' => 'Jobs',
