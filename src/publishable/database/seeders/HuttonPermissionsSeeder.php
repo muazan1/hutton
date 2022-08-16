@@ -150,6 +150,36 @@ class HuttonPermissionsSeeder extends Seeder
                 'permission' => 'delete-builder',
                 'api_permission' => 'builder:delete',
             ],
+
+            // sites module
+            [
+                'id' => 64,
+                'name' => 'Browse site',
+                'module' => 'site',
+                'permission' => 'browse-site',
+                'api_permission' => 'site:browse',
+            ],
+            [
+                'id' => 65,
+                'name' => 'Add site',
+                'module' => 'site',
+                'permission' => 'add-site',
+                'api_permission' => 'site:create',
+            ],
+            [
+                'id' => 66,
+                'name' => 'Edit site',
+                'module' => 'site',
+                'permission' => 'edit-site',
+                'api_permission' => 'site:edit',
+            ],
+            [
+                'id' => 67,
+                'name' => 'Delete site',
+                'module' => 'site',
+                'permission' => 'delete-site',
+                'api_permission' => 'site:delete',
+            ],
         ]);
     }
 }
