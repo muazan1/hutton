@@ -36,12 +36,52 @@ class HuttonRolePermissionsSeeder extends Seeder
                 'permission_id' => 40,
                 'permissionable_id' => '1',
                 'permissionable_type' => 'App\Models\Role',
-            ], // ..      delete
+            ],
             [
                 'permission_id' => 41,
                 'permissionable_id' => '1',
                 'permissionable_type' => 'App\Models\Role',
-            ], // ..      delete
+            ],
+            [
+                'permission_id' => 55,
+                'permissionable_id' => '1',
+                'permissionable_type' => 'App\Models\Role',
+            ],
+            [
+                'permission_id' => 47,
+                'permissionable_id' => '1',
+                'permissionable_type' => 'App\Models\Role',
+            ],
+            [
+                'permission_id' => 48,
+                'permissionable_id' => '1',
+                'permissionable_type' => 'App\Models\Role',
+            ],
+            [
+                'permission_id' => 49,
+                'permissionable_id' => '1',
+                'permissionable_type' => 'App\Models\Role',
+            ],
+            [
+                'permission_id' => 60,
+                'permissionable_id' => '1',
+                'permissionable_type' => 'App\Models\Role',
+            ],
+            [
+                'permission_id' => 61,
+                'permissionable_id' => '1',
+                'permissionable_type' => 'App\Models\Role',
+            ],
+            [
+                'permission_id' => 62,
+                'permissionable_id' => '1',
+                'permissionable_type' => 'App\Models\Role',
+            ],
+            [
+                'permission_id' => 63,
+                'permissionable_id' => '1',
+                'permissionable_type' => 'App\Models\Role',
+            ],
 
             // Joiner Role (permissionable id  === 3)
             [
@@ -68,6 +108,11 @@ class HuttonRolePermissionsSeeder extends Seeder
             ],
             [
                 'permission_id' => 53,
+                'permissionable_id' => '3',
+                'permissionable_type' => 'App\Models\Role',
+            ],
+            [
+                'permission_id' => 54,
                 'permissionable_id' => '3',
                 'permissionable_type' => 'App\Models\Role',
             ],
