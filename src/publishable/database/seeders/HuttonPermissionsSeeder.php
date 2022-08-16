@@ -52,12 +52,35 @@ class HuttonPermissionsSeeder extends Seeder
                 'permission' => 'browse',
                 'api_permission' => 'joiners:browse',
             ],
+
+            // JOiner Dashboard
             [
-                'id' => 42,
+                'id' => 50,
+                'name' => 'Joiner Dashboard',
+                'module' => 'joiner',
+                'permission' => 'joiner-dashboard',
+                'api_permission' => 'joiner:dashboard',
+            ],
+            [
+                'id' => 51,
                 'name' => 'Weekly Work',
                 'module' => 'work',
                 'permission' => 'weekly-work',
                 'api_permission' => 'work:weekly',
+            ],
+            [
+                'id' => 52,
+                'name' => 'My Work History',
+                'module' => 'work',
+                'permission' => 'work-history',
+                'api_permission' => 'work:history',
+            ],
+            [
+                'id' => 53,
+                'name' => 'Daily Work',
+                'module' => 'work',
+                'permission' => 'daily-work',
+                'api_permission' => 'work:daily',
             ],
         ]);
     }

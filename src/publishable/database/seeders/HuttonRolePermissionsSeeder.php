@@ -16,7 +16,7 @@ class HuttonRolePermissionsSeeder extends Seeder
     {
         //
         DB::table('permissionables')->insert([
-            //Joiner Role   (permissionable_id = 3)
+            //admin Role   (permissionable_id = 1)
             [
                 'permission_id' => 37,
                 'permissionable_id' => '1',
@@ -42,11 +42,35 @@ class HuttonRolePermissionsSeeder extends Seeder
                 'permissionable_id' => '1',
                 'permissionable_type' => 'App\Models\Role',
             ], // ..      delete
+
+            // Joiner Role (permissionable id  === 3)
             [
                 'permission_id' => 42,
                 'permissionable_id' => '3',
                 'permissionable_type' => 'App\Models\Role',
-            ], // ..      delete
+            ],
+
+            [
+                'permission_id' => 50,
+                'permissionable_id' => '3',
+                'permissionable_type' => 'App\Models\Role',
+            ],
+            [
+                'permission_id' => 51,
+                'permissionable_id' => '3',
+                'permissionable_type' => 'App\Models\Role',
+            ],
+
+            [
+                'permission_id' => 52,
+                'permissionable_id' => '3',
+                'permissionable_type' => 'App\Models\Role',
+            ],
+            [
+                'permission_id' => 53,
+                'permissionable_id' => '3',
+                'permissionable_type' => 'App\Models\Role',
+            ],
         ]);
     }
 }
