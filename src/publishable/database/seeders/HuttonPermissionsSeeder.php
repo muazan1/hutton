@@ -149,28 +149,28 @@ class HuttonPermissionsSeeder extends Seeder
             ],
             // Building types module
             [
-                'id' => 64,
+                'id' => 68,
                 'name' => 'Browse Building Types',
                 'module' => 'building_types',
                 'permission' => 'browse',
                 'api_permission' => 'building_types:browse',
             ],
             [
-                'id' => 65,
+                'id' => 69,
                 'name' => 'Add Building Types',
                 'module' => 'building_types',
                 'permission' => 'create',
                 'api_permission' => 'building_types:create',
             ],
             [
-                'id' => 66,
+                'id' => 70,
                 'name' => 'Edit Building Types',
                 'module' => 'building_types',
                 'permission' => 'edit',
                 'api_permission' => 'building_types:edit',
             ],
             [
-                'id' => 67,
+                'id' => 71,
                 'name' => 'Delete Building Types',
                 'module' => 'building_types',
                 'permission' => 'delete',
@@ -178,28 +178,28 @@ class HuttonPermissionsSeeder extends Seeder
             ],
             // Plots module
             [
-                'id' => 64,
+                'id' => 72,
                 'name' => 'Browse Plots',
                 'module' => 'plots',
                 'permission' => 'browse',
                 'api_permission' => 'building_types:browse',
             ],
             [
-                'id' => 65,
+                'id' => 73,
                 'name' => 'Add Plots',
                 'module' => 'plots',
                 'permission' => 'create',
                 'api_permission' => 'building_types:create',
             ],
             [
-                'id' => 66,
+                'id' => 74,
                 'name' => 'Edit Plots',
                 'module' => 'plots',
                 'permission' => 'edit',
                 'api_permission' => 'building_types:edit',
             ],
             [
-                'id' => 67,
+                'id' => 75,
                 'name' => 'Delete Plots',
                 'module' => 'plots',
                 'permission' => 'delete',
@@ -208,14 +208,14 @@ class HuttonPermissionsSeeder extends Seeder
 
             // Service Pricings module
             [
-                'id' => 64,
+                'id' => 76,
                 'name' => 'Browse Service Pricing',
                 'module' => 'service_pricing',
                 'permission' => 'browse',
                 'api_permission' => 'service_pricing:browse',
             ],
             [
-                'id' => 65,
+                'id' => 77,
                 'name' => 'Add Service Pricing',
                 'module' => 'service_pricing',
                 'permission' => 'create',
@@ -224,64 +224,64 @@ class HuttonPermissionsSeeder extends Seeder
 
             // joiners Pricings module
             [
-                'id' => 64,
+                'id' => 78,
                 'name' => 'Browse Joiner Pricing',
                 'module' => 'joiner_pricing',
                 'permission' => 'browse',
                 'api_permission' => 'joiner_pricing:browse',
             ],
             [
-                'id' => 65,
+                'id' => 79,
                 'name' => 'Add Joiner Pricing',
                 'module' => 'joiner_pricing',
                 'permission' => 'create',
                 'api_permission' => 'joiner_pricing:create',
             ],
 
-            // Jobs module
-            [
-                'id' => 54,
-                'name' => 'Jobs',
-                'module' => 'jobs',
-                'permission' => 'joiner-jobs',
-                'api_permission' => 'joiner:jobs',
-            ],
-            [
-                'id' => 55,
-                'name' => 'Admin Jobs',
-                'module' => 'jobs',
-                'permission' => 'admin-jobs',
-                'api_permission' => 'admin:jobs',
-            ],
-
             // Services module
             [
-                'id' => 64,
+                'id' => 80,
                 'name' => 'Browse Services',
                 'module' => 'services',
                 'permission' => 'browse',
                 'api_permission' => 'services:browse',
             ],
             [
-                'id' => 65,
+                'id' => 81,
                 'name' => 'Add Services',
                 'module' => 'services',
                 'permission' => 'create',
                 'api_permission' => 'services:create',
             ],
             [
-                'id' => 66,
+                'id' => 82,
                 'name' => 'Edit Services',
                 'module' => 'services',
                 'permission' => 'edit',
                 'api_permission' => 'services:edit',
             ],
             [
-                'id' => 67,
+                'id' => 83,
                 'name' => 'Delete Services',
                 'module' => 'services',
                 'permission' => 'delete',
                 'api_permission' => 'services:delete',
+            ],
+
+            // Jobs module
+            [
+                'id' => 80,
+                'name' => 'Jobs',
+                'module' => 'jobs',
+                'permission' => 'joiner-jobs',
+                'api_permission' => 'joiner:jobs',
+            ],
+            [
+                'id' => 81,
+                'name' => 'Admin Jobs',
+                'module' => 'jobs',
+                'permission' => 'admin-jobs',
+                'api_permission' => 'admin:jobs',
             ],
 
             // work module
