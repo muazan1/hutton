@@ -192,6 +192,29 @@ class HsJobsController extends Controller
             ]);
         }
     }
+    public function removeJobToJoiner(Request $request, $jobId)
+    {
+        try {
+            $job = HsJob::find($jobId);
+
+            $job->joiners()->detach($request->joiner_id);
+
+            $message = 'Joiner Successfully Removed from Job';
+
+            return response()->json([
+                'type' => 'success',
+                'message' => $message,
+                'data' => '',
+            ]);
+        } catch (\Throwable $th) {
+            $message = $th->getMessage();
+
+            return response()->json([
+                'type' => 'error',
+                'message' => $message,
+            ]);
+        }
+    }
 
     public function adminJobs(Request $request)
     {
