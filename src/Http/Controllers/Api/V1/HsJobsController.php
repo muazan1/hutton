@@ -252,7 +252,7 @@ class HsJobsController extends Controller
     public function getJob(Request $request, $jobId)
     {
         try {
-            $job = HsJob::with('joiners')->find($jobId);
+            $job = HsJob::find($jobId);
 
             return response()->json([
                 'type' => 'success',
