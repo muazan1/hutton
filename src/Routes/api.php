@@ -174,6 +174,12 @@ Route::group(['prefix' => 'api/v1', 'as' => 'api/v1'], function () {
         'assignJobToJoiner',
     ])->name('assign.joiner');
 
+    // route for removeing job to joiner
+    Route::post('job/{jobId}/remove-joiner', [
+        HsJobsController::class,
+        'removeJobToJoiner',
+    ])->name('remove.joiner');
+
     // Route for Joiner Work History
     Route::get('joiner/{joinerId}/work-history', [
         WorkController::class,
