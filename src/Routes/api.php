@@ -134,6 +134,12 @@ Route::group(['prefix' => 'api/v1', 'as' => 'api/v1'], function () {
         'joinerWeeklyWork',
     ])->name('joiner.weeklyWork');
 
+    // Get Current week
+    Route::get('joiner/{joinerId}/current_week', [
+        WeeklyWorkController::class,
+        'currentWeek',
+    ]);
+
     //Route for Wage Sheet
     Route::get('wage-sheet', [WageSheetController::class, 'wageSheet'])->name(
         'wage-sheet'

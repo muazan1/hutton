@@ -122,4 +122,28 @@ class WeeklyWorkController extends Controller
             ]);
         }
     }
+
+    public function currentWeek(Request $request, $joinerId)
+    {
+        try {
+            $weeklyWork = WeeklyWork::with('dailyWork')
+                ->where('user_id', $joinerId)
+                ->where('status', 'in-progress')
+                ->first();
+
+            return response()->json([
+                'type' => 'success',
+                'message' => '',
+                'data' => ['weeklyWork' => $weeklyWork],
+            ]);
+        } catch (\Throwable $th) {
+            $message = $th->getMessage();
+
+            return response()->json([
+                'type' => 'error',
+                'message' => $message,
+                'data' => '',
+            ]);
+        }
+    }
 }
