@@ -22,7 +22,7 @@ class HsJob extends Model
         return $this->belongsTo(Service::class, 'service_id', 'id');
     }
 
-    public function joiner()
+    public function joiners()
     {
         return $this->belongsTo(User::class, 'assigned_user_id', 'id');
     }
