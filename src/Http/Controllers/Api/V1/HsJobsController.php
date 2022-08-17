@@ -260,7 +260,7 @@ class HsJobsController extends Controller
 
             $roleId = Role::where('name', 'joiner')->first();
 
-            $joiners = User::where('role_id', $roleId->id)->paginte(10);
+            $joiners = User::where('role_id', $roleId->id)->paginate(10);
 
             return response()->json([
                 'type' => 'success',
