@@ -20,9 +20,9 @@ class CreateHsJobsTable extends Migration
 
             $table->integer('service_id');
 
-            $table->integer('user_id')->nullable();
+            // $table->integer('user_id')->nullable();
 
-            $table->integer('assigned_user_id')->nullable();
+            // $table->integer('assigned_user_id')->nullable();
 
             $table
                 ->decimal('percent_complete', $precision = 3, $scale = 2)
