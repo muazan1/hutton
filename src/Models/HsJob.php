@@ -24,7 +24,12 @@ class HsJob extends Model
 
     public function joiners()
     {
-        return $this->belongsToMany(User::class, 'plot_jobs_users');
+        return $this->belongsToMany(
+            User::class,
+            'plot_jobs_users',
+            'plot_job_id',
+            'user_id'
+        );
     }
     // public function joiners()
     // {
