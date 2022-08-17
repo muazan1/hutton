@@ -160,6 +160,8 @@ class HsJobsController extends Controller
         try {
             $job = HsJob::find($jobId);
 
+            $job->joiners()->attch($request->joiner_id);
+
             // if ($job->assigned_user_id != null) {
             //     $message = 'Another Joiner Already Assigned to Job';
 
