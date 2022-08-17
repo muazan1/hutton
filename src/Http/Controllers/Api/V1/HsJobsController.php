@@ -91,13 +91,13 @@ class HsJobsController extends Controller
             // dd('Muazan');
             $search = $request->search ?? '';
 
-            $alljobs = HsJob::with('service', 'plot')
+            $alljobs = HsJob::with('service', 'plot', 'joiners')
                 ->where('plot_id', $plotId)
                 // ->where(function ($query) use ($search) {
                 //     $query->where('plot_name', 'LIKE', '%' . $search . '%');
                 // })
                 ->get();
-            $jobs = HsJob::with('service', 'plot')
+            $jobs = HsJob::with('service', 'plot', 'joiners')
                 ->where('plot_id', $plotId)
                 // ->where(function ($query) use ($search) {
                 //     $query->where('plot_name', 'LIKE', '%' . $search . '%');
@@ -174,7 +174,7 @@ class HsJobsController extends Controller
             //     ]);
             // }
 
-            $job->update(['assigned_user_id' => $request->joiner_id]);
+            // $job->update(['assigned_user_id' => $request->joiner_id]);
 
             $message = 'Joiner Successfully Assigned to Job';
 
