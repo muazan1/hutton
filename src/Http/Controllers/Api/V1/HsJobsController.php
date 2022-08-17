@@ -24,6 +24,8 @@ use Sty\Hutton\Models\{
     ServicePricing
 };
 
+use App\Models\{User, Role};
+
 class HsJobsController extends Controller
 {
     public function GenerateJobs(Request $request)
@@ -256,10 +258,14 @@ class HsJobsController extends Controller
         try {
             $job = HsJob::with('joiners')->find($jobId);
 
+            $roleId = Role::where('name', 'joiner')->first();
+
+            $joiners = User::where('role_id', $roleId->id)->paginte();
+
             return response()->json([
                 'type' => 'success',
                 'message' => '',
-                'data' => ['job' => $job],
+                'data' => ['job' => $job, 'joiners' => $joiners],
             ]);
         } catch (\Throwable $th) {
             $message = $th->getMessage();
