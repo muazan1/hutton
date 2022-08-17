@@ -185,4 +185,8 @@ Route::group(['prefix' => 'api/v1', 'as' => 'api/v1'], function () {
     Route::get('admin/jobs', [HsJobsController::class, 'adminJobs'])->name(
         'admin.jobs'
     );
+
+    Route::get('jobs/{job}', [HsJobsController::class, 'getJob'])->name(
+        'get.job'
+    );
 });

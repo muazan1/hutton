@@ -248,4 +248,25 @@ class HsJobsController extends Controller
             ]);
         }
     }
+
+    public function getJob(Request $request, $jobId)
+    {
+        try {
+            $job = HsJob::find($jobId);
+
+            return response()->json([
+                'type' => 'success',
+                'message' => '',
+                'data' => ['job' => $job],
+            ]);
+        } catch (\Throwable $th) {
+            $message = $th->getMessage();
+
+            return response()->json([
+                'type' => 'error',
+                'message' => $message,
+                'data' => '',
+            ]);
+        }
+    }
 }
