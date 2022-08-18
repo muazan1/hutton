@@ -296,22 +296,22 @@ class HuttonPermissionsSeeder extends Seeder
                 'id' => 91,
                 'name' => 'My Work History',
                 'module' => 'work',
-                'permission' => 'work-history',
+                'permission' => 'my-work-history',
                 'api_permission' => 'work:history',
             ],
             [
                 'id' => 92,
-                'name' => 'Daily Work',
-                'module' => 'work',
-                'permission' => 'daily-work',
-                'api_permission' => 'work:daily',
-            ],
-            [
-                'id' => 93,
                 'name' => 'My Daily Work',
                 'module' => 'work',
                 'permission' => 'my-daily-work',
                 'api_permission' => 'mywork:daily',
+            ],
+            [
+                'id' => 93,
+                'name' => 'Daily Work',
+                'module' => 'work',
+                'permission' => 'daily-work',
+                'api_permission' => 'work:daily',
             ],
 
             /* permissions end here */
