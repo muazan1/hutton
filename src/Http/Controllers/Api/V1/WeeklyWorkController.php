@@ -106,7 +106,11 @@ class WeeklyWorkController extends Controller
     public function joinerWeeklyWork(Request $request, $weekId)
     {
         try {
-            $weeklyWork = WeeklyWork::with('dailyWork')->findOrFail($weekId);
+            $weeklyWork = WeeklyWork::with(
+                'dailyWork',
+                'dailyWork.site',
+                'dailyWork.plot'
+            )->findOrFail($weekId);
 
             return response()->json([
                 'type' => 'success',
