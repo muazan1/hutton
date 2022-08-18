@@ -132,7 +132,7 @@ class WeeklyWorkController extends Controller
                 ->where('status', 'in-progress')
                 ->first();
 
-            $dailyWork = DailyWork::where('week_id', $weeklyWork->id)->paginate(
+            $dailyWork = DailyWork::with('site','plot')->where('week_id', $weeklyWork->id)->paginate(
                 10
             );
 
