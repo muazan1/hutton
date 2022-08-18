@@ -129,7 +129,7 @@ Route::group(['prefix' => 'api/v1', 'as' => 'api/v1'], function () {
     ])->name('delete.dailyWork');
 
     // Route for viewing joiner weekly work
-    Route::get('joiner/{joinerId}/week/{weekId}/work', [
+    Route::get('week/{weekId}/work', [
         WeeklyWorkController::class,
         'joinerWeeklyWork',
     ])->name('joiner.weeklyWork');
