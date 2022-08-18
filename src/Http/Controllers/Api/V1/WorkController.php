@@ -15,7 +15,7 @@ class WorkController extends Controller
             $weeklyWorks = WeeklyWork::where('user_id', $joinerId)->get();
 
             return response()->json([
-                'type' => 'error',
+                'type' => 'success',
                 'message' => '',
                 'data' => ['weeklyWorks' => $weeklyWorks],
             ]);
