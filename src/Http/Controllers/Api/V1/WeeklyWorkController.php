@@ -103,7 +103,7 @@ class WeeklyWorkController extends Controller
         }
     }
 
-    public function joinerWeeklyWork(Request $request, $joinerId, $weekId)
+    public function joinerWeeklyWork(Request $request, $weekId)
     {
         try {
             $weeklyWork = WeeklyWork::with('dailyWork')->findOrFail($weekId);
