@@ -23,6 +23,7 @@ use Sty\Hutton\Models\{
     Site,
     Customer,
     ServicePricing,
+    DailyWork,
     WeeklyWork
 };
 
@@ -131,10 +132,17 @@ class WeeklyWorkController extends Controller
                 ->where('status', 'in-progress')
                 ->first();
 
+            $dailyWork = DailyWork::where('week_id', $weeklyWork->id)->paginate(
+                10
+            );
+
             return response()->json([
                 'type' => 'success',
                 'message' => '',
-                'data' => ['weeklyWork' => $weeklyWork],
+                'data' => [
+                    'weeklyWork' => $weeklyWork,
+                    'dailyWork' => $dailyWork,
+                ],
             ]);
         } catch (\Throwable $th) {
             $message = $th->getMessage();
