@@ -18,7 +18,7 @@ class StartNewWeek extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'For Starting Joiners New Week';
 
     /**
      * Create a new command instance.
@@ -37,6 +37,6 @@ class StartNewWeek extends Command
      */
     public function handle()
     {
-        return 0;
+        return 'Created';
     }
 }

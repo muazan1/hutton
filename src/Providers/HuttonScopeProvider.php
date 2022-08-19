@@ -4,6 +4,8 @@ namespace Sty\Hutton\Providers;
 
 use Illuminate\Support\ServiceProvider;
 
+use Sty\Hutton\Console\Commands\StartNewWeek;
+
 class HuttonScopeProvider extends ServiceProvider
 {
     /**
@@ -45,5 +47,9 @@ class HuttonScopeProvider extends ServiceProvider
                 'seeders'
             ),
         ]);
+
+        if ($this->app->runningInConsole()) {
+            $this->commands([StartNewWeek::class]);
+        }
     }
 }
