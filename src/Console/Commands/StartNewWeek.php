@@ -4,7 +4,7 @@ namespace Sty\Hutton\Console\Commands;
 
 use Illuminate\Console\Command;
 
-use Sty\Hutton\Http\Jobs\StartWeek;
+use Sty\Hutton\Http\Service\GenerateNewWeeks;
 
 class StartNewWeek extends Command
 {
@@ -39,7 +39,6 @@ class StartNewWeek extends Command
      */
     public function handle()
     {
-        // return 'Created';
-        new StartWeek('Hello World');
+        GenerateNewWeeks::newWeeks();
     }
 }

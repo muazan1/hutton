@@ -9,20 +9,18 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
-class StartWeek implements ShouldQueue
+class StartWeek
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-
-    public $name;
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct($name)
+    public function __construct()
     {
-        $this->name = $name;
+        //
     }
 
     /**
@@ -32,6 +30,6 @@ class StartWeek implements ShouldQueue
      */
     public function handle()
     {
-        \Log::info($name);
+        //
     }
 }
