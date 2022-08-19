@@ -40,5 +40,7 @@ class StartNewWeek extends Command
     public function handle()
     {
         GenerateNewWeeks::newWeeks();
+
+        return 0;
     }
 }
