@@ -13,14 +13,16 @@ class StartWeek implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    public $name;
+
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($name)
     {
-        //
+        $this->name = $name;
     }
 
     /**
@@ -30,6 +32,6 @@ class StartWeek implements ShouldQueue
      */
     public function handle()
     {
-        //
+        \Log::info($name);
     }
 }

@@ -4,6 +4,8 @@ namespace Sty\Hutton\Console\Commands;
 
 use Illuminate\Console\Command;
 
+use Sty\Hutton\Http\Jobs\StartWeek;
+
 class StartNewWeek extends Command
 {
     /**
@@ -37,6 +39,7 @@ class StartNewWeek extends Command
      */
     public function handle()
     {
-        return 'Created';
+        // return 'Created';
+        new StartWeek('Hello World');
     }
 }
