@@ -153,7 +153,7 @@ class WeeklyWorkController extends Controller
 
             return response()->json([
                 'type' => 'error',
-                'message' => $message,
+                'message' => 'Sorry! there no week Active',
                 'data' => '',
             ]);
         }
