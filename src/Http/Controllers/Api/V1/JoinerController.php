@@ -38,7 +38,7 @@ class JoinerController extends Controller
         try {
             $role = Role::where('name', 'joiner')->first();
 
-            $joiners = User::with('weeklyWork')
+            $joiners = HuttonUser::with('weeklyWork')
                 ->where('role_id', $role->id)
                 ->get();
 
