@@ -13,14 +13,14 @@ class StartNewWeek extends Command
      *
      * @var string
      */
-    protected $signature = 'start:joiner-weeks';
+    protected $signature = 'start:week';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'For Starting Joiners New Week';
+    protected $description = 'For Starting Joiners New Week & Close Last Week';
 
     /**
      * Create a new command instance.
@@ -40,6 +40,8 @@ class StartNewWeek extends Command
     public function handle()
     {
         GenerateNewWeeks::newWeeks();
+
+        $this->info('Creating New Weeks for Joiners');
 
         return 0;
     }

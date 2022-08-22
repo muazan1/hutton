@@ -13,7 +13,6 @@ use phpDocumentor\Reflection\Types\Null_;
 
 class GenerateNewWeeks
 {
-    //
     public static function newWeeks()
     {
         $joinerRole = Role::where('name', 'joiner')->first();
