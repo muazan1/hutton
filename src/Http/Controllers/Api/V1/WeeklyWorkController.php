@@ -13,6 +13,8 @@ use Exception;
 use Illuminate\Validation\Rule;
 use Mockery\Container;
 
+use Carbon\Carbon;
+
 use Sty\Hutton\Http\Requests\CreateSiteRequest;
 
 use Sty\Hutton\Mail\Work\WorkSend;
@@ -138,6 +140,38 @@ class WeeklyWorkController extends Controller
 
             $dailyWork = DailyWork::with('site', 'plot')
                 ->where('week_id', $weeklyWork->id)
+                ->paginate(10);
+
+            return response()->json([
+                'type' => 'success',
+                'message' => '',
+                'data' => [
+                    'weeklyWork' => $weeklyWork,
+                    'dailyWork' => $dailyWork,
+                ],
+            ]);
+        } catch (\Throwable $th) {
+            $message = $th->getMessage();
+
+            return response()->json([
+                'type' => 'error',
+                'message' => 'Sorry! there no week Active',
+                'data' => '',
+            ]);
+        }
+    }
+
+    public function currentDay(Request $request, $joinerId)
+    {
+        try {
+            $weeklyWork = WeeklyWork::with('dailyWork')
+                ->where('user_id', $joinerId)
+                ->where('status', 'in-progress')
+                ->first();
+
+            $dailyWork = DailyWork::with('site', 'plot')
+                ->where('week_id', $weeklyWork->id)
+                ->whereDate('created_at', Carbon::now())
                 ->paginate(10);
 
             return response()->json([
