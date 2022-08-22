@@ -37,7 +37,9 @@ class JoinerController extends Controller
         try {
             $role = Role::where('name', 'joiner')->first();
 
-            $joiners = User::where('role_id', $role->id)->get();
+            $joiners = User::with('weeklyWork')
+                ->where('role_id', $role->id)
+                ->get();
 
             $meta = User::where('role_id', $role->id)->paginate(10);
 
@@ -155,13 +157,6 @@ class JoinerController extends Controller
             ]);
             $joiner = User::findOrFail($joinerId);
 
-            //     $request->password == null &&
-            // if (
-            //     $request->cofirm_password == null
-            // ) {
-            //     // $request->password == $joiner->
-            // }
-
             $validator = Validator::make($request->all(), [
                 'role_id' => 'required',
                 'first_name' => 'required',
@@ -198,6 +193,7 @@ class JoinerController extends Controller
             $joiner->update($data);
 
             $joiner->address = $request->address;
+
             $joiner->phone = $request->phone;
 
             $joiner->save();
