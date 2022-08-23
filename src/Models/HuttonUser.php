@@ -21,6 +21,6 @@ class HuttonUser extends Authenticatable
 
     public function weeklyWork()
     {
-        return $this->hasMany(WeeklyWork::class,'user_id','id');
+        return $this->hasMany(WeeklyWork::class, 'user_id', 'id');
     }
 }
