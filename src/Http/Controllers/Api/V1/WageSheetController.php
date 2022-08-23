@@ -15,21 +15,27 @@ use Mockery\Container;
 
 use Sty\Hutton\Http\Requests\CreateSiteRequest;
 
-// use App\Models\User;
+use App\Models\{User, Role};
 
-use Sty\Hutton\Models\{HsJobs, User, Plot, Site, WeeklyWork, DailyWork};
+use Sty\Hutton\Models\{HsJobs, HuttonUser, Plot, Site, WeeklyWork, DailyWork};
 
 class WageSheetController extends Controller
 {
     public function wageSheet(Request $request)
     {
         try {
-            $joiners = User::where('role_id', 2)->get();
+            $role = Role::where('name', 'joiner')->first();
+
+            $joiners = HuttonUser::with('weeklyWork')
+                ->where('role_id', $role->id)
+                ->get();
+
+            $meta = User::where('role_id', $role->id)->paginate(10);
 
             return response()->json([
                 'type' => 'success',
                 'message' => '',
-                'data' => ['joiners' => $joiners],
+                'data' => ['joiner' => $joiners, 'meta' => $meta],
             ]);
         } catch (\Throwable $th) {
             $message = $th->getMessage();
