@@ -59,7 +59,6 @@ class JoinerController extends Controller
     }
     public function store(Request $request)
     {
-        // dd($request);
         try {
             $role = Role::where('name', 'joiner')->first();
 
