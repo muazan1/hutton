@@ -53,13 +53,15 @@ class WageSheetController extends Controller
         try {
             $weekCommencing = $request->week;
 
-            $joiners = User::with([
+            $role = Role::where('name', 'joiner')->first();
+
+            $joiners = HuttonUser::with([
                 'weeklyWork' => function ($query) use ($weekCommencing) {
                     return $query->whereDate('week_start', $weekCommencing);
                 },
             ])
-                ->where('role_id', 2)
-                ->get();
+                ->where('role_id', $role->id)
+                ->paginate();
 
             return response()->json([
                 'type' => 'success',
