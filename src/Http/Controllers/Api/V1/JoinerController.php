@@ -38,9 +38,7 @@ class JoinerController extends Controller
         try {
             $role = Role::where('name', 'joiner')->first();
 
-            $joiners = HuttonUser::with('weeklyWork')
-                ->where('role_id', $role->id)
-                ->get();
+            $joiners = User::where('role_id', $role->id)->get();
 
             $meta = User::where('role_id', $role->id)->paginate(10);
 
