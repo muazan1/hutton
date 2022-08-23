@@ -59,6 +59,7 @@ class WageSheetController extends Controller
                 'weeklyWork' => function ($query) use ($weekCommencing) {
                     return $query->whereDate('week_start', $weekCommencing);
                 },
+                'weeklyWork.dailyWork',
             ])
                 ->where('role_id', $role->id)
                 ->paginate();
