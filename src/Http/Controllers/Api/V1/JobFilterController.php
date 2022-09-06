@@ -20,9 +20,6 @@ use Illuminate\Pagination\LengthAwarePaginator;
 
 use Illuminate\Pagination\Paginator;
 
-
-
-
 class JobFilterController extends Controller
 {
     public function paginate($items, $perPage = 5, $page = null, $options = [])
@@ -115,8 +112,6 @@ class JobFilterController extends Controller
                 'data' => '',
             ]);
         }
-
-
     }
 
 }
