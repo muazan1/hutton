@@ -22,6 +22,8 @@ use DB;
 
 use Str;
 
+use Illuminate\Database\Eloquent\Collection;
+
 use Exception;
 
 class BuildingTypeController extends Controller
@@ -29,6 +31,7 @@ class BuildingTypeController extends Controller
     public function SiteBuildingTypes(Request $request, $siteId)
     {
         try {
+
             $search = $request->search ?? '';
 
             $buildingTypes = BuildingType::where('site_id', $siteId)
