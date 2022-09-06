@@ -166,6 +166,10 @@ Route::group(['prefix' => 'api/v1', 'as' => 'api/v1'], function () {
     // ])->name('jf.get_bt');
 
     // route for completed jobs
+
+//    Route for Jobs Main filter for admin
+    Route::post('admin/jobs/filter' ,[JobFilterController::class,'adminJobFilter'])->name('admin.job.filter');
+
     Route::get('jobs/completed', [
         JobFilterController::class,
         'completedJobs',
@@ -177,7 +181,7 @@ Route::group(['prefix' => 'api/v1', 'as' => 'api/v1'], function () {
         'jobsOnPlot',
     ])->name('jobPlots');
 
-    /* Routes end for job fileters */
+    /* Routes end for job filters */
 
     // route for assigning job to joiner
     Route::post('job/{jobId}/assign-joiner', [
