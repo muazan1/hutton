@@ -63,18 +63,24 @@ class JobFilterController extends Controller
 
         try {
 
-            $jobs = collect(HsJob::with('plot.buildingType.site','service')->get());
+//            $jobs = collect(HsJob::with('plot.buildingType.site','service')->get());
+
+            $jobs = HsJob::with('plot.buildingType.site','service');
 
             if($request->site != null)
             {
-                $jobs = $jobs->where('plot.buildingType.site.id',$request->site);
+                $jobs = $jobs->whereHas('plot.buildingType.site',function ($query) use($request) {
+                    $query->where('id',$request->site);
+                });
             }
-
+//
             if($request->buidling_type != null)
             {
-                $jobs = $jobs->where('plot.buildingType.id',$request->building_type);
+                $jobs = $jobs->whereHas('plot.buildingType',function ($query) use($request) {
+                    $query->where('id',$request->building_type);
+                });
             }
-
+//
             if($request->plot != null )
             {
                 $jobs = $jobs->where('plot_id',$request->plot);
@@ -90,7 +96,8 @@ class JobFilterController extends Controller
                 $jobs = $jobs->where('status',$request->status);
             }
 
-            $jobs = $this->paginate($jobs,10);
+//            $jobs = $this->paginate($jobs,10);
+            $jobs = $jobs->paginate(10);
 
             return response()->json([
                 'type' => 'success',
