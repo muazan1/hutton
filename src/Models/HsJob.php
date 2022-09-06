@@ -25,7 +25,7 @@ class HsJob extends Model
     public function joiners()
     {
         return $this->belongsToMany(
-            User::class,
+            HuttonUser::class,
             'plot_jobs_users',
             'plot_job_id',
             'user_id'

@@ -24,7 +24,7 @@ use Sty\Hutton\Http\Requests\CreateSiteRequest;
 
 use Sty\Hutton\Models\{HsJob, HuttonUser, Plot, Site, BuildingType, JoinerPricing, ServicePricing};
 
-use App\Models\{User, Role};
+use App\Models\{Role};
 
 class HsJobsController extends Controller
 {
@@ -87,20 +87,16 @@ class HsJobsController extends Controller
 
     public function jobsOnPlot(Request $request, $plotId)
     {
+
         try {
             $search = $request->search ?? '';
 
             $alljobs = HsJob::with('service', 'plot', 'joiners')
                 ->where('plot_id', $plotId)
-                // ->where(function ($query) use ($search) {
-                //     $query->where('plot_name', 'LIKE', '%' . $search . '%');
-                // })
                 ->get();
+
             $jobs = HsJob::with('service', 'plot', 'joiners')
                 ->where('plot_id', $plotId)
-                // ->where(function ($query) use ($search) {
-                //     $query->where('plot_name', 'LIKE', '%' . $search . '%');
-                // })
                 ->paginate(10);
 
             $completed = $alljobs->where('status', 'completed')->count();
@@ -127,7 +123,7 @@ class HsJobsController extends Controller
                     ->where('service_id', $job->service_id)
                     ->first();
 
-                $joinerPay += $joinerPricing->price;
+                $joinerPay += $joinerPricing != null ? $joinerPricing->price : 0;
             }
 
             $profit = $totalAmount - $joinerPay;
