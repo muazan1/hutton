@@ -7,13 +7,21 @@ use Illuminate\Routing\Controller;
 use Sty\Hutton\Models\BuildingType;
 
 use Illuminate\Http\Request;
+
 use Illuminate\Support\Facades\Hash;
+
 use Illuminate\Support\Facades\Mail;
+
 use Illuminate\Support\Facades\Validator;
+
 use Illuminate\Validation\Rule;
+
 use DataTables;
+
 use DB;
+
 use Str;
+
 use Exception;
 
 class BuildingTypeController extends Controller

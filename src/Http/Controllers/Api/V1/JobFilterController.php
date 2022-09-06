@@ -9,7 +9,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\{Hash, Mail, Validator};
 
 use phpDocumentor\Reflection\Types\Null_;
+
 use Sty\Hutton\Models\BuildingType;
+
 use Sty\Hutton\Models\HsJob;
 
 class JobFilterController extends Controller
@@ -52,7 +54,7 @@ class JobFilterController extends Controller
                 $building_type = BuildingType::find($request->building_type);
             }
 
-            $jobs = HsJob::all();
+            $jobs = HsJob::get();
 
             if($request->plot != null )
             {
@@ -65,7 +67,7 @@ class JobFilterController extends Controller
             }
 
             $jobs = $jobs->paginate(10);
-            
+
             return response()->json([
                 'type' => 'success',
                 'message' => '',
