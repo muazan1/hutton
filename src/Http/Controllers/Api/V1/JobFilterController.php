@@ -95,7 +95,7 @@ class JobFilterController extends Controller
             return response()->json([
                 'type' => 'success',
                 'message' => '',
-                'data' => $jobs,
+                'data' => ['jobs' => $jobs],
             ]);
 
         }catch (\Throwable $th)
