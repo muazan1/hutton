@@ -11,6 +11,7 @@ use Laravel\Sanctum\HasApiTokens;
 class HuttonUser extends Authenticatable
 {
     protected $table = 'users';
+
     protected $guarded = ['id', 'created_at', 'updated_at'];
 
     protected $hidden = ['password', 'remember_token'];

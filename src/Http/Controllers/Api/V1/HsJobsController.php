@@ -3,26 +3,26 @@
 namespace Sty\Hutton\Http\Controllers\Api\V1;
 
 use Illuminate\Http\Request;
+
 use Illuminate\Routing\Controller;
+
 use Illuminate\Support\Facades\{Hash, Mail, Validator};
 
 use DataTables;
+
 use DB;
+
 use Str;
+
 use Exception;
+
 use Illuminate\Validation\Rule;
+
 use Mockery\Container;
 
 use Sty\Hutton\Http\Requests\CreateSiteRequest;
 
-use Sty\Hutton\Models\{
-    HsJob,
-    Plot,
-    Site,
-    BuildingType,
-    JoinerPricing,
-    ServicePricing
-};
+use Sty\Hutton\Models\{HsJob, HuttonUser, Plot, Site, BuildingType, JoinerPricing, ServicePricing};
 
 use App\Models\{User, Role};
 
@@ -88,7 +88,6 @@ class HsJobsController extends Controller
     public function jobsOnPlot(Request $request, $plotId)
     {
         try {
-            // dd('Muazan');
             $search = $request->search ?? '';
 
             $alljobs = HsJob::with('service', 'plot', 'joiners')
@@ -285,7 +284,7 @@ class HsJobsController extends Controller
 
             $roleId = Role::where('name', 'joiner')->first();
 
-            $joiners = User::where('role_id', $roleId->id)->paginate(10);
+            $joiners = HuttonUser::where('role_id', $roleId->id)->paginate(10);
 
             return response()->json([
                 'type' => 'success',
