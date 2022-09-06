@@ -220,7 +220,9 @@ class HsJobsController extends Controller
     {
         try {
             $search = $request->search ?? '';
+
             $status = $request->status ?? '';
+
             $jobs = HsJob::with(
                 'plot',
                 'plot.buildingType',
@@ -242,7 +244,7 @@ class HsJobsController extends Controller
                 'message' => '',
                 'data' => ['jobs' => $jobs],
             ]);
-        } catch (\Exception $e) {
+        } catch (\Exception $th) {
             $message = $th->getMessage();
 
             return response()->json([
