@@ -87,7 +87,6 @@ class HsJobsController extends Controller
 
     public function jobsOnPlot(Request $request, $plotId)
     {
-
         try {
             $search = $request->search ?? '';
 
