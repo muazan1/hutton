@@ -20,48 +20,133 @@ class DummyData extends Seeder
 
     public function run()
     {
-        for ($i = 1; $i <= 20; $i++) {
-            Customer::create([
-                'uuid' => (string) Str::uuid(),
-                'customer_name' => 'Customer ' . $i,
-
-                'slug' => Str::slug('Customer ' . $i),
-                'email' => 'customer' . $i . '@gmail.com',
-                'street_1' => 'Main University Road',
-                'street_2' => '',
-                'city' => 'Karachi',
-                'postcode' => '7650' . $i,
-                'telephone_number' => '+92312021021' . $i,
-                'county' => 'Sindh',
-            ]);
+//        FOR GENERATING SERVICES
+        for ($i = 1; $i <= 10; $i++) {
 
             Service::create([
                 'service_name' => 'Service ' . $i,
                 'description' => 'Lorem Ipsum dolor sit amit',
             ]);
+        }
 
-            Site::create([
+//      FOR GENERATING SITES
+
+        DB::table('sites')->insert([
+            [
                 'uuid' => (string) Str::uuid(),
-                'customer_id' => $i,
-                'site_name' => 'Site ' . $i,
-                'slug' => Str::slug('Site ' . $i),
+                'customer_id' => 1,
+                'site_name' => 'Abc Site',
+                'slug' => Str::slug('Abc Site'),
                 'street_1' => 'Main University Road',
                 'street_2' => '',
                 'city' => 'Karachi',
                 'postcode' => '76500',
                 'county' => 'Sindh',
-                'telephone_number' => '+9231202102' . $i . '0',
-            ]);
+                'telephone_number' => '+923001234567',
+            ],
+            [
+                'uuid' => (string) Str::uuid(),
+                'customer_id' => 1,
+                'site_name' => 'Def Site',
+                'slug' => Str::slug('Def Site'),
+                'street_1' => 'Main University Road',
+                'street_2' => '',
+                'city' => 'Karachi',
+                'postcode' => '76500',
+                'county' => 'Sindh',
+                'telephone_number' => '+923001545845',
+            ],
+            [
+                'uuid' => (string) Str::uuid(),
+                'customer_id' => 2,
+                'site_name' => 'Xyz Site',
+                'slug' => Str::slug('Xyz Site'),
+                'street_1' => 'Main University Road',
+                'street_2' => '',
+                'city' => 'Karachi',
+                'postcode' => '76500',
+                'county' => 'Sindh',
+                'telephone_number' => '+923001362501',
+            ],
+            [
+                'uuid' => (string) Str::uuid(),
+                'customer_id' => 2,
+                'site_name' => 'MMP Site',
+                'slug' => Str::slug('MMP Site'),
+                'street_1' => 'Main University Road',
+                'street_2' => '',
+                'city' => 'Karachi',
+                'postcode' => '76500',
+                'county' => 'Sindh',
+                'telephone_number' => '+923001360001',
+            ]
+        ]);
 
-            Plot::create([
-                'building_type_id' => $i,
-                'plot_name' => 'PL-00' . $i,
-            ]);
+//      FOR GENERATING BUILDING TYPES
+        DB::table('building_types')->insert([
+            [
+                'site_id' => 1,
+                'building_type_name' => 'Building ABC',
+            ],
+            [
+                'site_id' => 1,
+                'building_type_name' => 'Building DEF',
+            ],
+            [
+                'site_id' => 2,
+                'building_type_name' => 'Building GHQ',
+            ],
+            [
+                'site_id' => 2,
+                'building_type_name' => 'Building XYZ',
+            ],
+            [
+                'site_id' => 2,
+                'building_type_name' => 'Building PPP',
+            ],
 
-            BuildingType::create([
-                'site_id' => $i,
-                'building_type_name' => 'Building ' . $i,
-            ]);
-        }
+        ]);
+        
+//      FOR GENERATING PLOTS
+        DB::table('plots')->insert([
+            [
+                'building_type_id' => 1,
+                'plot_name' => 'PL-001',
+            ],
+            [
+                'building_type_id' => 1,
+                'plot_name' => 'PL-002',
+            ],[
+                'building_type_id' => 1,
+                'plot_name' => 'PL-003',
+            ],
+            [
+                'building_type_id' => 1,
+                'plot_name' => 'PL-004',
+            ],
+            [
+                'building_type_id' => 1,
+                'plot_name' => 'PL-005',
+            ],
+            [
+                'building_type_id' => 2,
+                'plot_name' => 'PL-006',
+            ],
+            [
+                'building_type_id' => 2,
+                'plot_name' => 'PL-007',
+            ],[
+                'building_type_id' => 2,
+                'plot_name' => 'PL-008',
+            ],
+            [
+                'building_type_id' => 2,
+                'plot_name' => 'PL-009',
+            ],
+            [
+                'building_type_id' => 2,
+                'plot_name' => 'PL-010',
+            ],
+        ]);
     }
 }
