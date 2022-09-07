@@ -12,13 +12,6 @@ use Sty\Hutton\Models\{Customer, Plot, Site, BuildingType, Service};
 
 class DummyData extends Seeder
 {
-    /*
-     *
-     * Run the database seeds.
-     *
-     * @return void
-     */
-
     public function run()
     {
         //        FOR GENERATING SERVICES
@@ -85,22 +78,27 @@ class DummyData extends Seeder
         //      FOR GENERATING BUILDING TYPES
         DB::table('building_types')->insert([
             [
+                'uuid' => (string) Str::uuid(),
                 'site_id' => 1,
                 'building_type_name' => 'Building ABC',
             ],
             [
+                'uuid' => (string) Str::uuid(),
                 'site_id' => 1,
                 'building_type_name' => 'Building DEF',
             ],
             [
+                'uuid' => (string) Str::uuid(),
                 'site_id' => 2,
                 'building_type_name' => 'Building GHQ',
             ],
             [
+                'uuid' => (string) Str::uuid(),
                 'site_id' => 2,
                 'building_type_name' => 'Building XYZ',
             ],
             [
+                'uuid' => (string) Str::uuid(),
                 'site_id' => 2,
                 'building_type_name' => 'Building PPP',
             ],
@@ -109,55 +107,21 @@ class DummyData extends Seeder
         //      FOR GENERATING PLOTS
         DB::table('plots')->insert([
             [
-                'uuid' => (string) Str::uuid(),
                 'building_type_id' => 1,
                 'plot_name' => 'PL-001',
             ],
             [
-                'uuid' => (string) Str::uuid(),
                 'building_type_id' => 1,
                 'plot_name' => 'PL-002',
             ],
-            [
-                'uuid' => (string) Str::uuid(),
-                'building_type_id' => 1,
-                'plot_name' => 'PL-003',
-            ],
-            [
-                'uuid' => (string) Str::uuid(),
-                'building_type_id' => 1,
-                'plot_name' => 'PL-004',
-            ],
-            [
-                'uuid' => (string) Str::uuid(),
-                'building_type_id' => 1,
-                'plot_name' => 'PL-005',
-            ],
-            [
-                'uuid' => (string) Str::uuid(),
-                'building_type_id' => 2,
-                'plot_name' => 'PL-006',
-            ],
-            [
-                'uuid' => (string) Str::uuid(),
-                'building_type_id' => 2,
-                'plot_name' => 'PL-007',
-            ],
-            [
-                'uuid' => (string) Str::uuid(),
-                'building_type_id' => 2,
-                'plot_name' => 'PL-008',
-            ],
-            [
-                'uuid' => (string) Str::uuid(),
-                'building_type_id' => 2,
-                'plot_name' => 'PL-009',
-            ],
-            [
-                'uuid' => (string) Str::uuid(),
-                'building_type_id' => 2,
-                'plot_name' => 'PL-010',
-            ],
+            ['building_type_id' => 1, 'plot_name' => 'PL-003'],
+            ['building_type_id' => 1, 'plot_name' => 'PL-004'],
+            ['building_type_id' => 1, 'plot_name' => 'PL-005'],
+            ['building_type_id' => 2, 'plot_name' => 'PL-006'],
+            ['building_type_id' => 2, 'plot_name' => 'PL-007'],
+            ['building_type_id' => 2, 'plot_name' => 'PL-008'],
+            ['building_type_id' => 2, 'plot_name' => 'PL-009'],
+            ['building_type_id' => 2, 'plot_name' => 'PL-010'],
         ]);
     }
 }
