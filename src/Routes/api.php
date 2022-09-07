@@ -122,11 +122,23 @@ Route::group(['prefix' => 'api/v1', 'as' => 'api/v1'], function () {
         'dailyWork',
     ])->name('generate.dailyWork');
 
+//    route for saving daily miscellaneous work
+    Route::post('generate-daily-misc-work', [
+        DailyWorkController::class,
+        'dailyMiscWork',
+    ])->name('generate.dailyMiscWork');
+
     // Route for removing || Deleting daily work
     Route::delete('daily-work/{workId}', [
         DailyWorkController::class,
         'deleteDailyWork',
     ])->name('delete.dailyWork');
+
+//    Route for removing || deleting the daily miscellanous work
+    Route::delete('daily-misc-work/{workId}', [
+        DailyWorkController::class,
+        'deleteDailyMiscWork',
+    ])->name('delete.dailyMiscWork');
 
     // Route for viewing joiner weekly work
     Route::get('week/{weekId}/work', [
