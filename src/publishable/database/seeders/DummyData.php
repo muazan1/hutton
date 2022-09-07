@@ -1,6 +1,7 @@
 <?php
 
 namespace Database\Seeders;
+
 use Illuminate\Database\Seeder;
 
 use Illuminate\Support\Facades\DB;
@@ -20,16 +21,15 @@ class DummyData extends Seeder
 
     public function run()
     {
-//        FOR GENERATING SERVICES
+        //        FOR GENERATING SERVICES
         for ($i = 1; $i <= 10; $i++) {
-
             Service::create([
                 'service_name' => 'Service ' . $i,
                 'description' => 'Lorem Ipsum dolor sit amit',
             ]);
         }
 
-//      FOR GENERATING SITES
+        //      FOR GENERATING SITES
 
         DB::table('sites')->insert([
             [
@@ -79,10 +79,10 @@ class DummyData extends Seeder
                 'postcode' => '76500',
                 'county' => 'Sindh',
                 'telephone_number' => '+923001360001',
-            ]
+            ],
         ]);
 
-//      FOR GENERATING BUILDING TYPES
+        //      FOR GENERATING BUILDING TYPES
         DB::table('building_types')->insert([
             [
                 'site_id' => 1,
@@ -104,46 +104,57 @@ class DummyData extends Seeder
                 'site_id' => 2,
                 'building_type_name' => 'Building PPP',
             ],
-
         ]);
-        
-//      FOR GENERATING PLOTS
+
+        //      FOR GENERATING PLOTS
         DB::table('plots')->insert([
             [
+                'uuid' => (string) Str::uuid(),
                 'building_type_id' => 1,
                 'plot_name' => 'PL-001',
             ],
             [
+                'uuid' => (string) Str::uuid(),
                 'building_type_id' => 1,
                 'plot_name' => 'PL-002',
-            ],[
+            ],
+            [
+                'uuid' => (string) Str::uuid(),
                 'building_type_id' => 1,
                 'plot_name' => 'PL-003',
             ],
             [
+                'uuid' => (string) Str::uuid(),
                 'building_type_id' => 1,
                 'plot_name' => 'PL-004',
             ],
             [
+                'uuid' => (string) Str::uuid(),
                 'building_type_id' => 1,
                 'plot_name' => 'PL-005',
             ],
             [
+                'uuid' => (string) Str::uuid(),
                 'building_type_id' => 2,
                 'plot_name' => 'PL-006',
             ],
             [
+                'uuid' => (string) Str::uuid(),
                 'building_type_id' => 2,
                 'plot_name' => 'PL-007',
-            ],[
+            ],
+            [
+                'uuid' => (string) Str::uuid(),
                 'building_type_id' => 2,
                 'plot_name' => 'PL-008',
             ],
             [
+                'uuid' => (string) Str::uuid(),
                 'building_type_id' => 2,
                 'plot_name' => 'PL-009',
             ],
             [
+                'uuid' => (string) Str::uuid(),
                 'building_type_id' => 2,
                 'plot_name' => 'PL-010',
             ],
