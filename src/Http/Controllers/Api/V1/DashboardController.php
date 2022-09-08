@@ -33,26 +33,23 @@ class DashboardController extends  Controller
                         $query->where('user_id',$joinerId);
                     })->paginate(10);
 
-            $amounts = [];
 
             $works = DailyWork::with('weeklyWork','site','plot')->
                 whereHas('weeklyWork', function ($query) use($joinerId) {
                     $query->where('user_id',$joinerId);
                 })->get();
 
+
+
             $allWork = collect($works)->groupBy(function ($item) {
-                return Carbon::parse($item->created_at)->format('M');
+                return Carbon::parse($item->created_at)->format('M Y');
             })->map(function ($item) {
                 return $item->total_amount = ($item->sum('amount'));
             });
-//
-//            return response()->json(['work' => $allWork]);
-//            dd($allWork);
-//            foreach ($allWork as $item => $key)
-//            {
-//                dd($item);
-//            }
 
+//            $months = ['jan', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december'];
+
+//            dd($from,$to);
 
             return response()->json([
                 'type' => 'success',
