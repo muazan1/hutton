@@ -41,9 +41,9 @@ class DashboardController extends  Controller
             $message = $th->getMessage();
 
             return response()->json([
-            'type' => 'error',
-            'message' => $message,
-            'data' => '',
+                'type' => 'error',
+                'message' => $message,
+                'data' => '',
             ]);
         }
 
