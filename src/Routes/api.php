@@ -17,7 +17,8 @@ use Sty\Hutton\Http\Controllers\Api\V1\{
     DailyWorkController,
     WageSheetController,
     JobFilterController,
-    WorkController
+    WorkController,
+    DashboardController
 };
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
@@ -222,4 +223,10 @@ Route::group(['prefix' => 'api/v1', 'as' => 'api/v1'], function () {
     Route::get('jobs/{job}', [HsJobsController::class, 'getJob'])->name(
         'get.job'
     );
+
+
+//    Routes for dashboard api's
+
+//    for joiner recent work api
+    Route::get('joiner/{uuid}/recent-works',[DashboardController::class,'joinerRecentWork'])->name('joinerRecentWork.dashboard');
 });

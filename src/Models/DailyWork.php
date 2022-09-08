@@ -21,4 +21,8 @@ class DailyWork extends Model
     {
         return $this->belongsTo(Plot::class, 'plot_id', 'id');
     }
+
+    public function weeklyWork() {
+        return $this->belongsTo(WeeklyWork::class,'week_id','id');
+    }
 }
