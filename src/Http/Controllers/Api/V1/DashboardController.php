@@ -26,7 +26,8 @@ class DashboardController extends  Controller
 
             $joinerId = $joiner->id;
 
-            $work = DailyWork::whereHas('weeklyWork', function ($query) use($joinerId) {
+            $work = DailyWork::with('weeklyWork','site','plot')->
+            whereHas('weeklyWork', function ($query) use($joinerId) {
                 $query->where('user_id',$joinerId);
             })->paginate(10);
 
