@@ -17,6 +17,8 @@ use Sty\Hutton\Http\Requests\CreateSiteRequest;
 
 use Sty\Hutton\Models\{MiscWork, Plot, Site, WeeklyWork,HuttonUser, DailyWork};
 
+use Carbon\Carbon;
+
 class DashboardController extends  Controller
 {
     public function joinerRecentWork(Request $request,$uuid) {
@@ -27,14 +29,35 @@ class DashboardController extends  Controller
             $joinerId = $joiner->id;
 
             $work = DailyWork::with('weeklyWork','site','plot')->
-            whereHas('weeklyWork', function ($query) use($joinerId) {
-                $query->where('user_id',$joinerId);
-            })->paginate(10);
+                    whereHas('weeklyWork', function ($query) use($joinerId) {
+                        $query->where('user_id',$joinerId);
+                    })->paginate(10);
+
+            $amounts = [];
+
+            $works = DailyWork::with('weeklyWork','site','plot')->
+                whereHas('weeklyWork', function ($query) use($joinerId) {
+                    $query->where('user_id',$joinerId);
+                })->get();
+
+            $allWork = collect($works)->groupBy(function ($item) {
+                return Carbon::parse($item->created_at)->format('M');
+            })->map(function ($item) {
+                return $item->total_amount = ($item->sum('amount'));
+            });
+//
+//            return response()->json(['work' => $allWork]);
+//            dd($allWork);
+//            foreach ($allWork as $item => $key)
+//            {
+//                dd($item);
+//            }
+
 
             return response()->json([
                 'type' => 'success',
                 'message' => '',
-                'data' => ['work' => $work],
+                'data' => ['work' => $work,'allWork' => $allWork ],
             ]);
 
         } catch (\Throwable $th) {
