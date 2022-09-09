@@ -21,6 +21,8 @@ use Sty\Hutton\Mail\Work\WorkSend;
 
 use Sty\Hutton\Models\{HsJobs, MiscWork, Plot, Site, Customer, ServicePricing, DailyWork, WeeklyWork};
 
+use Sty\Hutton\Http\Service\GeneratePDF;
+
 class WeeklyWorkController extends Controller
 {
     public function StartWeek(Request $request)
@@ -73,11 +75,22 @@ class WeeklyWorkController extends Controller
     public function EndWeek(Request $request, $weekId)
     {
         try {
-            $week = WeeklyWork::findOrFail($weekId)->update([
+
+            $data = [];
+
+            $filename = 'views.pdfs.joiner_weekly_report';
+
+            $reportname = 'Joiner Weekly Work.pdf';
+
+            $week = WeeklyWork::findOrFail($weekId);
+
+            $pdf = GeneratePDF::generateReport($week,$filename,$reportname);
+
+            $work =  $week->update([
                 'status' => 'completed',
             ]);
 
-            $mail = Mail::to('admin@admin.com')->send(new WorkSend());
+            $mail = Mail::to('admin@admin.com')->send(new WorkSend($week,$pdf));
 
             $message = 'Week Ended Successfully';
 

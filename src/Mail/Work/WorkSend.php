@@ -11,13 +11,22 @@ class WorkSend extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public function __construct()
+    public $week;
+
+    public $pdf;
+
+    public function __construct($week,$pdf)
     {
-        //
+        $this->week = $week;
+
+        $this->pdf = $pdf;
     }
 
     public function build()
     {
-        return $this->markdown('Hutton::emails.sendWork');
+        return $this->subject('Joiner Weekly Work')
+            ->markdown('Hutton::emails.sendWork')
+            ->with(['week'=>$this->week])
+            ->attachData($this->pdf,'joiner-weekly-work.pdf');
     }
 }

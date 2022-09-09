@@ -16,4 +16,12 @@ class WeeklyWork extends Model
     {
         return $this->hasMany(DailyWork::class, 'week_id', 'id');
     }
+
+    public function miscWork(){
+        return $this->belongsTo(MiscWork::class,'week_id','id');
+    }
+
+    public function joiner(){
+        return $this->belongsTo(HuttonUser::class,'user_id','id');
+    }
 }

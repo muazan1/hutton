@@ -51,5 +51,8 @@ class HuttonScopeProvider extends ServiceProvider
         if ($this->app->runningInConsole()) {
             $this->commands([StartNewWeek::class]);
         }
+
+        $this->app->register(\Barryvdh\DomPDF\ServiceProvider::class);
+
     }
 }

@@ -25,4 +25,10 @@ class DailyWork extends Model
     public function weeklyWork() {
         return $this->belongsTo(WeeklyWork::class,'week_id','id');
     }
+
+    public function service()
+    {
+        return $this->belongsTo(Service::class, 'service_id', 'id');
+    }
+
 }
