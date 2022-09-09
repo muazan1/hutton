@@ -18,7 +18,7 @@ class WeeklyWork extends Model
     }
 
     public function miscWork(){
-        return $this->belongsTo(MiscWork::class,'week_id','id');
+        return $this->belongsTo(MiscWork::class,'id','week_id');
     }
 
     public function joiner(){
