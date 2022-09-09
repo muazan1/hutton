@@ -116,7 +116,8 @@ class WeeklyWorkController extends Controller
             $weeklyWork = WeeklyWork::with(
                 'dailyWork',
                 'dailyWork.site',
-                'dailyWork.plot'
+                'dailyWork.plot',
+                'miscWork'
             )->findOrFail($weekId);
 
             return response()->json([
