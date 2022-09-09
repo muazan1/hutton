@@ -51,10 +51,19 @@ class DashboardController extends  Controller
 
 //            dd($from,$to);
 
+            $months = [];
+            $amounts = [];
+            foreach ($allWork as $key => $item)
+            {
+                $months[] = $key;
+                $amounts[] = $item;
+            }
+
+
             return response()->json([
                 'type' => 'success',
                 'message' => '',
-                'data' => ['work' => $work,'allWork' => $allWork ],
+                'data' => ['work' => $work,'allWork' => $allWork,'months'=> $months,'amounts' => $amounts ],
             ]);
 
         } catch (\Throwable $th) {
