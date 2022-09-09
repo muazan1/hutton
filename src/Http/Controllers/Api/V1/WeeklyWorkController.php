@@ -19,15 +19,7 @@ use Sty\Hutton\Http\Requests\CreateSiteRequest;
 
 use Sty\Hutton\Mail\Work\WorkSend;
 
-use Sty\Hutton\Models\{
-    HsJobs,
-    Plot,
-    Site,
-    Customer,
-    ServicePricing,
-    DailyWork,
-    WeeklyWork
-};
+use Sty\Hutton\Models\{HsJobs, MiscWork, Plot, Site, Customer, ServicePricing, DailyWork, WeeklyWork};
 
 class WeeklyWorkController extends Controller
 {
@@ -174,12 +166,17 @@ class WeeklyWorkController extends Controller
                 ->whereDate('created_at', Carbon::now())
                 ->paginate(10);
 
+            $dailyMiscWork = MiscWork::where('week_id', $weeklyWork->id)
+                ->whereDate('created_at', Carbon::now())
+                ->paginate(10);
+
             return response()->json([
                 'type' => 'success',
                 'message' => '',
                 'data' => [
                     'weeklyWork' => $weeklyWork,
                     'dailyWork' => $dailyWork,
+                    'dailyMiscWork' => $dailyMiscWork,
                 ],
             ]);
         } catch (\Throwable $th) {
