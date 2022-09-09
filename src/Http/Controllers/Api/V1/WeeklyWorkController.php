@@ -134,12 +134,18 @@ class WeeklyWorkController extends Controller
                 ->where('week_id', $weeklyWork->id)
                 ->paginate(10);
 
+            $dailyMiscWork = MiscWork::where('week_id', $weeklyWork->id)
+                ->whereDate('created_at', Carbon::now())
+                ->paginate(10);
+
+
             return response()->json([
                 'type' => 'success',
                 'message' => '',
                 'data' => [
                     'weeklyWork' => $weeklyWork,
                     'dailyWork' => $dailyWork,
+                    'dailyMiscWork' => $dailyMiscWork,
                 ],
             ]);
         } catch (\Throwable $th) {
