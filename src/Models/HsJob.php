@@ -29,10 +29,14 @@ class HsJob extends Model
             'plot_jobs_users',
             'plot_job_id',
             'user_id'
-        );
+        )->wherePivot('user_id',auth()->user()->id);
     }
-    // public function joiners()
-    // {
-    //     return $this->hasMany(User::class, 'assigned_user_id', 'id');
-    // }
+
+    public function assignedJobs(){
+        return $this->hasMany('plot_jobs_users','plot_job_id','user_id');
+    }
+//     public function joiners()
+//     {
+//         return $this->hasMany(User::class, 'assigned_user_id', 'id');
+//     }
 }

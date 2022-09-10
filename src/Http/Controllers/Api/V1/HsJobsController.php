@@ -251,14 +251,25 @@ class HsJobsController extends Controller
 
 
     public function joinerJobs (Request $request) {
-//        dd(auth()->user());
-
+        
         try{
-            $joinerId = 23;
+            $search = $request->search ?? '';
 
-            $jobs = HsJob::all();
+            $status = $request->status ?? '';
 
-            dd($jobs);
+            $jobs = HsJob::with('joiners')->get();
+
+            if ($status != null) {
+                $jobs = $jobs->where('status', $status);
+            }
+
+            $jobs = $jobs->paginate(10);
+
+            return response()->json([
+                'type' => 'success',
+                'message' => '',
+                'data' => ['jobs' => $jobs],
+            ]);
 
         }
         catch(\Throwable $th) {
