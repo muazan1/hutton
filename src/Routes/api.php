@@ -220,6 +220,9 @@ Route::group(['prefix' => 'api/v1', 'as' => 'api/v1'], function () {
         'admin.jobs'
     );
 
+//    Route for joiner jobs
+    Route::get('joiner/jobs',[HsJobsController::class,'joinerJobs'])->name('joiner.jobs');
+
     Route::get('jobs/{job}', [HsJobsController::class, 'getJob'])->name(
         'get.job'
     );

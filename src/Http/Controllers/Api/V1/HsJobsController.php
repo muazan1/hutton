@@ -249,6 +249,30 @@ class HsJobsController extends Controller
         }
     }
 
+
+    public function joinerJobs (Request $request) {
+//        dd(auth()->user());
+
+        try{
+            $joinerId = 23;
+
+            $jobs = HsJob::all();
+
+            dd($jobs);
+
+        }
+        catch(\Throwable $th) {
+            $message = $th->getMessage();
+
+            return response()->json([
+                'type' => 'error',
+                'message' => $message,
+                'data' => '',
+            ]);
+        }
+    }
+
+
     public function servicesByPlot(Request $request, $plotId)
     {
         try {
