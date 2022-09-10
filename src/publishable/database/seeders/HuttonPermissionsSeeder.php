@@ -283,6 +283,13 @@ class HuttonPermissionsSeeder extends Seeder
                 'permission' => 'admin-jobs',
                 'api_permission' => 'admin:jobs',
             ],
+            [
+                'id' => 111,
+                'name' => 'Joiner Jobs',
+                'module' => 'jobs',
+                'permission' => 'joiner-jobs',
+                'api_permission' => 'joiner:jobs',
+            ],
 
             // work module
             [
