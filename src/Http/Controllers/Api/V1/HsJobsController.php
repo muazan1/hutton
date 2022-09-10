@@ -257,7 +257,10 @@ class HsJobsController extends Controller
 
             $joiner = HuttonUser::where('uuid',$uuid)->first();
 
-            $jobs = HsJob::with('joiners')
+            $jobs = HsJob::with('joiners' , 'plot',
+                'plot.buildingType',
+                'plot.buildingType.site',
+                'service')
                 ->whereHas('joiners' ,  function ($query) use($joiner) {
                     $query->where('id',$joiner->id);
                 });
