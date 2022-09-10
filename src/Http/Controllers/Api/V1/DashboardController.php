@@ -39,26 +39,25 @@ class DashboardController extends  Controller
                     $query->where('user_id',$joinerId);
                 })->get();
 
+            $allWork = DailyWork::with('weeklyWork','site','plot')->
+                whereHas('weeklyWork', function ($query) use($joinerId) {
+                    $query->where('user_id',$joinerId);
+                })->get();
 
+            $months = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'];
 
-            $allWork = collect($works)->groupBy(function ($item) {
-                return Carbon::parse($item->created_at)->format('M Y');
-            })->map(function ($item) {
-                return $item->total_amount = ($item->sum('amount'));
-            });
-
-//            $months = ['jan', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december'];
-
-//            dd($from,$to);
-
-            $months = [];
             $amounts = [];
-            foreach ($allWork as $key => $item)
+//
+            foreach ($months as $month)
             {
-                $months[] = $key;
-                $amounts[] = $item;
-            }
 
+                $amt = $allWork = DailyWork::with('weeklyWork','site','plot')->
+                        whereHas('weeklyWork', function ($query) use($joinerId) {
+                            $query->where('user_id',$joinerId);
+                        })->whereMonth('created_at',$month)->sum('amount');
+
+                $amounts[] = $amt;
+            }
 
             return response()->json([
                 'type' => 'success',
