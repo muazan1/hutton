@@ -250,18 +250,17 @@ class HsJobsController extends Controller
     }
 
 
-    public function joinerJobs (Request $request) {
-        dd(auth()->user());
+    public function joinerJobs (Request $request,$uuid) {
+
         try{
             $search = $request->search ?? '';
 
-            $status = $request->status ?? '';
+            $joiner = HuttonUser::where('uuid',$uuid)->first();
 
-            $jobs = HsJob::with('joiners')->get();
-
-            if ($status != null) {
-                $jobs = $jobs->where('status', $status);
-            }
+            $jobs = HsJob::with('joiners')
+                ->whereHas('joiners' ,  function ($query) use($joiner) {
+                    $query->where('id',$joiner->id);
+                });
 
             $jobs = $jobs->paginate(10);
 

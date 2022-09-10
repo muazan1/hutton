@@ -29,7 +29,7 @@ class HsJob extends Model
             'plot_jobs_users',
             'plot_job_id',
             'user_id'
-        )->wherePivot('user_id',auth()->user()->id);
+        );
     }
 
     public function assignedJobs(){

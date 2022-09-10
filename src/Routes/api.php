@@ -226,7 +226,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
         );
 
         //    Route for joiner jobs
-        Route::get('joiner/jobs', [
+        Route::get('joiner/{uuid}/jobs', [
             HsJobsController::class,
             'joinerJobs',
         ])->name('joiner.jobs');
