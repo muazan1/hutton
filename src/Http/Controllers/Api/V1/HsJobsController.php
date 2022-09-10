@@ -251,7 +251,7 @@ class HsJobsController extends Controller
 
 
     public function joinerJobs (Request $request) {
-        
+        dd(auth(()->user()));
         try{
             $search = $request->search ?? '';
 
