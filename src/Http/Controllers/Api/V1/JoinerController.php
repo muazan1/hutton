@@ -238,4 +238,26 @@ class JoinerController extends Controller
             ]);
         }
     }
+
+    public function joinerDetails(Request $request,$uuid){
+
+        try {
+            $joiner = User::where('uuid',$uuid)->first();
+
+            return response()->json([
+                'type' => 'success',
+                'message' => '',
+                'data' => ['joiner' => $joiner],
+            ]);
+        } catch (\Throwable $th) {
+            $message = $th->getMessage();
+
+            return response()->json([
+                'type' => 'error',
+                'message' => $message,
+                'data' => '',
+            ]);
+        }
+    }
+
 }
