@@ -10,4 +10,9 @@ class Site extends Model
     use HasFactory;
 
     protected $guarded = ['id', 'created_at', 'updated_at'];
+
+    public function buildingTypes ()
+    {
+        return $this->hasMany(BuildingType::class,'site_id','id');
+    }
 }

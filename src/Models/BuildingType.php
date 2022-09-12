@@ -15,4 +15,8 @@ class BuildingType extends Model
     {
         return $this->belongsTo(Site::class, 'site_id', 'id');
     }
+
+    public function plots () {
+        return $this->hasMany(Plot::class,'building_type_id','id');
+    }
 }

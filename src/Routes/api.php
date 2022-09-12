@@ -246,5 +246,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 //        get joiner by uuid
         Route::get('joiner/{uuid}',[JoinerController::class,'joinerDetails'])->name('joiner.view');
+
+//        Route for admin dashboard
+        Route::get('admin/dashboard',[DashboardController::class,'adminDashboard']);
+
     });
 //});

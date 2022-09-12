@@ -12,4 +12,9 @@ class Customer extends Model
     protected $table = 'customers';
 
     protected $guarded = ['id', 'created_at', 'updated_at'];
+
+    public function sites()
+    {
+        return $this->hasMany(Site::class,'customer_id','id');
+    }
 }

@@ -15,7 +15,7 @@ use Mockery\Container;
 
 use Sty\Hutton\Http\Requests\CreateSiteRequest;
 
-use Sty\Hutton\Models\{MiscWork, Plot, Site, WeeklyWork,HuttonUser, DailyWork};
+use Sty\Hutton\Models\{MiscWork,Customer, Plot, Site, WeeklyWork,HuttonUser, DailyWork};
 
 use Carbon\Carbon;
 
@@ -76,6 +76,83 @@ class DashboardController extends  Controller
             ]);
         }
 
+    }
+
+    public function adminDashboard (Request $request) {
+
+        try {
+
+            $builders = Customer::with('sites.buildingTypes.plots.job')->get();
+
+            $collection = collect($builders)->map(function($item){
+
+                if($item->sites->count() > 0){
+                    foreach ($item->sites as $site)
+                    {
+                        if($site->buildingTypes != null)
+                        {
+                            foreach ($site->buildingTypes as $buildingType)
+                            {
+                                if($buildingType->plots != null)
+                                {
+                                    foreach ($buildingType->plots as $plot)
+                                    {
+                                        if($plot->job != null)
+                                        {
+                                            foreach ($plot->job as $job)
+                                            {
+                                                $item->completed_services = $job->where('status','completed')->count();
+
+                                                $item->not_completed_services = $job->where('status','!=','completed')->count();
+                                            }
+                                        }
+                                        else{
+                                            $item->completed_services = 0;
+
+                                            $item->not_completed_services = 0;
+                                        }
+                                    }
+                                }
+                                else{
+                                    $item->completed_services = 0;
+
+                                    $item->not_completed_services = 0;
+                                }
+                            }
+                        }
+                        else{
+                            $item->completed_services = 0;
+
+                            $item->not_completed_services = 0;
+                        }
+                    }
+                }
+                else{
+                    $item->completed_services = 0;
+
+                    $item->not_completed_services = 0;
+                }
+
+                return $item;
+            })->take(10);
+
+            return response()->json([
+                'type' => 'success',
+                'message' => '',
+                'data' => ['builders' => $builders,'collection' => $collection],
+            ]);
+
+        }catch (\Throwable $th) {
+
+            $message = $th->getMessage();
+
+            return response()->json([
+                'type' => 'error',
+                'message' => $message,
+                'data' => '',
+            ]);
+
+        }
     }
 
 }
