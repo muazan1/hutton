@@ -1,6 +1,4 @@
-<?php
-
-namespace Database\Seeders;
+n<?php namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Sty\Hutton\Models\Role;
 
@@ -19,8 +17,15 @@ class RolesSeeder extends Seeder
 
     public function run()
     {
-        Role::create([
-            'name' => 'joiner',
-        ]);
+        DB::table('roles')->insert(
+            [
+                'id' => 4,
+                'name' => 'huttonscope_admin',
+            ],
+            [
+                'id' => 3,
+                'name' => 'joiner',
+            ]
+        );
     }
 }

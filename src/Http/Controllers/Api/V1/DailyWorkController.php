@@ -15,7 +15,7 @@ use Mockery\Container;
 
 use Sty\Hutton\Http\Requests\CreateSiteRequest;
 
-use Sty\Hutton\Models\{MiscWork, Plot, Site, WeeklyWork, DailyWork};
+use Sty\Hutton\Models\{HsJob, MiscWork, Plot, Site, WeeklyWork, DailyWork};
 use Whoops\Util\Misc;
 
 class DailyWorkController extends Controller
@@ -56,6 +56,21 @@ class DailyWorkController extends Controller
                 ]);
             }
 
+            $plotJob = HsJob::where('plot_id', $request->plot_id)
+                ->where('service_id', $request->service_id)
+                ->first();
+
+            if ($plotJob->status == 'completed')
+            {
+                $message = 'Job has Already Completed';
+
+                return response()->json([
+                    'type' => 'error',
+                    'message' => $message,
+                    'data' => '',
+                ]);
+            }
+
             $data = [
                 'week_id' => $request->week_id,
                 'site_id' => $request->site_id,
@@ -70,6 +85,8 @@ class DailyWorkController extends Controller
             $message = 'Daily Work Added Successfully';
 
             $week = DailyWork::create($data);
+
+            $plotJob->update(['status' => 'completed']);
 
             return response()->json([
                 'type' => 'success',
