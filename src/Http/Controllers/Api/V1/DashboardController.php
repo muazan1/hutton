@@ -133,7 +133,11 @@ class DashboardController extends  Controller
                     $item->not_completed_services = 0;
                 }
 
-                return $item;
+                return [
+                    'name'=> $item->customer_name,
+                    'completed' => $item->completed_services,
+                    'not_completed' => $item->not_completed_services
+                ];
             })->take(10);
 
             return response()->json([
