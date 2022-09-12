@@ -21,12 +21,13 @@ class MasterAdmin extends Seeder
     public function run()
     {
         User::create([
-            'role_id' => 1,
+            'role_id' => 3,
             'uuid' => (string) Str::uuid(),
-            'name' => 'Master Admin',
+            'first_name' => 'Master',
+            'last_name' => 'Admin',
             'email' => 'admin@admin.com',
             'phone' => '+923001234567',
-            'password' => Hash::make('password123'),
+            'password' => Hash::make('password'),
             'address' => 'Jump Street',
         ]);
     }
