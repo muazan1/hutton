@@ -26,15 +26,21 @@ class JobFilterController extends Controller
     {
         $page = $page ?: (Paginator::resolveCurrentPage() ?: 1);
 
-        $items = $items instanceof Collection ? $items : Collection::make($items);
+        $items =
+            $items instanceof Collection ? $items : Collection::make($items);
 
-        return new LengthAwarePaginator($items->forPage($page, $perPage), $items->count(), $perPage, $page, $options);
+        return new LengthAwarePaginator(
+            $items->forPage($page, $perPage),
+            $items->count(),
+            $perPage,
+            $page,
+            $options
+        );
     }
 
     public function completedJobs(Request $request)
     {
         try {
-
             $jobs = HsJob::where('status', 'completed')->paginate();
 
             return response()->json([
@@ -42,9 +48,7 @@ class JobFilterController extends Controller
                 'message' => '',
                 'data' => $jobs,
             ]);
-
         } catch (\Throwable $th) {
-
             $message = $th->getMessage();
 
             return response()->json([
@@ -52,48 +56,45 @@ class JobFilterController extends Controller
                 'message' => $message,
                 'data' => '',
             ]);
-
         }
     }
 
-    public function adminJobFilter (Request $request) {
-
+    public function adminJobFilter(Request $request)
+    {
         try {
+            //            $jobs = collect(HsJob::with('plot.buildingType.site','service')->get());
 
-//            $jobs = collect(HsJob::with('plot.buildingType.site','service')->get());
+            $jobs = HsJob::with('plot.buildingType.site', 'service');
 
-            $jobs = HsJob::with('plot.buildingType.site','service');
-
-            if($request->site != null)
-            {
-                $jobs = $jobs->whereHas('plot.buildingType.site',function ($query) use($request) {
-                    $query->where('id',$request->site);
+            if ($request->site != null) {
+                $jobs = $jobs->whereHas('plot.buildingType.site', function (
+                    $query
+                ) use ($request) {
+                    $query->where('id', $request->site);
                 });
             }
-//
-            if($request->buidling_type != null)
-            {
-                $jobs = $jobs->whereHas('plot.buildingType',function ($query) use($request) {
-                    $query->where('id',$request->building_type);
+            //
+            if ($request->buidling_type != null) {
+                $jobs = $jobs->whereHas('plot.buildingType', function (
+                    $query
+                ) use ($request) {
+                    $query->where('id', $request->building_type);
                 });
             }
-//
-            if($request->plot != null )
-            {
-                $jobs = $jobs->where('plot_id',$request->plot);
+            //
+            if ($request->plot != null) {
+                $jobs = $jobs->where('plot_id', $request->plot);
             }
 
-            if($request->service != null)
-            {
-                $jobs = $jobs->where('service_id',$request->service);
+            if ($request->service != null) {
+                $jobs = $jobs->where('service_id', $request->service);
             }
 
-            if($request->status != null)
-            {
-                $jobs = $jobs->where('status',$request->status);
+            if ($request->status != null) {
+                $jobs = $jobs->where('status', $request->status);
             }
 
-//            $jobs = $this->paginate($jobs,10);
+            //            $jobs = $this->paginate($jobs,10);
             $jobs = $jobs->paginate(10);
 
             return response()->json([
@@ -101,9 +102,7 @@ class JobFilterController extends Controller
                 'message' => '',
                 'data' => ['jobs' => $jobs],
             ]);
-
-        }catch (\Throwable $th)
-        {
+        } catch (\Throwable $th) {
             $message = $th->getMessage();
 
             return response()->json([
@@ -113,5 +112,4 @@ class JobFilterController extends Controller
             ]);
         }
     }
-
 }

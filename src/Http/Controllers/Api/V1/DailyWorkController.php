@@ -23,7 +23,6 @@ class DailyWorkController extends Controller
     public function dailyWork(Request $request)
     {
         try {
-
             $week = WeeklyWork::find($request->week_id);
 
             if ($week->status === 'completed') {
@@ -90,9 +89,7 @@ class DailyWorkController extends Controller
 
     public function dailyMiscWork(Request $request)
     {
-
         try {
-
             $week = WeeklyWork::find($request->week_id);
 
             if ($week->status === 'completed') {
@@ -151,7 +148,6 @@ class DailyWorkController extends Controller
         }
     }
 
-
     public function deleteDailyWork(Request $request, $workId)
     {
         try {
@@ -177,9 +173,8 @@ class DailyWorkController extends Controller
         }
     }
 
-    public function deleteDailyMiscWork(Request $request,$workId)
+    public function deleteDailyMiscWork(Request $request, $workId)
     {
-
         try {
             $dailyWork = MiscWork::find($workId);
 

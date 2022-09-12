@@ -22,7 +22,15 @@ use Mockery\Container;
 
 use Sty\Hutton\Http\Requests\CreateSiteRequest;
 
-use Sty\Hutton\Models\{HsJob, HuttonUser, Plot, Site, BuildingType, JoinerPricing, ServicePricing};
+use Sty\Hutton\Models\{
+    HsJob,
+    HuttonUser,
+    Plot,
+    Site,
+    BuildingType,
+    JoinerPricing,
+    ServicePricing
+};
 
 use App\Models\{Role};
 
@@ -122,7 +130,8 @@ class HsJobsController extends Controller
                     ->where('service_id', $job->service_id)
                     ->first();
 
-                $joinerPay += $joinerPricing != null ? $joinerPricing->price : 0;
+                $joinerPay +=
+                    $joinerPricing != null ? $joinerPricing->price : 0;
             }
 
             $profit = $totalAmount - $joinerPay;
@@ -249,21 +258,22 @@ class HsJobsController extends Controller
         }
     }
 
-
-    public function joinerJobs (Request $request,$uuid) {
-
-        try{
+    public function joinerJobs(Request $request, $uuid)
+    {
+        try {
             $search = $request->search ?? '';
 
-            $joiner = HuttonUser::where('uuid',$uuid)->first();
+            $joiner = HuttonUser::where('uuid', $uuid)->first();
 
-            $jobs = HsJob::with('joiners' , 'plot',
+            $jobs = HsJob::with(
+                'joiners',
+                'plot',
                 'plot.buildingType',
                 'plot.buildingType.site',
-                'service')
-                ->whereHas('joiners' ,  function ($query) use($joiner) {
-                    $query->where('id',$joiner->id);
-                });
+                'service'
+            )->whereHas('joiners', function ($query) use ($joiner) {
+                $query->where('id', $joiner->id);
+            });
 
             $jobs = $jobs->paginate(10);
 
@@ -272,9 +282,7 @@ class HsJobsController extends Controller
                 'message' => '',
                 'data' => ['jobs' => $jobs],
             ]);
-
-        }
-        catch(\Throwable $th) {
+        } catch (\Throwable $th) {
             $message = $th->getMessage();
 
             return response()->json([
@@ -284,7 +292,6 @@ class HsJobsController extends Controller
             ]);
         }
     }
-
 
     public function servicesByPlot(Request $request, $plotId)
     {

@@ -239,10 +239,10 @@ class JoinerController extends Controller
         }
     }
 
-    public function joinerDetails(Request $request,$uuid){
-
+    public function joinerDetails(Request $request, $uuid)
+    {
         try {
-            $joiner = User::where('uuid',$uuid)->first();
+            $joiner = User::where('uuid', $uuid)->first();
 
             return response()->json([
                 'type' => 'success',
@@ -259,5 +259,4 @@ class JoinerController extends Controller
             ]);
         }
     }
-
 }

@@ -15,4 +15,8 @@ class Site extends Model
     {
         return $this->hasMany(BuildingType::class,'site_id','id');
     }
+
+    public function builder() {
+        return $this->belongsTo(Customer::class,'customer_id','id');
+    }
 }

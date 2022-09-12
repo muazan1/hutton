@@ -31,7 +31,6 @@ class BuildingTypeController extends Controller
     public function SiteBuildingTypes(Request $request, $siteId)
     {
         try {
-
             $search = $request->search ?? '';
 
             $buildingTypes = BuildingType::where('site_id', $siteId)

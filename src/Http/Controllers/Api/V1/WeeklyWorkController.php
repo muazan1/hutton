@@ -19,7 +19,16 @@ use Sty\Hutton\Http\Requests\CreateSiteRequest;
 
 use Sty\Hutton\Mail\Work\WorkSend;
 
-use Sty\Hutton\Models\{HsJobs, MiscWork, Plot, Site, Customer, ServicePricing, DailyWork, WeeklyWork};
+use Sty\Hutton\Models\{
+    HsJobs,
+    MiscWork,
+    Plot,
+    Site,
+    Customer,
+    ServicePricing,
+    DailyWork,
+    WeeklyWork
+};
 
 use Sty\Hutton\Http\Service\GeneratePDF;
 
@@ -75,7 +84,6 @@ class WeeklyWorkController extends Controller
     public function EndWeek(Request $request, $weekId)
     {
         try {
-
             $data = [];
 
             $filename = 'views.pdfs.joiner_weekly_report';
@@ -84,13 +92,15 @@ class WeeklyWorkController extends Controller
 
             $week = WeeklyWork::findOrFail($weekId);
 
-            $pdf = GeneratePDF::generateReport($week,$filename,$reportname);
+            $pdf = GeneratePDF::generateReport($week, $filename, $reportname);
 
-            $work =  $week->update([
+            $work = $week->update([
                 'status' => 'completed',
             ]);
 
-            $mail = Mail::to('admin@admin.com')->send(new WorkSend($week,$pdf));
+            $mail = Mail::to('admin@admin.com')->send(
+                new WorkSend($week, $pdf)
+            );
 
             $message = 'Week Ended Successfully';
 
@@ -151,7 +161,6 @@ class WeeklyWorkController extends Controller
             $dailyMiscWork = MiscWork::where('week_id', $weeklyWork->id)
                 ->whereDate('created_at', Carbon::now())
                 ->paginate(10);
-
 
             return response()->json([
                 'type' => 'success',
