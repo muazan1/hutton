@@ -205,7 +205,7 @@ class DashboardController extends Controller
                 'message' => $message,
                 'data' => '',
             ]);
-            
+
         }
     }
 }
