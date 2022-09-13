@@ -350,9 +350,8 @@ class HsJobsController extends Controller
 
             $jobs = HsJob::with('service','plot.buildingType.site')
                     ->whereHas('plot.buildingType.site',function ($query) use($site) {
-                        dd($query);
-                        $query->find($site->id);
-                    })
+//                    $query->where
+                  })
                     ->paginate(10);
 
             return response()->json([
