@@ -1,5 +1,7 @@
-n<?php namespace Database\Seeders;
+<?php namespace Database\Seeders;
+
 use Illuminate\Database\Seeder;
+
 use Sty\Hutton\Models\Role;
 
 use Illuminate\Support\Facades\DB;
