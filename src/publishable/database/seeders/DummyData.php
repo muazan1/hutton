@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
-use Sty\Hutton\Models\{Customer, JoinerPricing, Plot, Site, BuildingType, Service};
+use Sty\Hutton\Models\{Customer, JoinerPricing, Plot, ServicePricing, Site, BuildingType, Service};
 
 class DummyData extends Seeder
 {
@@ -177,6 +177,8 @@ class DummyData extends Seeder
 
         $builders = User::where('role_id',2)->get();
 
+        $buildingTypes = BuildingType::all();
+
         foreach($services as $service) {
 
             foreach ($builders as $builder)
@@ -185,7 +187,17 @@ class DummyData extends Seeder
                     [
                         'builder_id'    => $builder->id,
                         'service_id'    => $service->id,
-                        'amount'        => rand(50,500)
+                        'price'        => rand(50,500)
+                    ]
+                );
+            }
+
+            foreach ($buildingTypes as $buildingType) {
+                ServicePricing::create(
+                    [
+                        'building_type_id'    => $buildingType->id,
+                        'service_id'     => $service->id,
+                        'price' => rand(50,500)
                     ]
                 );
             }
