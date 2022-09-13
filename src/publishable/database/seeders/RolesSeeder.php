@@ -23,11 +23,17 @@ class RolesSeeder extends Seeder
             [
                 'id' => 4,
                 'name' => 'huttonscope_admin',
-            ],
+            ]
+        );
+
+        DB::table('roles')->insert(
             [
                 'id' => 3,
                 'name' => 'joiner',
             ]
         );
+
+
+
     }
 }
