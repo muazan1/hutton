@@ -21,7 +21,7 @@ class MasterAdmin extends Seeder
     public function run()
     {
         User::create([
-            'role_id' => 4,
+            'role_id' => 1,
             'uuid' => (string) Str::uuid(),
             'first_name' => 'Master',
             'last_name' => 'Admin',

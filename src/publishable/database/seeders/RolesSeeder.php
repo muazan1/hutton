@@ -19,12 +19,12 @@ class RolesSeeder extends Seeder
 
     public function run()
     {
-        DB::table('roles')->insert(
-            [
-                'id' => 4,
-                'name' => 'huttonscope_admin',
-            ]
-        );
+//        DB::table('roles')->insert(
+//            [
+//                'id' => 4,
+//                'name' => 'huttonscope_admin',
+//            ]
+//        );
 
         DB::table('roles')->insert(
             [
