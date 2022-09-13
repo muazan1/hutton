@@ -259,5 +259,8 @@ Route::group(['prefix' => 'api/v1', 'as' => 'api/v1'], function () {
         DashboardController::class,
         'recentlyCompletedWork',
     ]);
+
+//    for site dashboard
+    Route::get('site/{slug}/jobs',[HsJobsController::class,'jobsOnSite']);
 });
 //});
