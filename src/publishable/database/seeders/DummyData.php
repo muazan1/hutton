@@ -2,13 +2,14 @@
 
 namespace Database\Seeders;
 
+use App\Models\User;
 use Illuminate\Database\Seeder;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
-use Sty\Hutton\Models\{Customer, Plot, Site, BuildingType, Service};
+use Sty\Hutton\Models\{Customer, JoinerPricing, Plot, Site, BuildingType, Service};
 
 class DummyData extends Seeder
 {
@@ -123,5 +124,73 @@ class DummyData extends Seeder
             ['building_type_id' => 2, 'plot_name' => 'PL-009'],
             ['building_type_id' => 2, 'plot_name' => 'PL-010'],
         ]);
+
+//        for generating joiners
+
+        User::create([
+            'role_id' => 3,
+            'uuid' => (string) Str::uuid(),
+            'first_name' => 'Johnny',
+            'last_name' => 'Parker',
+            'email' => 'johnny@admin.com',
+            'phone' => '+923001234000',
+            'password' => Hash::make('password'),
+            'address' => 'Jump Street',
+        ]);
+
+        User::create([
+            'role_id' => 3,
+            'uuid' => (string) Str::uuid(),
+            'first_name' => 'Martin',
+            'last_name' => 'Borrote',
+            'email' => 'martin@admin.com',
+            'phone' => '+923001234110',
+            'password' => Hash::make('password'),
+            'address' => 'Jump Street',
+        ]);
+
+        User::create([
+            'role_id' => 3,
+            'uuid' => (string) Str::uuid(),
+            'first_name' => 'Salvador',
+            'last_name' => 'Stephen',
+            'email' => 'salvador@admin.com',
+            'phone' => '+923001234220',
+            'password' => Hash::make('password'),
+            'address' => 'Jump Street',
+        ]);
+
+        User::create([
+            'role_id' => 3,
+            'uuid' => (string) Str::uuid(),
+            'first_name' => 'Alex',
+            'last_name' => 'James',
+            'email' => 'alex@admin.com',
+            'phone' => '+923001234230',
+            'password' => Hash::make('password'),
+            'address' => 'Jump Street',
+        ]);
+
+//        for joiner pricings
+
+        $services = Service::all();
+
+        $builders = User::where('role_id',2)->get();
+
+        foreach($services as $service) {
+
+            foreach ($builders as $builder)
+            {
+                JoinerPricing::create(
+                    [
+                        'builder_id'    => $builder->id,
+                        'service_id'    => $service->id,
+                        'amount'        => rand(50,500)
+                    ]
+                );
+            }
+
+        }
+
     }
 }
