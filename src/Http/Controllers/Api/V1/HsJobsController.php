@@ -195,6 +195,7 @@ class HsJobsController extends Controller
             ]);
         }
     }
+
     public function removeJobToJoiner(Request $request, $jobId)
     {
         try {
@@ -343,15 +344,14 @@ class HsJobsController extends Controller
 
     public function jobsOnSite(Request $request,$slug)
     {
-//        dd($request,$slug);
         try{
 
             $site = Site::with('buildingTypes.plots.job')->where('slug',$slug)->first();
 
             $jobs = HsJob::with('service','plot.buildingType.site')
-                    ->whereHas('plot.buildingType.site',function ($query) use($site) {
-//                    $query->where
-                  })
+                    ->whereHas('plot.buildingType.site',function ($query) use($slug) {
+                        $query->where('slug',$slug);
+                      })
                     ->paginate(10);
 
             return response()->json([
