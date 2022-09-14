@@ -262,5 +262,8 @@ Route::group(['prefix' => 'api/v1', 'as' => 'api/v1'], function () {
 
 //    for site dashboard
     Route::get('site/{slug}/jobs',[HsJobsController::class,'jobsOnSite']);
+
+//    for jobs on each builder
+    Route::get('builder/{slug}/jobs',[HsJobsController::class,'jobsOnBuilder']);
 });
 //});

@@ -375,4 +375,36 @@ class HsJobsController extends Controller
         }
 
     }
+
+    public function jobsOnBuilder(Request $request,$slug) {
+
+        try{
+
+            $jobs = HsJob::with('service','plot.buildingType.site.builder')
+                ->whereHas('plot.buildingType.site.builder',function ($query) use($slug) {
+                    $query->where('slug',$slug);
+                })
+                ->paginate(10);
+
+            return response()->json([
+                'type' => 'success',
+                'message' => '',
+                'data' => [
+                    'jobs' => $jobs
+                ]
+            ]);
+
+        }catch(\Exception $e)
+        {
+            $message = $e->getMessage();
+
+            return response()->json([
+                'type' => 'error',
+                'message' => $message,
+                'data' => ''
+            ]);
+        }
+
+    }
+
 }
