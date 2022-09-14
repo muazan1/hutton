@@ -348,7 +348,7 @@ class HsJobsController extends Controller
 
             $site = Site::with('buildingTypes.plots.job')->where('slug',$slug)->first();
 
-            $jobs = HsJob::with('service','plot.buildingType.site')
+            $jobs = HsJob::with('service','plot.buildingType.site.builder')
                     ->whereHas('plot.buildingType.site',function ($query) use($slug) {
                         $query->where('slug',$slug);
                       })
