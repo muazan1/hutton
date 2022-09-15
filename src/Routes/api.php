@@ -267,8 +267,15 @@ Route::group(['prefix' => 'api/v1', 'as' => 'api/v1'], function () {
     Route::get('builder/{slug}/jobs',[HsJobsController::class,'jobsOnBuilder']);
 
 //    Route for site dashboard
-    Route::get('site/{slug}/dashboard',[DashboardController::class,'siteDashboard']);
 
-    Route::get('site/{slug}/dashboard/bars',[DashboardController::class,'siteDashboardBars']);
+    Route::controller( DashboardController::class)->group(function () {
+
+        Route::get('site/{slug}/dashboard','siteDashboard');
+
+        Route::get('site/{slug}/dashboard/bars','siteDashboardBars');
+
+        Route::get('site/{slug}/dashboard/completions','siteDashboardCompletionChart');
+
+    });
 });
 //});

@@ -276,4 +276,54 @@ class DashboardController extends Controller
         }
 
     }
+
+    public function siteDashboardCompletionChart (Request $request,$slug) {
+
+        try{
+            $collection = collect(Service::with('jobs.plot.buildingType.site')
+                ->whereHas('jobs.plot.buildingType.site', function ($query) use($slug) {
+                    $query->where('slug',$slug);
+                })->get()
+            )->map(function ($item) {
+
+                $name = $item->service_name;
+                $completed = ($item->jobs->where('status','completed')->count());
+                $not_completed = ($item->jobs->where('status','!=','completed')->count());
+
+                return [$name,$completed,$not_completed];
+            });
+
+            $collect = collect(HsJob::with('plot.buildingType.site')
+                        ->whereHas('plot.buildingType.site', function ($item) use($slug) {
+                            $item->where('slug',$slug);
+                        })
+                        ->get());
+
+            $completed = $collect->where('status','completed')->count();
+
+            $not_completed = $collect->where('status','!=','completed')->count();
+
+            $collection = ['completed' => $completed,'not_completed' => $not_completed];
+
+            return response()->json([
+                'type' => 'success',
+                'message' => '',
+                'data' => [
+                    'collection' => $collection,
+                ],
+            ]);
+
+        }catch (\Exception $e)
+        {
+            $message = $e->getMessage();
+
+            return response()->json([
+                'type' => 'error',
+                'message' => $message,
+                'data' => '',
+            ]);
+
+        }
+
+    }
 }
