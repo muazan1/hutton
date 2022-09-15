@@ -280,7 +280,7 @@ class DashboardController extends Controller
     public function siteDashboardCompletionChart (Request $request,$slug) {
 
         try{
-            
+
             $collect = collect(HsJob::with('plot.buildingType.site')
                         ->whereHas('plot.buildingType.site', function ($item) use($slug) {
                             $item->where('slug',$slug);
