@@ -18,4 +18,8 @@ class Service extends Model
     {
         return $this->hasMany(JoinerPricing::class);
     }
+
+    public function jobs () {
+        return $this->hasMany(HsJob::class,'service_id','id');
+    }
 }

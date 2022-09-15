@@ -15,7 +15,7 @@ use Mockery\Container;
 
 use Sty\Hutton\Http\Requests\CreateSiteRequest;
 
-use Sty\Hutton\Models\{HsJob, MiscWork, Customer, Plot, Site, WeeklyWork, HuttonUser, DailyWork};
+use Sty\Hutton\Models\{HsJob, MiscWork, Customer, Plot, Service, Site, WeeklyWork, HuttonUser, DailyWork};
 
 use Carbon\Carbon;
 
@@ -207,5 +207,50 @@ class DashboardController extends Controller
             ]);
 
         }
+    }
+
+    public function siteDashboard(Request $request,$slug) {
+
+        try{
+
+            $plots = HsJob::with('plot.buildingType.site')
+                        ->whereHas('plot.buildingType.site', function ($query) use($slug) {
+                            $query->where('slug',$slug);
+                        })->paginate(10);
+
+            $collection = collect(Service::with('jobs.plot.buildingType.site')
+                            ->whereHas('jobs.plot.buildingType.site', function ($query) use($slug) {
+                                $query->where('slug',$slug);
+                            })->get()
+                        )->map(function ($item) {
+
+                            $name = $item->service_name;
+                            $completed = ($item->jobs->where('status','completed')->count());
+                            $not_completed = ($item->jobs->where('status','!=','completed')->count());
+
+                            return [$name,$completed,$not_completed];
+                        });
+
+            return response()->json([
+                'type' => 'success',
+                'message' => '',
+                'data' => [
+                    'plots' => $plots,
+                    'collection' => $collection,
+                ],
+            ]);
+
+        }catch (\Exception $e)
+        {
+            $message = $e->getMessage();
+
+            return response()->json([
+                'type' => 'error',
+                'message' => $message,
+                'data' => '',
+            ]);
+
+        }
+
     }
 }
