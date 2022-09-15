@@ -386,10 +386,51 @@ class HsJobsController extends Controller
                 })
                 ->paginate(10);
 
+            $collection = collect(Site::with('builder','buildingTypes.plots.job')
+                            ->whereHas('builder',function ($query) use($slug) {
+                                $query->where('slug',$slug);
+                            })
+//                            ->where('slug',$slug)
+                            ->get())->map(function ($item) {
+                                $site_name = $item->site_name;
+                                $completed = 0;
+                                $not_completed = 0;
+
+                                if($item->buildingTypes != null )
+                                {
+                                    foreach($item->buildingTypes as $buildinType)
+                                    {
+                                        if($buildinType->plots != null )
+                                        {
+//
+                                            foreach($buildinType->plots as $plot)
+                                            {
+//                                                dump($plot->job->count());
+                                                $completed += $plot->job->where('status','completed')->count();
+                                                $not_completed += $plot->job->where('status','!=','completed')->count();
+                                            }
+                                        }else{
+                                            $completed += 0;
+                                            $not_completed += 0;
+                                        }
+                                    }
+                                }
+                                else{
+                                    $completed += 0;
+                                    $not_completed += 0;
+                                }
+
+                                return [$site_name,$completed,$not_completed];
+                            });
+
+//            $completed = $collection->where('status','completed')->count();
+//            $not_completed = $collection->where('status','!=','completed')->count();
+
             return response()->json([
                 'type' => 'success',
                 'message' => '',
                 'data' => [
+                    'collection' => $collection,
                     'jobs' => $jobs
                 ]
             ]);
