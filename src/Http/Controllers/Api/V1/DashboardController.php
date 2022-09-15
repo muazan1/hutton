@@ -213,7 +213,7 @@ class DashboardController extends Controller
 
         try{
 
-            $plots = HsJob::with('plot.buildingType.site')
+            $plots = HsJob::with('plot.buildingType.site','service')
                         ->whereHas('plot.buildingType.site', function ($query) use($slug) {
                             $query->where('slug',$slug);
                         })->paginate(10);
