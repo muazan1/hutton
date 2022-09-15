@@ -218,24 +218,47 @@ class DashboardController extends Controller
                             $query->where('slug',$slug);
                         })->paginate(10);
 
-            $collection = collect(Service::with('jobs.plot.buildingType.site')
-                            ->whereHas('jobs.plot.buildingType.site', function ($query) use($slug) {
-                                $query->where('slug',$slug);
-                            })->get()
-                        )->map(function ($item) {
-
-                            $name = $item->service_name;
-                            $completed = ($item->jobs->where('status','completed')->count());
-                            $not_completed = ($item->jobs->where('status','!=','completed')->count());
-
-                            return [$name,$completed,$not_completed];
-                        });
-
             return response()->json([
                 'type' => 'success',
                 'message' => '',
                 'data' => [
                     'plots' => $plots,
+                ],
+            ]);
+
+        }catch (\Exception $e)
+        {
+            $message = $e->getMessage();
+
+            return response()->json([
+                'type' => 'error',
+                'message' => $message,
+                'data' => '',
+            ]);
+
+        }
+    }
+
+    public function siteDashboardBars (Request $request,$slug) {
+
+        try{
+            $collection = collect(Service::with('jobs.plot.buildingType.site')
+                ->whereHas('jobs.plot.buildingType.site', function ($query) use($slug) {
+                    $query->where('slug',$slug);
+                })->get()
+            )->map(function ($item) {
+
+                $name = $item->service_name;
+                $completed = ($item->jobs->where('status','completed')->count());
+                $not_completed = ($item->jobs->where('status','!=','completed')->count());
+
+                return [$name,$completed,$not_completed];
+            });
+
+            return response()->json([
+                'type' => 'success',
+                'message' => '',
+                'data' => [
                     'collection' => $collection,
                 ],
             ]);

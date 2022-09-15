@@ -268,5 +268,7 @@ Route::group(['prefix' => 'api/v1', 'as' => 'api/v1'], function () {
 
 //    Route for site dashboard
     Route::get('site/{slug}/dashboard',[DashboardController::class,'siteDashboard']);
+
+    Route::get('site/{slug}/dashboard/bars',[DashboardController::class,'siteDashboardBars']);
 });
 //});
