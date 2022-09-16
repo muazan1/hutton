@@ -28,12 +28,12 @@ use Exception;
 
 class BuildingTypeController extends Controller
 {
-    public function SiteBuildingTypes(Request $request, $siteId)
+    public function SiteBuildingTypes(Request $request, $slug)
     {
         try {
             $search = $request->search ?? '';
 
-            $buildingTypes = BuildingType::where('site_id', $siteId)
+            $buildingTypes = BuildingType::where('slug', $slug)
                 ->where(function ($query) use ($search) {
                     $query
                         ->where(
@@ -101,9 +101,11 @@ class BuildingTypeController extends Controller
                 ]);
             }
 
+            $site = Site::where('slug',$request->site_id)->first();
+
             $data = [
                 'uuid' => Str::uuid(),
-                'site_id' => $request->site_id,
+                'site_id' => $site->id,
                 'building_type_name' => $request->building_type_name,
                 'description' => $request->description,
             ];

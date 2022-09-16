@@ -62,7 +62,7 @@ Route::group(['prefix' => 'api/v1', 'as' => 'api/v1'], function () {
     ])->name('customer.site');
 
     //Route for getting Building Types for specific site
-    Route::get('site/{site}/building-types', [
+    Route::get('site/{slug}/building-types', [
         BuildingTypeController::class,
         'SiteBuildingTypes',
     ])->name('sites.buildingTypes');

@@ -94,9 +94,10 @@ class SiteController extends Controller
         }
     }
 
-    public function edit(Request $request, $siteId)
+    public function edit(Request $request, $slug)
     {
-        $site = Site::findOrFail($siteId);
+
+        $site = Site::where('slug',$slug)->first();
 
         return response()->json([
             'type' => 'success',
