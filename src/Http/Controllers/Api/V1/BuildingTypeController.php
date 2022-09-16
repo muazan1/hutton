@@ -29,7 +29,9 @@ class BuildingTypeController extends Controller
         try {
             $search = $request->search ?? '';
 
-            $buildingTypes = BuildingType::where('slug', $slug)
+            $site = Site::where('slug',$slug)->first();
+
+            $buildingTypes = BuildingType::where('site_id', $site->id)
                 ->where(function ($query) use ($search) {
                     $query
                         ->where(
