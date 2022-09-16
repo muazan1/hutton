@@ -16,15 +16,11 @@ use Illuminate\Support\Facades\Validator;
 
 use Illuminate\Validation\Rule;
 
-use DataTables;
-
-use DB;
-
-use Str;
-
 use Illuminate\Database\Eloquent\Collection;
 
 use Exception;
+
+use Sty\Hutton\Models\Site;
 
 class BuildingTypeController extends Controller
 {
