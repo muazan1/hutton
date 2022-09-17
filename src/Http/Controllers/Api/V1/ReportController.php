@@ -12,7 +12,9 @@ use Sty\Hutton\Models\WeeklyWork;
 
 use Sty\Hutton\Http\Service\ExportExcel;
 
-use \Maatwebsite\Excel\ExcelServiceProvider;
+//use \Maatwebsite\Excel\ExcelServiceProvider;
+
+use Maatwebsite\Excel\Facades\Excel;
 
 class ReportController extends Controller
 {
@@ -30,6 +32,6 @@ class ReportController extends Controller
 
     public function generateExcel($view, $data, $filename)
     {
-        return Excel::store(new ExportExcel($data, $view), $filename);
+        return Excel::download(new ExportExcel($data, $view), $filename);
     }
 }
