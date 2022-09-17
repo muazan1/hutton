@@ -54,7 +54,7 @@ class HuttonScopeProvider extends ServiceProvider
 
         $this->app->register(\Barryvdh\DomPDF\ServiceProvider::class);
 
-//        $this->app->register(Maatwebsite\Excel\ExcelServiceProvider::class);
+        $this->app->register(Maatwebsite\Excel\ExcelServiceProvider::class);
 
     }
 }
