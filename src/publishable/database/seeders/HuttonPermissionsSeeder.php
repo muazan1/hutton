@@ -327,6 +327,15 @@ class HuttonPermissionsSeeder extends Seeder
                 'api_permission' => 'work:weekly',
             ],
 
+//            permission for admin reports
+            [
+                'id' => 150,
+                'name' => 'Admin Reports',
+                'module' => 'reports',
+                'permission' => 'reports',
+                'api_permission' => 'admin:reports',
+            ],
+
             /* permissions end here */
         ]);
     }

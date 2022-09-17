@@ -18,7 +18,8 @@ use Sty\Hutton\Http\Controllers\Api\V1\{
     WageSheetController,
     JobFilterController,
     WorkController,
-    DashboardController
+    DashboardController,
+    ReportController
 };
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
@@ -275,6 +276,17 @@ Route::group(['prefix' => 'api/v1', 'as' => 'api/v1'], function () {
         Route::get('site/{slug}/dashboard/bars','siteDashboardBars');
 
         Route::get('site/{slug}/dashboard/completions','siteDashboardCompletionChart');
+
+    });
+
+//    Admin Report Routes
+    Route::controller(ReportController::class)->group(function () {
+
+        Route::prefix('admin/reports/')->group(function () {
+
+            Route::post('builder-jobs-completed','builderJobsCompleted');
+
+        });
 
     });
 });
