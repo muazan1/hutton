@@ -21,6 +21,6 @@ class ReportController extends Controller
 
         $filename = 'excel.xlsx';
 
-        ExportExcel::export($collection,$filename);
+        return ExportExcel::export($collection,$filename);
     }
 }
