@@ -12,8 +12,6 @@ use Sty\Hutton\Models\WeeklyWork;
 
 use Sty\Hutton\Http\Service\ExportExcel;
 
-//use \Maatwebsite\Excel\ExcelServiceProvider;
-
 use Maatwebsite\Excel\Facades\Excel;
 
 class ReportController extends Controller
