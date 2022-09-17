@@ -12,15 +12,24 @@ use Sty\Hutton\Models\WeeklyWork;
 
 use Sty\Hutton\Http\Service\ExportExcel;
 
+use \Maatwebsite\Excel\ExcelServiceProvider;
+
 class ReportController extends Controller
 {
 
     public function builderJobsCompleted (Request $request)
     {
-        $collection = Service::all();
+        $data = Service::all();
 
         $filename = 'excel.xlsx';
 
-        return ExportExcel::export($collection,$filename);
+        $view = 'Hutton::excel.builderJobsCompleted';
+
+        return $this->generateExcel($view,$data,$filename);
+    }
+
+    public function generateExcel($view, $data, $filename)
+    {
+        return Excel::store(new ExportExcel($data, $view), $filename);
     }
 }
