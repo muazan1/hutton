@@ -138,39 +138,6 @@ class DummyData extends Seeder
             'address' => 'Jump Street',
         ]);
 
-        User::create([
-            'role_id' => 3,
-            'uuid' => (string) Str::uuid(),
-            'first_name' => 'Martin',
-            'last_name' => 'Borrote',
-            'email' => 'martin@admin.com',
-            'phone' => '+923001234110',
-            'password' => Hash::make('password'),
-            'address' => 'Jump Street',
-        ]);
-
-        User::create([
-            'role_id' => 3,
-            'uuid' => (string) Str::uuid(),
-            'first_name' => 'Salvador',
-            'last_name' => 'Stephen',
-            'email' => 'salvador@admin.com',
-            'phone' => '+923001234220',
-            'password' => Hash::make('password'),
-            'address' => 'Jump Street',
-        ]);
-
-        User::create([
-            'role_id' => 3,
-            'uuid' => (string) Str::uuid(),
-            'first_name' => 'Alex',
-            'last_name' => 'James',
-            'email' => 'alex@admin.com',
-            'phone' => '+923001234230',
-            'password' => Hash::make('password'),
-            'address' => 'Jump Street',
-        ]);
-
 //        for joiner pricings
 
         $services = Service::all();
