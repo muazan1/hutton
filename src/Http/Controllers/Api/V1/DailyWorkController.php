@@ -56,6 +56,8 @@ class DailyWorkController extends Controller
                 ]);
             }
 
+
+
             $plotJob = HsJob::where('plot_id', $request->plot_id)
                 ->where('service_id', $request->service_id)
                 ->first();
@@ -71,9 +73,11 @@ class DailyWorkController extends Controller
                 ]);
             }
 
+            $site = Site::where('slug',$request->site_id)->first();
+
             $data = [
                 'week_id' => $request->week_id,
-                'site_id' => $request->site_id,
+                'site_id' => $site->id,
                 'plot_id' => $request->plot_id,
                 'service_id' => $request->service_id,
                 'day' => $request->day,
