@@ -319,6 +319,13 @@ class HuttonPermissionsSeeder extends Seeder
                 'permission' => 'wage-sheet',
                 'api_permission' => 'work:daily',
             ],
+            [
+                'id' => 95,
+                'name' => 'My Weekly Work',
+                'module' => 'work',
+                'permission' => 'my-weekly-work',
+                'api_permission' => 'work:weekly',
+            ],
 
             /* permissions end here */
         ]);
