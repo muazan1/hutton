@@ -21,15 +21,21 @@ class ReportController extends Controller
     {
         $data = Service::all();
 
-        $filename = 'excel_exports/reports/excel.xlsx';
+        $rand = rand(10000000,9999999999);
+
+        $filename = ('public/excel_exports/reports/report_'.$rand.'.xlsx');
 
         $view = 'Hutton::excel.builderJobsCompleted';
 
-        return $this->generateExcel($view,$data,$filename);
+        $this->generateExcel($view,$data,$filename);
+
+        return (asset('storage/excel_exports/reports/report_'.$rand.'.xlsx'));
+
+//        return response()->download($filename);
     }
 
     public function generateExcel($view, $data, $filename)
     {
-        return Excel::store(new ExportExcel($data, $view), $filename);
+        return Excel::store(new ExportExcel($data, $view), ($filename));
     }
 }
