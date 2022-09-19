@@ -1,0 +1,45 @@
+<?php
+
+namespace App\Services;
+
+use Illuminate\Contracts\View\View;
+use Maatwebsite\Excel\Concerns\FromView;
+use Maatwebsite\Excel\Concerns\WithColumnWidths;
+use Maatwebsite\Excel\Concerns\WithColumnFormatting;
+use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
+use Maatwebsite\Excel\Concerns\WithEvents;
+use Maatwebsite\Excel\Concerns\WithDrawings;
+use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
+
+class SpreedSheet implements FromView
+{
+    public $data;
+    public $view;
+
+    public function __construct($data, $view)
+    {
+        $this->data = $data;
+        $this->view = $view;
+    }
+
+    public function view(): View
+    {
+        $view = $this->view;
+        $data = $this->data;
+
+        // dd($data);
+        return view($view, compact('data'));
+    }
+
+    // private function logo()
+    // {
+    //     $drawing = new Drawing();
+    //     $drawing->setName('Logo');
+    //     $drawing->setDescription('This is my logo');
+    //     $drawing->setPath(asset('storage/report_assets/loe-header-logo.svg'));
+    //     $drawing->setHeight(90);
+    //     $drawing->setCoordinates('B3');
+
+    //     return $drawing;
+    // }
+}

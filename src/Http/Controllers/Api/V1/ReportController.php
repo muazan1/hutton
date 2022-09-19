@@ -21,7 +21,7 @@ class ReportController extends Controller
     {
         $data = Service::all();
 
-        $filename = 'excel.xlsx';
+        $filename = 'excel_exports/reports/excel.xlsx';
 
         $view = 'Hutton::excel.builderJobsCompleted';
 
@@ -30,6 +30,6 @@ class ReportController extends Controller
 
     public function generateExcel($view, $data, $filename)
     {
-        return Excel::download(new ExportExcel($data, $view), $filename);
+        return Excel::store(new ExportExcel($data, $view), $filename);
     }
 }
