@@ -286,6 +286,14 @@ Route::group(['prefix' => 'api/v1', 'as' => 'api/v1'], function () {
 
             Route::post('builder-jobs-completed','builderJobsCompleted');
 
+            Route::post('builder-remaining-jobs','builderRemainingJobs');
+
+            Route::post('joiner-completed-jobs','joinerCompletedJobs');
+
+            Route::post('joiner-wage-sheet','joinerWageSheet');
+
+            Route::post('builder-invoice-sheet','builderInvoiceSheet');
+
         });
 
     });

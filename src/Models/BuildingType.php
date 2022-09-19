@@ -19,4 +19,9 @@ class BuildingType extends Model
     public function plots () {
         return $this->hasMany(Plot::class,'building_type_id','id');
     }
+
+//    public function pricing()
+//    {
+//        return $this->belongsTo(ServicePricing::class, 'building_type_id', 'id');
+//    }
 }

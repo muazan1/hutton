@@ -6,6 +6,7 @@ use Illuminate\Routing\Controller;
 
 use Illuminate\Http\Request;
 
+use Sty\Hutton\Models\HsJob;
 use Sty\Hutton\Models\Service;
 
 use Sty\Hutton\Models\WeeklyWork;
@@ -17,22 +18,182 @@ use Maatwebsite\Excel\Facades\Excel;
 class ReportController extends Controller
 {
 
-    public function builderJobsCompleted (Request $request)
+    public function builderJobsCompleted(Request $request)
     {
-        $data = Service::all();
+        $data = HsJob::with(
+            'plot.buildingType.site.builder',
+            'service'
+        )
+            ->where('status', 'completed');
 
-        $rand = rand(10000000,9999999999);
+        if ($request->builder != 'all') {
+            $data =
+                $data->whereHas('plot.buildingType.site.builder', function ($query) use ($request) {
+                    $query->where('id', $request->builders);
+                });
+        }
 
-        $filename = ('public/excel_exports/reports/report_'.$rand.'.xlsx');
+        $data = collect($data->get());
+
+        $rand = rand(10000000, 9999999999);
+
+        $filename = ('public/excel_exports/reports/report_' . $rand . '.xlsx');
 
         $view = 'Hutton::excel.builderJobsCompleted';
 
-        $this->generateExcel($view,$data,$filename);
+        $this->generateExcel($view, $data, $filename);
 
-        return (asset('storage/excel_exports/reports/report_'.$rand.'.xlsx'));
+        return (asset('storage/excel_exports/reports/report_' . $rand . '.xlsx'));
 
-//        return response()->download($filename);
     }
+
+    public function builderRemainingJobs(Request $request)
+    {
+
+        $data = HsJob::with(
+            'plot.buildingType.site.builder',
+            'service'
+        )
+            ->where('status', '!=', 'completed');
+
+        if ($request->builder_id != null) {
+            $data =
+                $data->whereHas('plot.buildingType.site.builder', function ($query) use ($request) {
+                    $query->where('id', $request->builder_id);
+                });
+        }
+
+        if ($request->site_id != null) {
+            $data =
+                $data->whereHas('plot.buildingType.site', function ($query) use ($request) {
+                    $query->where('id', $request->site_id);
+                });
+        }
+
+        $data = collect($data->get());
+
+        $rand = rand(10000000, 9999999999);
+
+        $filename = ('public/excel_exports/reports/report_' . $rand . '.xlsx');
+
+        $view = 'Hutton::excel.builderRemainingJobs';
+
+        $this->generateExcel($view, $data, $filename);
+
+        return (asset('storage/excel_exports/reports/report_' . $rand . '.xlsx'));
+    }
+
+    public function joinerCompletedJobs(Request $request)
+    {
+
+        $data = HsJob::with(
+            'plot.buildingType.site.builder',
+            'service'
+        )
+            ->where('status', '!=', 'completed');
+
+        if ($request->builder_id != null) {
+            $data =
+                $data->whereHas('plot.buildingType.site.builder', function ($query) use ($request) {
+                    $query->where('id', $request->builder_id);
+                });
+        }
+
+        if ($request->site_id != null) {
+            $data =
+                $data->whereHas('plot.buildingType.site', function ($query) use ($request) {
+                    $query->where('id', $request->site_id);
+                });
+        }
+
+        $data = collect($data->get());
+
+        $rand = rand(10000000, 9999999999);
+
+        $filename = ('public/excel_exports/reports/report_' . $rand . '.xlsx');
+
+        $view = 'Hutton::excel.builderRemainingJobs';
+
+        $this->generateExcel($view, $data, $filename);
+
+        return (asset('storage/excel_exports/reports/report_' . $rand . '.xlsx'));
+
+    }
+
+    public function joinerWageSheet(Request $request)
+    {
+
+        $data = HsJob::with(
+            'plot.buildingType.site.builder',
+            'service'
+        )
+            ->where('status', '!=', 'completed');
+
+        if ($request->builder_id != null) {
+            $data =
+                $data->whereHas('plot.buildingType.site.builder', function ($query) use ($request) {
+                    $query->where('id', $request->builder_id);
+                });
+        }
+
+        if ($request->site_id != null) {
+            $data =
+                $data->whereHas('plot.buildingType.site', function ($query) use ($request) {
+                    $query->where('id', $request->site_id);
+                });
+        }
+
+        $data = collect($data->get());
+
+        $rand = rand(10000000, 9999999999);
+
+        $filename = ('public/excel_exports/reports/report_' . $rand . '.xlsx');
+
+        $view = 'Hutton::excel.builderRemainingJobs';
+
+        $this->generateExcel($view, $data, $filename);
+
+        return (asset('storage/excel_exports/reports/report_' . $rand . '.xlsx'));
+
+    }
+
+    public function builderInvoiceSheet(Request $request)
+    {
+
+        $data = HsJob::with(
+            'plot.buildingType.site.builder',
+            'service'
+        )
+            ->where('status', '!=', 'completed');
+
+        if ($request->builder_id != null) {
+            $data =
+                $data->whereHas('plot.buildingType.site.builder', function ($query) use ($request) {
+                    $query->where('id', $request->builder_id);
+                });
+        }
+
+        if ($request->site_id != null) {
+            $data =
+                $data->whereHas('plot.buildingType.site', function ($query) use ($request) {
+                    $query->where('id', $request->site_id);
+                });
+        }
+
+        $data = collect($data->get());
+
+        $rand = rand(10000000, 9999999999);
+
+        $filename = ('public/excel_exports/reports/report_' . $rand . '.xlsx');
+
+        $view = 'Hutton::excel.builderRemainingJobs';
+
+        $this->generateExcel($view, $data, $filename);
+
+        return (asset('storage/excel_exports/reports/report_' . $rand . '.xlsx'));
+
+    }
+
 
     public function generateExcel($view, $data, $filename)
     {
