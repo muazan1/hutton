@@ -115,7 +115,7 @@ class JobFilterController extends Controller
 
     public function joinerJobFilter(Request $request)
     {
-        dd($request);
+
         try {
 
             $jobs = HsJob::with('plot.buildingType.site', 'service');
