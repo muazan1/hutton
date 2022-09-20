@@ -188,6 +188,11 @@ Route::group(['prefix' => 'api/v1', 'as' => 'api/v1'], function () {
         'adminJobFilter',
     ])->name('admin.job.filter');
 
+    Route::post('joiner/jobs/filter', [
+        JobFilterController::class,
+        'joinerJobFilter',
+    ])->name('joiner.job.filter');
+
     Route::get('jobs/completed', [
         JobFilterController::class,
         'completedJobs',

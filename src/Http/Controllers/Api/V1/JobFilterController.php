@@ -112,4 +112,58 @@ class JobFilterController extends Controller
             ]);
         }
     }
+
+    public function joinerJobFilter(Request $request)
+    {
+        try {
+
+            $jobs = HsJob::with('plot.buildingType.site', 'service');
+
+            if ($request->site != null) {
+                $jobs = $jobs->whereHas('plot.buildingType.site', function (
+                    $query
+                ) use ($request) {
+                    $query->where('slug', $request->site);
+                });
+            }
+
+
+            if ($request->buidling_type != null) {
+                $jobs = $jobs->whereHas('plot.buildingType', function (
+                    $query
+                ) use ($request) {
+                    $query->where('id', $request->building_type);
+                });
+            }
+
+
+            if ($request->plot != null) {
+                $jobs = $jobs->where('plot_id', $request->plot);
+            }
+
+            if ($request->service != null) {
+                $jobs = $jobs->where('service_id', $request->service);
+            }
+
+            if ($request->status != null) {
+                $jobs = $jobs->where('status', $request->status);
+            }
+
+            $jobs = $jobs->paginate(10);
+
+            return response()->json([
+                'type' => 'success',
+                'message' => '',
+                'data' => ['jobs' => $jobs],
+            ]);
+        } catch (\Throwable $th) {
+            $message = $th->getMessage();
+
+            return response()->json([
+                'type' => 'error',
+                'message' => $message,
+                'data' => '',
+            ]);
+        }
+    }
 }
