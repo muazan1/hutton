@@ -115,6 +115,7 @@ class JobFilterController extends Controller
 
     public function joinerJobFilter(Request $request)
     {
+        dd($request);
         try {
 
             $jobs = HsJob::with('plot.buildingType.site', 'service');
@@ -127,7 +128,6 @@ class JobFilterController extends Controller
                 });
             }
 
-
             if ($request->buidling_type != null) {
                 $jobs = $jobs->whereHas('plot.buildingType', function (
                     $query
@@ -135,7 +135,6 @@ class JobFilterController extends Controller
                     $query->where('id', $request->building_type);
                 });
             }
-
 
             if ($request->plot != null) {
                 $jobs = $jobs->where('plot_id', $request->plot);
