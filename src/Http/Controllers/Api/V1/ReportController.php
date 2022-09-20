@@ -61,14 +61,14 @@ class ReportController extends Controller
         )
             ->where('status', '!=', 'completed');
 
-        if ($request->builder_id != null) {
+        if ($request->builder_slug != 'all') {
             $data =
                 $data->whereHas('plot.buildingType.site.builder', function ($query) use ($request) {
-                    $query->where('id', $request->builder_id);
+                    $query->where('slug', $request->builder_slug);
                 });
         }
 
-        if ($request->site_id != null) {
+        if ($request->site_id != 'all') {
             $data =
                 $data->whereHas('plot.buildingType.site', function ($query) use ($request) {
                     $query->where('id', $request->site_id);
