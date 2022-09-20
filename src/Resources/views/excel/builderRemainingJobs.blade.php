@@ -1,25 +1,22 @@
 <table>
-    <tr>
-        <td>
-            {{'Site'}}
-        </td>
-        <td>
-            {{'Joiner'}}
-        </td>
-        <td>
+    <tr style="font-weight: bold">
+        <td style="font-weight: bold">
             {{'Service'}}
         </td>
-        <td>
-            {{'Date & Time'}}
+        <td style="font-weight: bold">
+            {{'Plot'}}
         </td>
-        <td>
-            {{'Joiner Price'}}
+        <td style="font-weight: bold">
+            {{'Building Type'}}
         </td>
-        <td>
-            {{'Service Price'}}
+        <td style="font-weight: bold">
+            {{'Site'}}
         </td>
-        <td>
-            {{'MD Hutton Profit'}}
+        <td style="font-weight: bold">
+            {{'Builder'}}
+        </td>
+        <td style="font-weight: bold">
+            {{'Status'}}
         </td>
     </tr>
 
@@ -27,25 +24,22 @@
         @foreach($data as $index => $value)
             <tr>
                 <td>
-                    {{ $value->plot->buildingType->site->site_name }}
-                </td>
-                <td>
-                    {{'Joiner'}}
-                </td>
-                <td>
                     {{ $value->service->service_name }}
                 </td>
                 <td>
-                    {{ \Carbon\Carbon::parse($value->updated_at)->format('d/m/Y H:i:s A') }}
+                    {{ $value->plot->plot_name }}
                 </td>
                 <td>
-                    {{'Joiner Price'}}
+                    {{ $value->plot->buildingType->building_type_name }}
                 </td>
                 <td>
-                    {{'Service Price'}}
+                    {{$value->plot->buildingType->site->site_name}}
                 </td>
                 <td>
-                    {{'MD Hutton Profit'}}
+                    {{$value->plot->buildingType->site->builder->customer_name}}
+                </td>
+                <td>
+                    {{ $value->status }}
                 </td>
             </tr>
         @endforeach

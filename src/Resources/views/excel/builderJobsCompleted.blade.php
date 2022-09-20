@@ -1,24 +1,24 @@
 <table>
     <tr>
-        <td>
+        <td style="font-weight: bold">
             {{'Site'}}
         </td>
-        <td>
+        <td style="font-weight: bold">
             {{'Joiner'}}
         </td>
-        <td>
+        <td style="font-weight: bold">
             {{'Service'}}
         </td>
-        <td>
+        <td style="font-weight: bold">
             {{'Date & Time'}}
         </td>
-        <td>
+        <td style="font-weight: bold">
             {{'Joiner Price'}}
         </td>
-        <td>
+        <td style="font-weight: bold">
             {{'Service Price'}}
         </td>
-        <td>
+        <td style="font-weight: bold">
             {{'MD Hutton Profit'}}
         </td>
     </tr>

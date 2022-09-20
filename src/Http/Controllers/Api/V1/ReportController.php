@@ -6,6 +6,7 @@ use Illuminate\Routing\Controller;
 
 use Illuminate\Http\Request;
 
+use Sty\Hutton\Models\DailyWork;
 use Sty\Hutton\Models\HsJob;
 use Sty\Hutton\Models\Service;
 
@@ -14,6 +15,10 @@ use Sty\Hutton\Models\WeeklyWork;
 use Sty\Hutton\Http\Service\ExportExcel;
 
 use Maatwebsite\Excel\Facades\Excel;
+
+use App\Models\Role;
+
+use App\Models\User;
 
 class ReportController extends Controller
 {
@@ -86,25 +91,21 @@ class ReportController extends Controller
     public function joinerCompletedJobs(Request $request)
     {
 
-        $data = HsJob::with(
-            'plot.buildingType.site.builder',
-            'service'
-        )
-            ->where('status', '!=', 'completed');
-
-        if ($request->builder_id != null) {
-            $data =
-                $data->whereHas('plot.buildingType.site.builder', function ($query) use ($request) {
-                    $query->where('id', $request->builder_id);
-                });
+        if($request->joiner != 'all')
+        {
+            $data = DailyWork::with('weeklyWork.joiner','plot.buildingType.site.builder','service')
+                ->whereHas('weeklyWork', function ($query) use($request)
+                    {
+                        $query->where('user_id',$request->joiner);
+                    }
+                );
+        }
+        else
+        {
+            $data = DailyWork::with('weeklyWork.joiner','plot.buildingType.site.builder','service');
         }
 
-        if ($request->site_id != null) {
-            $data =
-                $data->whereHas('plot.buildingType.site', function ($query) use ($request) {
-                    $query->where('id', $request->site_id);
-                });
-        }
+        $data = $data->whereBetween('created_at',[$request->date_from,$request->date_to]);
 
         $data = collect($data->get());
 
@@ -112,7 +113,7 @@ class ReportController extends Controller
 
         $filename = ('public/excel_exports/reports/report_' . $rand . '.xlsx');
 
-        $view = 'Hutton::excel.builderRemainingJobs';
+        $view = 'Hutton::excel.joinerCompletedJobs';
 
         $this->generateExcel($view, $data, $filename);
 
@@ -123,33 +124,28 @@ class ReportController extends Controller
     public function joinerWageSheet(Request $request)
     {
 
-        $data = HsJob::with(
-            'plot.buildingType.site.builder',
-            'service'
-        )
-            ->where('status', '!=', 'completed');
+        $joinerRole = Role::where('name','joiner')->first();
 
-        if ($request->builder_id != null) {
-            $data =
-                $data->whereHas('plot.buildingType.site.builder', function ($query) use ($request) {
-                    $query->where('id', $request->builder_id);
-                });
-        }
+        $joiners = User::where('role_id',$joinerRole->id)->get();
 
-        if ($request->site_id != null) {
-            $data =
-                $data->whereHas('plot.buildingType.site', function ($query) use ($request) {
-                    $query->where('id', $request->site_id);
-                });
-        }
+        $data = DailyWork::with('weeklyWork.joiner')
+            ->whereBetween('created_at',[$request->date_from,$request->date_to]);
 
-        $data = collect($data->get());
+        $data = collect($data->get())
+            ->map(function ($item) {
+                $item->joiner_name = $item->weeklyWork->joiner->first_name.' '.$item->weeklyWork->joiner->last_name;
+
+                $item->total_amount = $item->sum('amount');
+
+                return ['joiner_name' => $item->joiner_name ,'total_amount' => $item->total_amount] ;
+            })
+            ->unique();
 
         $rand = rand(10000000, 9999999999);
 
         $filename = ('public/excel_exports/reports/report_' . $rand . '.xlsx');
 
-        $view = 'Hutton::excel.builderRemainingJobs';
+        $view = 'Hutton::excel.joinerWageSheet';
 
         $this->generateExcel($view, $data, $filename);
 
@@ -194,9 +190,9 @@ class ReportController extends Controller
 
     }
 
-
     public function generateExcel($view, $data, $filename)
     {
         return Excel::store(new ExportExcel($data, $view), ($filename));
     }
+
 }
