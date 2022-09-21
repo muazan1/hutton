@@ -15,7 +15,7 @@ class AlterServicesTableAddColumnPriority extends Migration
     {
         Schema::table('services', function (Blueprint $table) {
             $table
-                ->string('priority')
+                ->integer('priority')
                 ->nullable()
                 ->after('description');
         });
