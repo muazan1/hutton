@@ -153,11 +153,19 @@ class JoinerPricingController extends Controller
         $builderslug
     ) {
         try {
+
+            $search = $request->search ?? '';
+
             $builder = Customer::select('id')
                 ->where('slug', $builderslug)
                 ->first();
 
-            $services = Service::with([
+            $services = Service::where(function ($query) use ($search) {
+                $query
+                    ->where('service_name', 'LIKE', '%' . $search . '%')
+                    ->orWhere('description', 'LIKE', '%' . $search . '%');
+            })
+                ->with([
                 'joinerPricings' => function ($query) use ($builder) {
                     $query->where('builder_id', $builder->id);
                 },
