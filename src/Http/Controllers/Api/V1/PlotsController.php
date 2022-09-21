@@ -90,7 +90,7 @@ class PlotsController extends Controller
                 ->where(function ($query) use ($search) {
                     $query->where('plot_name', 'LIKE', '%' . $search . '%');
                 })
-                ->paginate(10);
+                ->paginate(40);
 
             return response()->json([
                 'type' => 'success',
