@@ -25,7 +25,6 @@ class ServiceController extends Controller
     {
         try {
             $search = $request->search ?? '';
-            // dd($search);
 
             $services = Service::all();
 
@@ -78,6 +77,7 @@ class ServiceController extends Controller
             $validator = Validator::make($request->all(), [
                 'service_name' => 'required',
                 'description' => 'nullable',
+                'priority' => 'nullable',
             ]);
 
             if ($validator->fails()) {
@@ -91,6 +91,7 @@ class ServiceController extends Controller
             $data = [
                 'service_name' => $request->service_name,
                 'description' => $request->description,
+                'priority' => $request->priority,
             ];
 
             $service = Service::create($data);
@@ -142,6 +143,7 @@ class ServiceController extends Controller
             $validator = Validator::make($request->all(), [
                 'service_name' => 'required',
                 'description' => 'nullable',
+                'priority' => 'nullable',
             ]);
 
             if ($validator->fails()) {
@@ -155,6 +157,7 @@ class ServiceController extends Controller
             $data = [
                 'service_name' => $request->service_name,
                 'description' => $request->description,
+                'priority' => $request->priority,
             ];
 
             $service->update($data);
