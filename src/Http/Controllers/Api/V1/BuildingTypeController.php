@@ -131,7 +131,7 @@ class BuildingTypeController extends Controller
     public function edit(Request $request, $btId)
     {
         try {
-            $buildingType = BuildingType::with('site')->findOrFail($btId);
+            $buildingType = BuildingType::with('site,builder')->findOrFail($btId);
 
             return response()->json([
                 'type' => 'success',
