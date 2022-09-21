@@ -20,7 +20,7 @@ class PlotsController extends Controller
     public function index(Request $request)
     {
         try {
-            $plots = Plot::paginate(10);
+            $plots = Plot::paginate(40);
 
             return response()->json([
                 'type' => 'success',
