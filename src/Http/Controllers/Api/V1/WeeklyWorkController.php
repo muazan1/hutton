@@ -154,12 +154,12 @@ class WeeklyWorkController extends Controller
                 ->where('status', 'in-progress')
                 ->first();
 
+
             $dailyWork = DailyWork::with('site', 'plot')
                 ->where('week_id', $weeklyWork->id)
                 ->paginate(10);
 
             $dailyMiscWork = MiscWork::where('week_id', $weeklyWork->id)
-                ->whereDate('created_at', Carbon::now())
                 ->paginate(10);
 
             return response()->json([
