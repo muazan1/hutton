@@ -98,6 +98,8 @@ class WeeklyWorkController extends Controller
                 'status' => 'completed',
             ]);
 
+//            return $week;
+
             $mail = Mail::to('admin@admin.com')->send(
                 new WorkSend($week, $pdf)
             );
