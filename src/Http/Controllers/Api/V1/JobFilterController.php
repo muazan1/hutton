@@ -115,37 +115,40 @@ class JobFilterController extends Controller
 
     public function joinerJobFilter(Request $request)
     {
-
         try {
 
             $jobs = HsJob::with('plot.buildingType.site', 'service');
 
-            if ($request->site != null) {
+            if ($request->site != 'null' && $request->site != null) {
                 $jobs = $jobs->whereHas('plot.buildingType.site', function (
                     $query
                 ) use ($request) {
-                    $query->where('slug', $request->site);
+                    $query->where('slug', $request->get('site'));
                 });
             }
 
-            if ($request->buidling_type != null) {
+            if ($request->building_type != 'null' && $request->building_type != null) {
+
                 $jobs = $jobs->whereHas('plot.buildingType', function (
                     $query
                 ) use ($request) {
-                    $query->where('id', $request->building_type);
+                    $query->where('id', $request->get('building_type'));
                 });
             }
 
-            if ($request->plot != null) {
-                $jobs = $jobs->where('plot_id', $request->plot);
+            if ($request->plot != 'null' && $request->plot != null) {
+
+                $jobs = $jobs->where('plot_id',$request->get('plot'));
+
             }
 
-            if ($request->service != null) {
-                $jobs = $jobs->where('service_id', $request->service);
+            if ($request->service != 'null' && $request->service != null) {
+                $jobs = $jobs->where('service_id', $request->get('service'));
             }
 
-            if ($request->status != null) {
-                $jobs = $jobs->where('status', $request->status);
+            if ($request->status != 'null' && $request->status != null) {
+
+                $jobs = $jobs->where('status', $request->get('status'));
             }
 
             $jobs = $jobs->paginate(10);
