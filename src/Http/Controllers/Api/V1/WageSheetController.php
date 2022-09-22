@@ -32,6 +32,10 @@ class WageSheetController extends Controller
 
             $meta = User::where('role_id', $role->id)->paginate(10);
 
+            $collection = collect($joiners)->map(function ($item) {
+                dd($item);
+            });
+
             return response()->json([
                 'type' => 'success',
                 'message' => '',
