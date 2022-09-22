@@ -154,6 +154,7 @@ Route::group(['prefix' => 'api/v1', 'as' => 'api/v1'], function () {
         WeeklyWorkController::class,
         'currentWeek',
     ]);
+
     // Get Current day
     Route::get('joiner/{joinerId}/current_day', [
         WeeklyWorkController::class,
