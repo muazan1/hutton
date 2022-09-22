@@ -114,7 +114,7 @@ Route::group(['prefix' => 'api/v1', 'as' => 'api/v1'], function () {
     ])->name('generate.weeklyWork');
 
     // Route for end Weeklky Work
-    Route::get('end-weekly-work/{weekId}', [
+    Route::post('end-weekly-work/{weekId}', [
         WeeklyWorkController::class,
         'EndWeek',
     ])->name('end.weeklyWork');
