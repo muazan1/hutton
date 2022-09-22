@@ -1,2 +1,1 @@
-Hello World,
-This is an Email Send from Laravel Package.
+Joiner Weekly Work Report from Hutton Scope.
