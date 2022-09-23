@@ -39,15 +39,15 @@ class WageSheetController extends Controller
         try {
             $role = Role::where('name', 'joiner')->first();
 
+            $search = $request->search ?? '';
+
             $joiners = HuttonUser::with('weeklyWork.dailyWork','weeklyWork.miscWork')
+                                ->where(function ($query) use ($search) {
+                                    $query->where('first_name', 'LIKE', '%' . $search . '%')
+                                          ->orWhere('last_name', 'LIKE', '%' . $search . '%');
+                                })
                                 ->where('role_id', $role->id)
                                 ->get();
-
-//            $meta = $joiners;
-
-//            $meta = HuttonUser::with('weeklyWork.dailyWork','weeklyWork.miscWork')
-//                            ->where('role_id', $role->id)->get();
-//                            ->paginate(10);
 
             $meta = collect($joiners)->map(function ($item) {
 
