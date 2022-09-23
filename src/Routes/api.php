@@ -282,6 +282,9 @@ Route::group(['prefix' => 'api/v1', 'as' => 'api/v1'], function () {
 
         Route::get('builder/{slug}/dashboard/pieChart','BuilderPieChart');
 
+        Route::get('admin/dashboard/pieChart','AdminPieChart');
+
+
     });
 
 //    Admin Report Routes

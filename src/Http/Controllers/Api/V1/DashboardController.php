@@ -373,4 +373,51 @@ class DashboardController extends Controller
 
     }
 
+
+
+    public function AdminPieChart (Request $request) {
+
+        try{
+            
+            $collect = collect(
+                HsJob::with([
+                    'plot.buildingType.site.builder',
+                    'plot.buildingType.pricing',
+                    'service.pricings',
+                    'service.joinerPricings'])
+                    ->get()
+            );
+
+            $gross = $collect->where('status','completed')->map(function ($item) {
+                return  $item->plot->buildingType->pricing->price;
+            })->sum();
+
+            $joiner = $collect->where('status','completed')->map(function ($item) {
+                return  $item->service->joinerPricings[0]->price;
+            })->sum();
+
+            $profit = $gross - $joiner;
+
+            return response()->json([
+                'type' => 'success',
+                'message' => '',
+                'data' => [
+                    'collection' =>  ['gross' => $gross, 'joiner' => $joiner,'profit' => $profit],
+                ],
+            ]);
+
+        }catch (\Exception $e)
+        {
+            $message = $e->getMessage();
+
+            return response()->json([
+                'type' => 'error',
+                'message' => $message,
+                'data' => '',
+            ]);
+
+        }
+
+    }
+
 }
