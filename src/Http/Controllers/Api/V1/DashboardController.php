@@ -378,7 +378,7 @@ class DashboardController extends Controller
     public function AdminPieChart (Request $request) {
 
         try{
-            
+
             $collect = collect(
                 HsJob::with([
                     'plot.buildingType.site.builder',
