@@ -29,11 +29,8 @@ class WageSheetController extends Controller
             $role = Role::where('name', 'joiner')->first();
 
             $joiners = HuttonUser::with('weeklyWork.dailyWork','weeklyWork.miscWork')
-//                ->whereHas('weeklyWork' , function ($query) {
-//                    $query->where('status','in-progress');
-//                })
-                ->where('role_id', $role->id)
-                ->get();
+                                ->where('role_id', $role->id)
+                                ->get();
 
             $meta = User::where('role_id', $role->id)->paginate(10);
 
@@ -44,8 +41,6 @@ class WageSheetController extends Controller
                 $item->weeklyTotal = 0;
 
                 $item->first = ($item->weeklyWork->where('status','in-progress')->first());
-
-
 
                 if($item->first->dailyWork->count() > 0){
 
@@ -61,7 +56,6 @@ class WageSheetController extends Controller
                                             ->sum('amount');
                 }
 
-
                 if($item->first->dailyWork->count() > 0){
 
                     $item->weeklyTotal += $item->first->dailyWork->sum('amount');
@@ -72,26 +66,9 @@ class WageSheetController extends Controller
                     $item->weeklyTotal += $item->first->miscWork->sum('amount');
                 }
 
-//                if($item->weeklyWork->count() > 0) {
-//
-//                    foreach ($item->weeklyWork as $value) {
-//
-//                        if($value->dailyWork->count() > 0)
-//                        {
-//                            $item->weeklyTotal += $value->dailyWork->sum('amount');
-//                        }
-//
-//                        if($value->miscWork->count() > 0)
-//                        {
-//                            $item->weeklyTotal += $value->miscWork->sum('amount');
-//                        }
-//
-//                    }
-//                }
-
-
                 return ($item);
             });
+
 
              return response()->json([
                 'type' => 'success',
