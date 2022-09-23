@@ -21,8 +21,19 @@ use Sty\Hutton\Models\{HsJobs, HuttonUser, Plot, Site, WeeklyWork, DailyWork};
 
 use Carbon\Carbon;
 
+use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Collection;
+use Illuminate\Pagination\LengthAwarePaginator;
+
 class WageSheetController extends Controller
 {
+    public function paginate($items, $perPage = 5, $page = null, $options = [])
+    {
+        $page = $page ?: (Paginator::resolveCurrentPage() ?: 1);
+        $items = $items instanceof Collection ? $items : Collection::make($items);
+        return new LengthAwarePaginator($items->forPage($page, $perPage), $items->count(), $perPage, $page, $options);
+    }
+
     public function wageSheet(Request $request)
     {
         try {
@@ -32,9 +43,11 @@ class WageSheetController extends Controller
                                 ->where('role_id', $role->id)
                                 ->get();
 
-            $meta = User::where('role_id', $role->id)->paginate(10);
+            $meta = HuttonUser::with('weeklyWork.dailyWork','weeklyWork.miscWork')
+                            ->where('role_id', $role->id)->get();
+//                            ->paginate(10);
 
-            $joiners = collect($joiners)->map(function ($item) {
+            $meta = collect($meta)->map(function ($item) {
 
                 $item->dailyTotal = 0;
 
@@ -69,6 +82,7 @@ class WageSheetController extends Controller
                 return ($item);
             });
 
+            $meta = $this->paginate($meta,10);
 
              return response()->json([
                 'type' => 'success',
