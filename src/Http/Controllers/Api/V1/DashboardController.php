@@ -349,13 +349,13 @@ class DashboardController extends Controller
 
             $profit = $gross - $joiner;
 
-            $collection = ['gross' => $gross, 'joiner' => $joiner,'profit' => $profit];
+//            $collection = ['gross' => $gross, 'joiner' => $joiner,'profit' => $profit];
 
             return response()->json([
                 'type' => 'success',
                 'message' => '',
                 'data' => [
-                    'collection' => $collection,
+                    'collection' =>  ['gross' => $gross, 'joiner' => $joiner,'profit' => $profit],
                 ],
             ]);
 
