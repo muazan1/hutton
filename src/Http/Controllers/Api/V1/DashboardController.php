@@ -15,7 +15,7 @@ use Mockery\Container;
 
 use Sty\Hutton\Http\Requests\CreateSiteRequest;
 
-use Sty\Hutton\Models\{HsJob, MiscWork, Customer, Plot, Service, Site, WeeklyWork, HuttonUser, DailyWork};
+use Sty\Hutton\Models\{BuildingType, HsJob, MiscWork, Customer, Plot, Service, Site, WeeklyWork, HuttonUser, DailyWork};
 
 use Carbon\Carbon;
 
@@ -98,6 +98,7 @@ class DashboardController extends Controller
     public function adminDashboard(Request $request)
     {
         try {
+
             $builders = Customer::with('sites.buildingTypes.plots.job')->get();
 
             $collection = collect($builders)
@@ -314,4 +315,63 @@ class DashboardController extends Controller
         }
 
     }
+
+    public function BuilderPieChart (Request $request,$slug) {
+
+        try{
+
+            $builder = Customer::where('slug',$slug)->first();
+
+            $collect = collect(
+                HsJob::with([
+                'plot.buildingType.site.builder',
+                'plot.buildingType.pricing',
+                'service.pricings',
+                'service.joinerPricings' => function($query) use($builder) {
+                    $query->where('builder_id', $builder->id);
+                }])
+                ->whereHas('plot.buildingType.site.builder', function ($item) use($slug) {
+                    $item->where('slug',$slug);
+                })
+//                ->whereHas('service.joinerPricings',function ($query) use($builder) {
+//                    $query->where('builder_id', $builder->id);
+//                })
+                ->get()
+            );
+
+
+            $gross = $collect->where('status','completed')->map(function ($item) {
+               return  $item->plot->buildingType->pricing->price;
+            })->sum();
+
+            $joiner = $collect->where('status','completed')->map(function ($item) {
+                return  $item->service->joinerPricings[0]->price;
+            })->sum();
+
+            $profit = $gross - $joiner;
+
+            $collection = ['gross' => $gross, 'joiner' => $joiner,'profit' => $profit];
+
+            return response()->json([
+                'type' => 'success',
+                'message' => '',
+                'data' => [
+                    'collection' => $collection,
+                ],
+            ]);
+
+        }catch (\Exception $e)
+        {
+            $message = $e->getMessage();
+
+            return response()->json([
+                'type' => 'error',
+                'message' => $message,
+                'data' => '',
+            ]);
+
+        }
+
+    }
+
 }

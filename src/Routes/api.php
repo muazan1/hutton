@@ -280,6 +280,8 @@ Route::group(['prefix' => 'api/v1', 'as' => 'api/v1'], function () {
 
         Route::get('site/{slug}/dashboard/completions','siteDashboardCompletionChart');
 
+        Route::get('builder/{slug}/dashboard/pieChart','BuilderPieChart');
+
     });
 
 //    Admin Report Routes
