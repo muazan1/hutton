@@ -43,11 +43,13 @@ class WageSheetController extends Controller
                                 ->where('role_id', $role->id)
                                 ->get();
 
-            $meta = HuttonUser::with('weeklyWork.dailyWork','weeklyWork.miscWork')
-                            ->where('role_id', $role->id)->get();
+//            $meta = $joiners;
+
+//            $meta = HuttonUser::with('weeklyWork.dailyWork','weeklyWork.miscWork')
+//                            ->where('role_id', $role->id)->get();
 //                            ->paginate(10);
 
-            $meta = collect($meta)->map(function ($item) {
+            $meta = collect($joiners)->map(function ($item) {
 
                 $item->dailyTotal = 0;
 
