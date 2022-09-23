@@ -339,7 +339,6 @@ class DashboardController extends Controller
                 ->get()
             );
 
-
             $gross = $collect->where('status','completed')->map(function ($item) {
                return  $item->plot->buildingType->pricing->price;
             })->sum();
