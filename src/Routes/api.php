@@ -27,6 +27,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 //Route::middleware(['auth:sanctum'])->group(function () {
+
+    
 Route::group(['prefix' => 'api/v1', 'as' => 'api/v1'], function () {
 
     // Routes for Builders|Customers Module
