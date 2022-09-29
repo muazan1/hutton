@@ -106,6 +106,18 @@ class SiteController extends Controller
         ]);
     }
 
+    public function details(Request $request, $slug)
+    {
+
+        $site = Site::with('builder')->where('slug',$slug)->first();
+
+        return response()->json([
+            'type' => 'success',
+            'message' => '',
+            'data' => $site,
+        ]);
+    }
+
     public function update(Request $request, $siteId)
     {
         try {
