@@ -109,7 +109,7 @@ class SiteController extends Controller
     public function details(Request $request, $slug)
     {
 
-        $site = Site::with('builder')->where('slug',$slug)->first();
+        $site = Site::with('builderww')->where('slug',$slug)->first();
 
         return response()->json([
             'type' => 'success',

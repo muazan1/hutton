@@ -126,6 +126,7 @@ class DailyWorkController extends Controller
 
             $validator = Validator::make($request->all(), [
                 'week_id' => ['required'],
+                'site_id' => ['required'],
                 'title' => ['required'],
                 'work_carried' => ['required'],
                 'time_taken' => ['required'],
@@ -144,6 +145,7 @@ class DailyWorkController extends Controller
 
             $data = [
                 'week_id' => $request->week_id,
+                'site_id' => $request->site_id,
                 'title' => $request->title,
                 'work_carried' => $request->work_carried,
                 'time_taken' => $request->time_taken,
