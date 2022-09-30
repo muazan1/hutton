@@ -56,8 +56,6 @@ class DailyWorkController extends Controller
                 ]);
             }
 
-
-
             $plotJob = HsJob::where('plot_id', $request->plot_id)
                 ->where('service_id', $request->service_id)
                 ->first();
@@ -91,7 +89,7 @@ class DailyWorkController extends Controller
             $week = DailyWork::create($data);
 
 
-            $plotJob->update(['status' => 'completed']);
+            $plotJob->update(['status' => $request->status]);
 
             return response()->json([
                 'type' => 'success',
