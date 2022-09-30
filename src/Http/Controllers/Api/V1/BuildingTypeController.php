@@ -22,6 +22,8 @@ use Exception;
 
 use Sty\Hutton\Models\Site;
 
+use Str;
+
 class BuildingTypeController extends Controller
 {
     public function SiteBuildingTypes(Request $request, $slug)
