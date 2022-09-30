@@ -197,7 +197,8 @@ class WeeklyWorkController extends Controller
                 ->whereDate('created_at', Carbon::now())
                 ->paginate(10);
 
-            $dailyMiscWork = MiscWork::where('week_id', $weeklyWork->id)
+            $dailyMiscWork = MiscWork::with('site')
+                ->where('week_id', $weeklyWork->id)
                 ->whereDate('created_at', Carbon::now())
                 ->paginate(10);
 
