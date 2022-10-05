@@ -90,7 +90,9 @@ class WeeklyWorkController extends Controller
 
             $reportname = 'Joiner Weekly Work.pdf';
 
-            $week = WeeklyWork::findOrFail($weekId);
+            $week = WeeklyWork::with('dailyWork')->findOrFail($weekId);
+
+//            dd($week);
 
             $pdf = GeneratePDF::generateReport($week, $filename, $reportname);
 
