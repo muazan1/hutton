@@ -170,8 +170,10 @@ class BuildingTypeController extends Controller
                 ]);
             }
 
+            $site = Site::where('slug',$request->site_id)->first();
+
             $data = [
-                'site_id' => $request->site_id,
+                'site_id' => $site->id,
                 'building_type_name' => $request->building_type_name,
                 'description' => $request->description,
             ];
