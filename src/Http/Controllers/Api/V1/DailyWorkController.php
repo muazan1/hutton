@@ -148,6 +148,7 @@ class DailyWorkController extends Controller
                 'work_carried' => $request->work_carried,
                 'time_taken' => $request->time_taken,
                 'amount' => $request->amount,
+                'notes' => $request->notes,
             ];
 
             $message = 'Daily Work Added Successfully';
