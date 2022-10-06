@@ -149,14 +149,14 @@ class CustomerController extends Controller
         }
     }
 
-    public function destroy(Request $request, $customerId)
+    public function destroy(Request $request, $customerSlug)
     {
         try {
-            $customer = Customer::findOrFail($customerId);
+            $customer = Customer::where('slug',$customerSlug)->first();
 
             $customer->delete();
 
-            $message = 'customer Deleted Successfully';
+            $message = 'Customer Deleted Successfully';
 
             return response()->json([
                 'type' => 'success',
