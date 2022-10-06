@@ -64,16 +64,18 @@ class CustomerController extends Controller
         }
     }
 
-    public function edit(Request $request, $customerId)
+    public function edit(Request $request, $customerSlug)
     {
         try {
-            $customer = Customer::findOrFail($customerId);
+            $customer = Customer::where('slug',$customerSlug)->first();
 
             return response()->json([
                 'type' => 'success',
                 'data' => $customer,
             ]);
+
         } catch (Exception $th) {
+
             return response()->json([
                 'type' => 'error',
                 'data' => $th->getMessage(),
