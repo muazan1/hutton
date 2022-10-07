@@ -31,7 +31,7 @@ class ReportController extends Controller
             'completed_by'
         );
 
-        return response()->json($data->get());
+//        return response()->json($data->get());
 
         if ($request->builders != 'all') {
             $data =
