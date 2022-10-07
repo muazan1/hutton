@@ -25,13 +25,15 @@ class ReportController extends Controller
 
     public function builderJobsCompleted(Request $request)
     {
+//        dd($request);
+
         $data = HsJob::with(
             'plot.buildingType.site.builder',
             'service'
         )
             ->where('status', 'completed');
 
-        if ($request->builder != 'all') {
+        if ($request->builders != 'all') {
             $data =
                 $data->whereHas('plot.buildingType.site.builder', function ($query) use ($request) {
                     $query->where('id', $request->builders);
