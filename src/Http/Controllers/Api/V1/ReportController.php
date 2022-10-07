@@ -28,7 +28,7 @@ class ReportController extends Controller
         $data = HsJob::where('status', 'completed')->with(
             'plot.buildingType.site.builder',
             'service',
-            'completed_by'
+            'jobjoiner'
         );
 
         if ($request->builders != 'all') {
@@ -45,6 +45,7 @@ class ReportController extends Controller
         $filename = ('public/excel_exports/reports/report_' . $rand . '.xlsx');
 
         $view = 'Hutton::excel.builderJobsCompleted';
+
 
         $this->generateExcel($view, $data, $filename);
 

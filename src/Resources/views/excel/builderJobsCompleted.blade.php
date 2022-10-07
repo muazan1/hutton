@@ -25,13 +25,14 @@
 
     @if($data->count() > 0)
         @foreach($data as $index => $value)
+{{--    {{dd($value->jobjoiner[0])}}--}}
             <tr>
                 <td>
                     {{ $value->plot->buildingType->site->site_name }}
                 </td>
                 <td>
-                    {{ $value->completed_by != NULL ?
-                        $value->completed_by->first_name.' '.$value->completed_by->last_name :'' }}
+                    {{ $value->jobjoiner != NULL ?
+                        $value->jobjoiner->first_name.' '.$value->jobjoiner->last_name :'' }}
                 </td>
                 <td>
                     {{ $value->service->service_name }}
