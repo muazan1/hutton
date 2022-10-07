@@ -28,7 +28,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 //Route::middleware(['auth:sanctum'])->group(function () {
 
-    
+
 Route::group(['prefix' => 'api/v1', 'as' => 'api/v1'], function () {
 
     // Routes for Builders|Customers Module
@@ -306,6 +306,8 @@ Route::group(['prefix' => 'api/v1', 'as' => 'api/v1'], function () {
             Route::post('joiner-wage-sheet','joinerWageSheet');
 
             Route::post('builder-invoice-sheet','builderInvoiceSheet');
+
+            Route::post('report-by-site','ReportBysite');
 
         });
 

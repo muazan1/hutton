@@ -196,4 +196,39 @@ class ReportController extends Controller
         return Excel::store(new ExportExcel($data, $view), ($filename));
     }
 
+    public function ReportBysite(Request $request)
+    {
+        if($request->sites != 'all')
+        {
+            $data = DailyWork::with('weeklyWork.joiner','plot.buildingType.site.builder','service')
+                    ->whereHas('plot.buildingType.site', function ($query) use($request)
+                    {
+                        $query->where('id',$request->sites);
+                    }
+                );
+        }
+        else
+        {
+            $data = DailyWork::with('weeklyWork.joiner','plot.buildingType.site.builder','service');
+        }
+
+        return response()->json($data->get());
+
+        $data = $data->whereBetween('created_at',[$request->date_from,$request->date_to]);
+
+        $data = collect($data->get());
+
+        $rand = rand(10000000, 9999999999);
+
+        $filename = ('public/excel_exports/reports/report_' . $rand . '.xlsx');
+
+        $view = 'Hutton::excel.ReportBySite';
+
+        $this->generateExcel($view, $data, $filename);
+
+        return (asset('storage/excel_exports/reports/report_' . $rand . '.xlsx'));
+
+    }
+
+
 }
