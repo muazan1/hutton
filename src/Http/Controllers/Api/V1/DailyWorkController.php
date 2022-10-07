@@ -75,6 +75,7 @@ class DailyWorkController extends Controller
 
             $data = [
                 'week_id' => $request->week_id,
+                'plot_job_id' => $plotJob->id,
                 'site_id' => $site->id,
                 'plot_id' => $request->plot_id,
                 'service_id' => $request->service_id,

@@ -27,9 +27,12 @@ class ReportController extends Controller
     {
         $data = HsJob::with(
             'plot.buildingType.site.builder',
-            'service'
+            'service',
+            'plot_job'
         )
             ->where('status', 'completed');
+
+        return response()->json([$data->get()]);
 
         if ($request->builders != 'all') {
             $data =
