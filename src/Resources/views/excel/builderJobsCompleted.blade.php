@@ -30,7 +30,7 @@
                     {{ $value->plot->buildingType->site->site_name }}
                 </td>
                 <td>
-                    {{'Joiner'}}
+                    {{ $value->completed_by->first_name.' '.$value->completed_by->last_name }}
                 </td>
                 <td>
                     {{ $value->service->service_name }}

@@ -36,8 +36,8 @@ class HsJob extends Model
         return $this->hasMany('plot_jobs_users','plot_job_id','user_id');
     }
 
-    public function plot_job(){
-        return $this->hasMany(DailyWork::class,'plot_job_id');
+    public function completed_by(){
+        return $this->hasMany(HuttonUser::class,'id','completed_by');
     }
 
 }
