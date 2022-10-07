@@ -22,7 +22,6 @@ class DailyWorkController extends Controller
 {
     public function dailyWork(Request $request)
     {
-//        dd(auth()->user());
         try {
             $week = WeeklyWork::find($request->week_id);
 
@@ -94,7 +93,7 @@ class DailyWorkController extends Controller
             $plotJob->update(
                 [
                     'status' => $request->status,
-                    'completed_by' => auth()->user()->id
+                    'completed_by' => $week->user_id
                 ]
             );
 
