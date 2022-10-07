@@ -25,8 +25,6 @@ class ReportController extends Controller
 
     public function builderJobsCompleted(Request $request)
     {
-//        dd($request);
-
         $data = HsJob::with(
             'plot.buildingType.site.builder',
             'service'
