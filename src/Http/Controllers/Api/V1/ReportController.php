@@ -196,8 +196,9 @@ class ReportController extends Controller
         return Excel::store(new ExportExcel($data, $view), ($filename));
     }
 
-    public function ReportBysite(Request $request)
+    public function ReportBySite(Request $request)
     {
+
         if($request->sites != 'all')
         {
             $data = DailyWork::with('weeklyWork.joiner','plot.buildingType.site.builder','service')
@@ -212,9 +213,9 @@ class ReportController extends Controller
             $data = DailyWork::with('weeklyWork.joiner','plot.buildingType.site.builder','service');
         }
 
-        return response()->json($data->get());
-
         $data = $data->whereBetween('created_at',[$request->date_from,$request->date_to]);
+
+//        return response()->json($data->get());
 
         $data = collect($data->get());
 

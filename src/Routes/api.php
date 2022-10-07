@@ -307,7 +307,7 @@ Route::group(['prefix' => 'api/v1', 'as' => 'api/v1'], function () {
 
             Route::post('builder-invoice-sheet','builderInvoiceSheet');
 
-            Route::post('report-by-site','ReportBysite');
+            Route::post('report-by-site','ReportBySite');
 
         });
 
