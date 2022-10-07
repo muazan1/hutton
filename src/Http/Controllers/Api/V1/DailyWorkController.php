@@ -22,7 +22,7 @@ class DailyWorkController extends Controller
 {
     public function dailyWork(Request $request)
     {
-        dd(auth()->user());
+//        dd(auth()->user());
         try {
             $week = WeeklyWork::find($request->week_id);
 
