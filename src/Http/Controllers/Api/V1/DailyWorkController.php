@@ -90,7 +90,12 @@ class DailyWorkController extends Controller
             $week = DailyWork::create($data);
 
 
-            $plotJob->update(['status' => $request->status]);
+            $plotJob->update(
+                [
+                    'status' => $request->status,
+                    'completed_by' => auth()->user()->id
+                ]
+            );
 
             return response()->json([
                 'type' => 'success',

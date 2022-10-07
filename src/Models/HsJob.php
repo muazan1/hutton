@@ -37,10 +37,7 @@ class HsJob extends Model
     }
 
     public function plot_job(){
-        return $this->belongsTo(HsJob::class,'plot_job_id','id');
+        return $this->hasMany(DailyWork::class,'plot_job_id');
     }
-//     public function joiners()
-//     {
-//         return $this->hasMany(User::class, 'assigned_user_id', 'id');
-//     }
+
 }
