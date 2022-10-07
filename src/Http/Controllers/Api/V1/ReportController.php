@@ -31,8 +31,6 @@ class ReportController extends Controller
             'completed_by'
         );
 
-//        return response()->json($data->get());
-
         if ($request->builders != 'all') {
             $data =
                 $data->whereHas('plot.buildingType.site.builder', function ($query) use ($request) {
