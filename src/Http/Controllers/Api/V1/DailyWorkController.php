@@ -89,11 +89,12 @@ class DailyWorkController extends Controller
 
             $week = DailyWork::create($data);
 
+            $weekly_work = WeeklyWork::find($request->week_id);
 
             $plotJob->update(
                 [
                     'status' => $request->status,
-                    'completed_by' => $week->user_id
+                    'completed_by' => $weekly_work->user_id
                 ]
             );
 
