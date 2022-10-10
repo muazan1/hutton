@@ -1,20 +1,20 @@
 {
-    "name": "sty/hutton",
-    "description": "Hutton Scope Package",
-    "license": "MIT",
-    "autoload": {
-        "psr-4": {
-            "Sty\\Hutton\\": "src/"
-        }
-    },
-    "authors": [
-        {
-            "name": "Muazan Qureshi",
-            "email": "m.ahmed.muazan@stallyons.com"
-        }
-    ],
-    "require": {
-        "barryvdh/laravel-dompdf": "*",
-        "maatwebsite/excel": "*"
+  "name": "sty/hutton",
+  "description": "Hutton Scope Package",
+  "license": "MIT",
+  "autoload": {
+    "psr-4": {
+      "Sty\\Hutton\\": "src/"
     }
+  },
+  "authors": [
+    {
+      "name": "Muazan Qureshi",
+      "email": "m.ahmed.muazan@stallyons.com"
+    }
+  ],
+  "require": {
+    "barryvdh/laravel-dompdf": "*",
+    "maatwebsite/excel": "*"
+  }
 }
