@@ -60,7 +60,9 @@ class WageSheetController extends Controller
                 if($week_start != null)
                 {
                     $item->first = ($item->weeklyWork->where('week_start','=',($week_start))->first());
-                }else{
+                }
+                else
+                {
                     $item->first = ($item->weeklyWork->where('status','in-progress')->first());
                 }
 

@@ -72,6 +72,7 @@ class HsJobsController extends Controller
                             'percent_complete' => 0.0,
                             'amount' => $service->price,
                             'status' => 'not-started',
+                            'priority' => $service->priority
                         ]);
                     }
                 }
