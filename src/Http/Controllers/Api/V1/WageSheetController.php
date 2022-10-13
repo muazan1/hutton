@@ -41,6 +41,10 @@ class WageSheetController extends Controller
 
             $search = $request->search ?? '';
 
+            $from_date = $request->from_date ?? '';
+
+            $to_date = $request->to_date ?? '';
+
             $joiners = HuttonUser::with('weeklyWork.dailyWork','weeklyWork.miscWork')
                                 ->where(function ($query) use ($search) {
                                     $query->where('first_name', 'LIKE', '%' . $search . '%')
@@ -49,7 +53,7 @@ class WageSheetController extends Controller
                                 ->where('role_id', $role->id)
                                 ->get();
 
-            $meta = collect($joiners)->map(function ($item) {
+            $meta = collect($joiners)->map(function ($item) use($from_date,$to_date) {
 
                 $item->dailyTotal = 0;
 
@@ -73,12 +77,31 @@ class WageSheetController extends Controller
 
                 if($item->first->dailyWork->count() > 0){
 
-                    $item->weeklyTotal += $item->first->dailyWork->sum('amount');
+                    if($from_date != null && $to_date != null)
+                    {
+                        $item->weeklyTotal += $item->first->dailyWork
+                                             ->whereBetween('created_at',[$from_date,$to_date])
+                                             ->sum('amount');
+                    }
+                    else
+                    {
+                        $item->weeklyTotal += $item->first->dailyWork->sum('amount');
+                    }
                 }
 
                 if($item->first->miscWork->count() > 0){
 
-                    $item->weeklyTotal += $item->first->miscWork->sum('amount');
+                    if($from_date != null && $to_date != null)
+                    {
+                        $item->weeklyTotal += $item->first->miscWork
+                            ->whereBetween('created_at',[$from_date,$to_date])
+                            ->sum('amount');
+                    }
+                    else
+                    {
+                        $item->weeklyTotal += $item->first->miscWork
+                            ->sum('amount');
+                    }
                 }
 
                 return ($item);
