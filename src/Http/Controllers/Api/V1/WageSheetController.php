@@ -63,16 +63,36 @@ class WageSheetController extends Controller
 
                 if($item->first->dailyWork->count() > 0){
 
-                    $item->dailyTotal += $item->first->dailyWork
-                                            ->where('created_at','>=',Carbon::now()->format('Y-m-d'))
-                                            ->sum('amount');
+
+
+                    if($from_date != null && $to_date != null)
+                    {
+                        $item->dailyTotal += $item->first->dailyWork
+                            ->where('created_at','>=',$to_date)
+                            ->sum('amount');
+                    }
+                    else
+                    {
+                        $item->dailyTotal += $item->first->dailyWork
+                            ->where('created_at','>=',Carbon::now()->format('Y-m-d'))
+                            ->sum('amount');
+                    }
                 }
 
                 if($item->first->miscWork->count() > 0){
 
-                    $item->dailyTotal += $item->first->miscWork
-                                            ->where('created_at',Carbon::now())
-                                            ->sum('amount');
+                    if($from_date != null && $to_date != null)
+                    {
+                        $item->dailyTotal += $item->first->miscWork
+                            ->where('created_at',$to_date)
+                            ->sum('amount');
+                    }
+                    else
+                    {
+                        $item->dailyTotal += $item->first->miscWork
+                            ->where('created_at',Carbon::now())
+                            ->sum('amount');
+                    }
                 }
 
                 if($item->first->dailyWork->count() > 0){
