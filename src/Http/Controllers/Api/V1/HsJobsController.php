@@ -61,7 +61,7 @@ class HsJobsController extends Controller
                 )->get();
 
                 foreach ($services as $service) {
-                    $job = HsJob::where('plot_id', $plot->id)
+                    $job = HsJob::with('service')->where('plot_id', $plot->id)
                         ->where('service_id', $service->service_id)
                         ->first();
 
@@ -72,7 +72,7 @@ class HsJobsController extends Controller
                             'percent_complete' => 0.0,
                             'amount' => $service->price,
                             'status' => 'not-started',
-                            'priority' => $service->priority
+                            'priority' => $service->service->priority
                         ]);
                     }
                 }
