@@ -159,7 +159,7 @@ class WeeklyWorkController extends Controller
                 ->first();
 
 
-            $dailyWork = DailyWork::with('site', 'plot')
+            $dailyWork = DailyWork::with('site', 'plot','service')
                 ->where('week_id', $weeklyWork->id)
                 ->paginate(10);
 
