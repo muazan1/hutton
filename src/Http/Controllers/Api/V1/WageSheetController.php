@@ -36,7 +36,7 @@ class WageSheetController extends Controller
 
     public function wageSheet(Request $request)
     {
-        try {
+//        try {
             $role = Role::where('name', 'joiner')->first();
 
             $search = $request->search ?? '';
@@ -59,7 +59,7 @@ class WageSheetController extends Controller
 
                 if($week_start != null)
                 {
-                    $item->first = ($item->weeklyWork->where('created_at',$week_start)->first());
+                    $item->first = ($item->weeklyWork->where('week_start','=',($week_start))->first());
                 }else{
                     $item->first = ($item->weeklyWork->where('status','in-progress')->first());
                 }
@@ -67,65 +67,30 @@ class WageSheetController extends Controller
 
                 if($item->first->dailyWork->count() > 0){
 
-
-
-//                    if($from_date != null && $to_date != null)
-//                    {
-//                        $item->dailyTotal += $item->first->dailyWork
-//                            ->where('created_at','>=',$to_date)
-//                            ->sum('amount');
-//                    }
-//                    else
-//                    {
                         $item->dailyTotal += $item->first->dailyWork
                             ->where('created_at','>=',Carbon::now()->format('Y-m-d'))
                             ->sum('amount');
-//                    }
+
                 }
 
                 if($item->first->miscWork->count() > 0){
 
-//                    if($from_date != null && $to_date != null)
-//                    {
-//                        $item->dailyTotal += $item->first->miscWork
-//                            ->where('created_at',$to_date)
-//                            ->sum('amount');
-//                    }
-//                    else
-//                    {
                         $item->dailyTotal += $item->first->miscWork
                             ->where('created_at',Carbon::now())
                             ->sum('amount');
-//                    }
                 }
 
                 if($item->first->dailyWork->count() > 0){
 
-//                    if($from_date != null && $to_date != null)
-//                    {
-//                        $item->weeklyTotal += $item->first->dailyWork
-//                                             ->whereBetween('created_at',[$from_date,$to_date])
-//                                             ->sum('amount');
-//                    }
-//                    else
-//                    {
                         $item->weeklyTotal += $item->first->dailyWork->sum('amount');
-//                    }
+
                 }
 
                 if($item->first->miscWork->count() > 0){
 
-//                    if($from_date != null && $to_date != null)
-//                    {
-//                        $item->weeklyTotal += $item->first->miscWork
-//                            ->whereBetween('created_at',[$from_date,$to_date])
-//                            ->sum('amount');
-//                    }
-//                    else
-//                    {
                         $item->weeklyTotal += $item->first->miscWork
                             ->sum('amount');
-//                    }
+
                 }
 
                 return ($item);
@@ -138,15 +103,15 @@ class WageSheetController extends Controller
                 'message' => '',
                 'data' => ['joiner' => $joiners, 'meta' => $meta],
             ]);
-        } catch (\Throwable $th) {
-            $message = $th->getMessage();
-
-            return response()->json([
-                'type' => 'error',
-                'message' => $message,
-                'data' => '',
-            ]);
-        }
+//        } catch (\Throwable $th) {
+//            $message = $th->getMessage();
+//
+//            return response()->json([
+//                'type' => 'error',
+//                'message' => $message,
+//                'data' => '',
+//            ]);
+//        }
     }
 
     public function wageSheetByWeek(Request $request)
