@@ -41,9 +41,7 @@ class WageSheetController extends Controller
 
             $search = $request->search ?? '';
 
-            $from_date = $request->from_date ?? '';
-
-            $to_date = $request->to_date ?? '';
+            $week_start = $request->week_start ?? '';
 
             $joiners = HuttonUser::with('weeklyWork.dailyWork','weeklyWork.miscWork')
                                 ->where(function ($query) use ($search) {
@@ -53,75 +51,81 @@ class WageSheetController extends Controller
                                 ->where('role_id', $role->id)
                                 ->get();
 
-            $meta = collect($joiners)->map(function ($item) use($from_date,$to_date) {
+            $meta = collect($joiners)->map(function ($item) use($week_start) {
 
                 $item->dailyTotal = 0;
 
                 $item->weeklyTotal = 0;
 
-                $item->first = ($item->weeklyWork->where('status','in-progress')->first());
+                if($week_start != null)
+                {
+                    $item->first = ($item->weeklyWork->where('created_at',$week_start)->first());
+                }else{
+                    $item->first = ($item->weeklyWork->where('status','in-progress')->first());
+                }
+
 
                 if($item->first->dailyWork->count() > 0){
 
 
 
-                    if($from_date != null && $to_date != null)
-                    {
-                        $item->dailyTotal += $item->first->dailyWork
-                            ->where('created_at','>=',$to_date)
-                            ->sum('amount');
-                    }
-                    else
-                    {
+//                    if($from_date != null && $to_date != null)
+//                    {
+//                        $item->dailyTotal += $item->first->dailyWork
+//                            ->where('created_at','>=',$to_date)
+//                            ->sum('amount');
+//                    }
+//                    else
+//                    {
                         $item->dailyTotal += $item->first->dailyWork
                             ->where('created_at','>=',Carbon::now()->format('Y-m-d'))
                             ->sum('amount');
-                    }
+//                    }
                 }
 
                 if($item->first->miscWork->count() > 0){
 
-                    if($from_date != null && $to_date != null)
-                    {
-                        $item->dailyTotal += $item->first->miscWork
-                            ->where('created_at',$to_date)
-                            ->sum('amount');
-                    }
-                    else
-                    {
+//                    if($from_date != null && $to_date != null)
+//                    {
+//                        $item->dailyTotal += $item->first->miscWork
+//                            ->where('created_at',$to_date)
+//                            ->sum('amount');
+//                    }
+//                    else
+//                    {
                         $item->dailyTotal += $item->first->miscWork
                             ->where('created_at',Carbon::now())
                             ->sum('amount');
-                    }
+//                    }
                 }
 
                 if($item->first->dailyWork->count() > 0){
 
-                    if($from_date != null && $to_date != null)
-                    {
-                        $item->weeklyTotal += $item->first->dailyWork
-                                             ->whereBetween('created_at',[$from_date,$to_date])
-                                             ->sum('amount');
-                    }
-                    else
-                    {
+//                    if($from_date != null && $to_date != null)
+//                    {
+//                        $item->weeklyTotal += $item->first->dailyWork
+//                                             ->whereBetween('created_at',[$from_date,$to_date])
+//                                             ->sum('amount');
+//                    }
+//                    else
+//                    {
                         $item->weeklyTotal += $item->first->dailyWork->sum('amount');
-                    }
+//                    }
                 }
 
                 if($item->first->miscWork->count() > 0){
 
-                    if($from_date != null && $to_date != null)
-                    {
+//                    if($from_date != null && $to_date != null)
+//                    {
+//                        $item->weeklyTotal += $item->first->miscWork
+//                            ->whereBetween('created_at',[$from_date,$to_date])
+//                            ->sum('amount');
+//                    }
+//                    else
+//                    {
                         $item->weeklyTotal += $item->first->miscWork
-                            ->whereBetween('created_at',[$from_date,$to_date])
                             ->sum('amount');
-                    }
-                    else
-                    {
-                        $item->weeklyTotal += $item->first->miscWork
-                            ->sum('amount');
-                    }
+//                    }
                 }
 
                 return ($item);
