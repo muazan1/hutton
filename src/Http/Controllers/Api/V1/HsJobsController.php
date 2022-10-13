@@ -61,8 +61,9 @@ class HsJobsController extends Controller
                 )->get();
 
                 foreach ($services as $service) {
-                    $job = HsJob::with('service')->where('plot_id', $plot->id)
+                    $job = HsJob::where('plot_id', $plot->id)
                         ->where('service_id', $service->service_id)
+                        ->with('service')
                         ->first();
 
                     if (!$job) {
