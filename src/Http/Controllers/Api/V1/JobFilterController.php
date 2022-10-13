@@ -63,7 +63,16 @@ class JobFilterController extends Controller
     {
         try {
 
-            $jobs = HsJob::with('plot.buildingType.site', 'service');
+            $jobs = HsJob::with('plot.buildingType.site.builder', 'service');
+
+            if ($request->builder != null) {
+                $jobs = $jobs->whereHas('plot.buildingType.site.builder', function (
+                    $query
+                ) use ($request) {
+                    $query->where('slug', $request->builder);
+                });
+            }
+
 
             if ($request->site != null) {
                 $jobs = $jobs->whereHas('plot.buildingType.site', function (
