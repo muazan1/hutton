@@ -29,7 +29,8 @@ use Sty\Hutton\Models\{
     Site,
     BuildingType,
     JoinerPricing,
-    ServicePricing
+    ServicePricing,
+    Service
 };
 
 use App\Models\{Role};
@@ -63,17 +64,19 @@ class HsJobsController extends Controller
                 foreach ($services as $service) {
                     $job = HsJob::where('plot_id', $plot->id)
                         ->where('service_id', $service->service_id)
-                        ->with('service')
                         ->first();
 
                     if (!$job) {
+
+                        $ser = Service::find($service->service_id);
+
                         HsJob::create([
                             'plot_id' => $plot->id,
                             'service_id' => $service->service_id,
                             'percent_complete' => 0.0,
                             'amount' => $service->price,
                             'status' => 'not-started',
-                            'priority' => $service->service->priority
+                            'priority' => $ser->priority
                         ]);
                     }
                 }
