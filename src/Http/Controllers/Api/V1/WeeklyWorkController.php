@@ -194,7 +194,7 @@ class WeeklyWorkController extends Controller
                 ->where('status', 'in-progress')
                 ->first();
 
-            $dailyWork = DailyWork::with('site', 'plot')
+            $dailyWork = DailyWork::with('site', 'plot','service')
                 ->where('week_id', $weeklyWork->id)
                 ->whereDate('created_at', Carbon::now())
                 ->paginate(10);
