@@ -19,7 +19,8 @@ use Sty\Hutton\Http\Controllers\Api\V1\{
     JobFilterController,
     WorkController,
     DashboardController,
-    ReportController
+    ReportController,
+    ChatController
 };
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
@@ -312,5 +313,20 @@ Route::group(['prefix' => 'api/v1', 'as' => 'api/v1'], function () {
         });
 
     });
+
+//    Chat Routes
+
+    Route::controller(ChatController::class)->group(function () {
+
+        Route::prefix('chat/')->group(function () {
+
+            Route::post('create','CreateChat');
+
+            Route::post('{chat}/message','CreateMessage');
+
+        });
+
+    });
+
 });
 //});
