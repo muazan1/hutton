@@ -24,6 +24,8 @@ use Sty\Hutton\Models\{Chat,Message};
 
 use Str;
 
+use App\Models\User;
+
 class ChatController extends Controller
 {
     public function CreateChat(Request $request) {
@@ -131,10 +133,14 @@ class ChatController extends Controller
     public function sendMessage (Request $request) {
         try {
 
+            $joiner = User::where('uuid',$request->joiner)->first();
+
+            $admin = User::where('uuid',$request->admin)->first();
+
             $chat = Message::create(
                 [
-                    'joiner_id' => $request->joiner_id,
-                    'admin_id' => $request->admin_id,
+                    'joiner_id' => $joiner->id,
+                    'admin_id' => $admin->id,
                     'message' => $request->message,
                 ]
             );
