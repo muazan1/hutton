@@ -18,6 +18,8 @@ class CreateMessagesTable extends Migration
 
             $table->integer('chat_id');
 
+            $table->integer('from_user_id');
+
             $table->text('message');
 
             $table->integer('is_read')->default(0);

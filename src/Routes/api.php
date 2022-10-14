@@ -324,6 +324,8 @@ Route::group(['prefix' => 'api/v1', 'as' => 'api/v1'], function () {
 
             Route::post('{chat}/message','CreateMessage');
 
+            Route::get('{chat}','GetChat');
+
         });
 
     });

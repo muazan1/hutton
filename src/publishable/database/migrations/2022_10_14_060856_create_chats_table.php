@@ -17,9 +17,9 @@ class CreateChatsTable extends Migration
 
             $table->id();
 
-            $table->integer('from_user_id');
+            $table->integer('admin_id');
 
-            $table->integer('to_user_id');
+            $table->integer('joiner_id');
 
             $table->timestamps();
 

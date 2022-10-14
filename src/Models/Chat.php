@@ -12,4 +12,8 @@ class Chat extends Model
 
     protected $guarded = ['id', 'created_at', 'updated_at'];
 
+    public function messages () {
+        return $this->hasMany(Message::class);
+    }
+
 }

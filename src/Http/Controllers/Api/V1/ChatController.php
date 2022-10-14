@@ -32,12 +32,12 @@ class ChatController extends Controller
 
             $chat = Chat::updateOrCreate(
                 [
-                    'from_user_id' => $request->from_user_id,
-                    'to_user_id'   => $request->to_user_id
+                    'admin_id' => $request->admin_id,
+                    'joiner_id'   => $request->joiner_id
                 ],
                 [
-                    'from_user_id' => $request->from_user_id,
-                    'to_user_id'   => $request->to_user_id
+                    'admin_id' => $request->admin_id,
+                    'joiner_id'   => $request->joiner_id
                 ],
             );
 
@@ -67,19 +67,18 @@ class ChatController extends Controller
     public function CreateMessage(Request $request,$chat) {
 
         try {
-            dd($request->user());
 
             $chat = Chat::find($chat);
 
             $chat = Message::create(
                 [
                     'chat_id' => $chat->id,
-                    'from_user_id' => auth()->user()->id,
+                    'from_user_id' => $request->from_user_id,
                     'message' => $request->message,
                 ]
             );
 
-            $message = 'Chat Created Successfully';
+            $message = 'Message Sent Successfully';
 
             return response()->json([
                 'type' => 'success',
@@ -101,4 +100,32 @@ class ChatController extends Controller
         }
 
     }
+
+    public function GetChat(Request $request,$chat) {
+
+        try {
+
+            $chat = Chat::with('messages')->find($chat);
+
+            return response()->json([
+                'type' => 'success',
+                'message' => '',
+                'data' => ['chat' => $chat],
+            ]);
+
+        }
+        catch (\Exception $e) {
+
+            $message = $e->getMessage();
+
+            return response()->json([
+                'type' => 'error',
+                'message' => $message,
+                'data' => '',
+            ]);
+
+        }
+
+    }
+
 }
