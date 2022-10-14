@@ -16,9 +16,9 @@ class CreateMessagesTable extends Migration
         Schema::create('messages', function (Blueprint $table) {
             $table->id();
 
-            $table->integer('chat_id');
+            $table->integer('joiner_id');
 
-            $table->integer('from_user_id');
+            $table->integer('admin_id');
 
             $table->text('message');
 

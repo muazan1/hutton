@@ -13,13 +13,13 @@ class CreateChatsTable extends Migration
      */
     public function up()
     {
-        Schema::create('chats', function (Blueprint $table) {
+        Schema::create('message_replay', function (Blueprint $table) {
 
             $table->id();
 
-            $table->integer('admin_id');
+            $table->integer('message_id');
 
-            $table->integer('joiner_id');
+            $table->text('message');
 
             $table->timestamps();
 
@@ -33,6 +33,6 @@ class CreateChatsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('chats');
+        Schema::dropIfExists('message_replay');
     }
 }

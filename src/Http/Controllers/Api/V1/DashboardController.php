@@ -17,6 +17,8 @@ use Sty\Hutton\Http\Requests\CreateSiteRequest;
 
 use Sty\Hutton\Models\{BuildingType, HsJob, MiscWork, Customer, Plot, Service, Site, WeeklyWork, HuttonUser, DailyWork};
 
+use App\Models\{Role};
+
 use Carbon\Carbon;
 
 class DashboardController extends Controller
@@ -418,6 +420,33 @@ class DashboardController extends Controller
 
         }
 
+    }
+
+    public function getAdmins (Request $request) {
+
+        try{
+
+            $role = Role::where('name','admin')->first();
+
+            $admins = Customer::where('role_id',$role->id)->get();
+
+            return response()->json([
+                'type' => 'success',
+                'message' => '',
+                'data' => ['admins'=> $admins],
+            ]);
+        }
+        catch (\Exception $e)
+        {
+            $message = $e->getMessage();
+
+            return response()->json([
+                'type' => 'error',
+                'message' => $message,
+                'data' => '',
+            ]);
+
+        }
     }
 
 }

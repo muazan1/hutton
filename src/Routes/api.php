@@ -326,9 +326,14 @@ Route::group(['prefix' => 'api/v1', 'as' => 'api/v1'], function () {
 
             Route::get('{chat}','GetChat');
 
+            Route::post('send-message','sendMessage');
+
         });
 
     });
+
+//    ROute for getting admins
+    Route::get('/admins',[DashboardController::class,'getAdmins']);
 
 });
 //});

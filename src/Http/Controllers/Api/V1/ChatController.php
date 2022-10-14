@@ -128,4 +128,38 @@ class ChatController extends Controller
 
     }
 
+    public function sendMessage (Request $request) {
+        try {
+
+            $chat = Message::create(
+                [
+                    'joiner_id' => $request->joiner_id,
+                    'admin_id' => $request->admin_id,
+                    'message' => $request->message,
+                ]
+            );
+
+            $message = 'Message Sent Successfully';
+
+            return response()->json([
+                'type' => 'success',
+                'message' => $message,
+                'data' => ['chat' => $chat],
+            ]);
+
+        }
+        catch (\Exception $e) {
+
+            $message = $e->getMessage();
+
+            return response()->json([
+                'type' => 'error',
+                'message' => $message,
+                'data' => '',
+            ]);
+
+        }
+    }
+
+
 }
