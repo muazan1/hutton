@@ -435,6 +435,7 @@ class DashboardController extends Controller
                 'message' => '',
                 'data' => ['admins'=> $admins],
             ]);
+
         }
         catch (\Exception $e)
         {
