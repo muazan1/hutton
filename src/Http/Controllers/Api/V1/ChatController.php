@@ -67,8 +67,8 @@ class ChatController extends Controller
     public function CreateMessage(Request $request,$chat) {
 
         try {
-            dd(auth()->user());
-            
+            dd($request->user());
+
             $chat = Chat::find($chat);
 
             $chat = Message::create(
