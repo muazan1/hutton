@@ -428,7 +428,7 @@ class DashboardController extends Controller
 
             $role = Role::where('name','admin')->first();
 
-            $admins = User::where('role_id',$role->id)->get();
+            $admins = User::select('id','first_name','last_name')->where('role_id',$role->id)->get();
 
             return response()->json([
                 'type' => 'success',
