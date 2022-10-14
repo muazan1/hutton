@@ -333,7 +333,7 @@ Route::group(['prefix' => 'api/v1', 'as' => 'api/v1'], function () {
     });
 
 //    ROute for getting admins
-    Route::get('/admins',[DashboardController::class,'getAdmins']);
+    Route::get('admins',[DashboardController::class,'getAdmins']);
 
 });
 //});
