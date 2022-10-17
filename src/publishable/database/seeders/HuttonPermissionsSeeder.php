@@ -344,6 +344,13 @@ class HuttonPermissionsSeeder extends Seeder
                 'permission' => 'message',
                 'api_permission' => 'message:message',
             ],
+            [
+                'id' => 153,
+                'name' => 'Joiner Notification',
+                'module' => 'joinerNotification',
+                'permission' => 'joinerNotification',
+                'api_permission' => 'joinerNotification:joinerNotification',
+            ],
 //            for admin notifications
             [
                 'id' => 152,
