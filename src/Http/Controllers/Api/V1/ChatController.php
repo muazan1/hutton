@@ -20,7 +20,7 @@ use Illuminate\Database\Eloquent\Collection;
 
 use Exception;
 
-use Sty\Hutton\Models\{Chat,Message};
+use Sty\Hutton\Models\{Chat,Message,MessageReplay};
 
 use Str;
 
@@ -131,6 +131,7 @@ class ChatController extends Controller
     }
 
     public function sendMessage (Request $request) {
+
         try {
 
             $joiner = User::where('uuid',$request->joiner)->first();
@@ -167,5 +168,128 @@ class ChatController extends Controller
         }
     }
 
+    public function adminNotifications (Request $request,$uuid) {
+
+        try {
+
+            $admin = User::where('uuid',$uuid)->first();
+
+            $chats = Message::where('admin_id',$admin->id)->where('is_read',0)->get();
+
+            return response()->json([
+                'type' => 'success',
+                'message' => '',
+                'data' => ['chats' => $chats],
+            ]);
+
+        }
+        catch (\Exception $e) {
+
+            $message = $e->getMessage();
+
+            return response()->json([
+                'type' => 'error',
+                'message' => $message,
+                'data' => '',
+            ]);
+
+        }
+
+    }
+
+    public function chatReply (Request $request) {
+
+        try {
+
+            $msg = Message::find($request->message_id);
+
+            if($msg != null){
+
+                $replay = MessageReplay::create([
+                    'message_id' => $request->message_id,
+                    'message'   => $request->message
+                ]);
+
+            }
+            else
+            {
+                $message =  'Message not found';
+
+                return response()->json([
+                    'type' => 'error',
+                    'message' => $message,
+                    'data' => '',
+                ]);
+            }
+
+            $message = 'Message sent Successfully';
+
+            return response()->json([
+                'type' => 'success',
+                'message' => $message,
+                'data' => '',
+            ]);
+
+        }
+        catch (\Exception $e) {
+
+            $message = $e->getMessage();
+
+            return response()->json([
+                'type' => 'error',
+                'message' => $message,
+                'data' => '',
+            ]);
+
+        }
+
+    }
+
+    public function markRead (Request $request,$message_id) {
+
+        try {
+
+            $msg = Message::find($message_id);
+
+            if($msg != null){
+
+                $msg->update([
+                    'is_read' => 1,
+                ]);
+
+            }
+            else
+            {
+                $message =  'Message not found';
+
+                return response()->json([
+                    'type' => 'error',
+                    'message' => $message,
+                    'data' => '',
+                ]);
+            }
+
+            $message = 'Mark as Read Successfully';
+
+            return response()->json([
+                'type' => 'success',
+                'message' => $message,
+                'data' => '',
+            ]);
+
+        }
+        catch (\Exception $e) {
+
+            $message = $e->getMessage();
+
+            return response()->json([
+                'type' => 'error',
+                'message' => $message,
+                'data' => '',
+            ]);
+
+        }
+
+    }
 
 }

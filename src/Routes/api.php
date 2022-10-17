@@ -335,5 +335,12 @@ Route::group(['prefix' => 'api/v1', 'as' => 'api/v1'], function () {
 //    ROute for getting admins
     Route::get('admins',[DashboardController::class,'getAdmins']);
 
+    Route::get('admin/{uuid}/notifications',[ChatController::class,'adminNotifications']);
+
+    Route::post('message/reply',[ChatController::class,'chatReply']);
+
+    Route::get('message/{message_id}/mark_read',[ChatController::class,'markRead']);
+
+
 });
 //});
