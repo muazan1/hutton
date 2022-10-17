@@ -206,7 +206,7 @@ class ChatController extends Controller
 
             $joiner = User::where('uuid',$uuid)->first();
 
-            $chats = Message::with('admin','joiner')
+            $chats = Message::with('admin','joiner','replies')
                                 ->has('replies')
                                 ->where('joiner_id',$joiner->id)
                                 ->get();
