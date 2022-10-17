@@ -176,7 +176,7 @@ class ChatController extends Controller
 
             $chats = Message::with('admin','joiner','replies')
                                 ->where('admin_id',$admin->id)
-                                ->where('is_read',0)
+//                                ->where('is_read',0)
                                 ->get();
 
             return response()->json([
@@ -323,5 +323,4 @@ class ChatController extends Controller
         }
 
     }
-
 }
