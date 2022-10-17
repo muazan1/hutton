@@ -337,6 +337,8 @@ Route::group(['prefix' => 'api/v1', 'as' => 'api/v1'], function () {
 
     Route::get('admin/{uuid}/notifications',[ChatController::class,'adminNotifications']);
 
+    Route::get('joiner/{uuid}/notifications',[ChatController::class,'joinerNotifications']);
+
     Route::post('message/reply',[ChatController::class,'chatReply']);
 
     Route::get('message/{message_id}/mark_read',[ChatController::class,'markRead']);

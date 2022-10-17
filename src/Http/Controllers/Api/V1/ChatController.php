@@ -200,6 +200,38 @@ class ChatController extends Controller
 
     }
 
+    public function joinerNotifications (Request $request,$uuid) {
+
+        try {
+
+            $joiner = User::where('uuid',$uuid)->first();
+
+            $chats = Message::with('admin','joiner','replies')
+                                ->where('joiner_id',$joiner->id)
+//                                ->where('is_read',0)
+                                ->get();
+
+            return response()->json([
+                'type' => 'success',
+                'message' => '',
+                'data' => ['chats' => $chats],
+            ]);
+
+        }
+        catch (\Exception $e) {
+
+            $message = $e->getMessage();
+
+            return response()->json([
+                'type' => 'error',
+                'message' => $message,
+                'data' => '',
+            ]);
+
+        }
+
+    }
+
     public function chatReply (Request $request) {
 
         try {
