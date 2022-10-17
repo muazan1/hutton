@@ -339,15 +339,15 @@ class HuttonPermissionsSeeder extends Seeder
 //            for joiner message
             [
                 'id' => 151,
-                'name' => 'Joiner Message',
+                'name' => 'Joiner message',
                 'module' => 'joiner',
                 'permission' => 'message',
                 'api_permission' => 'joiner:message',
             ],
-//            for joiner message
+//            for admin notifications
             [
                 'id' => 152,
-                'name' => 'Admin Notification',
+                'name' => 'Admin notification',
                 'module' => 'admin',
                 'permission' => 'notification',
                 'api_permission' => 'admin:notification',
