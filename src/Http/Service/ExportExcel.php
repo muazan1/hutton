@@ -4,7 +4,7 @@ namespace Sty\Hutton\Http\Service;
 
 use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
-use Maatwebsite\Excel\Concerns\ShouldAutoSize;
+use Maatwebsite\Excel\Concerns\WithColumnWidths;
 use Maatwebsite\Excel\Concerns\WithColumnFormatting;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 use Maatwebsite\Excel\Concerns\WithEvents;
@@ -12,7 +12,7 @@ use Maatwebsite\Excel\Concerns\WithDrawings;
 use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
 
 
-class ExportExcel implements FromView,ShouldAutoSize
+class ExportExcel implements FromView,WithColumnWidths
 {
     public $data;
     public $view;
@@ -31,5 +31,14 @@ class ExportExcel implements FromView,ShouldAutoSize
         return view($view, compact('data'));
     }
 
+    public function columnWidths(): array
+    {
+        return [
+            'A' => '100%',
+            'B' => '100%',
+            'C' => '100%',
+            'D' => '100%',
+        ];
+    }
 
 }
