@@ -34,10 +34,10 @@ class ExportExcel implements FromView,WithColumnWidths
     public function columnWidths(): array
     {
         return [
-            'A' => 55,
-            'B' => 45,
-            'C' => 200,
-            'D' => 45,
+            'A' => 'auto',
+            'B' => 'auto',
+            'C' => 'auto',
+            'D' => 'auto',
         ];
     }
 
