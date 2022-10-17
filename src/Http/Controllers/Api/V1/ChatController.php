@@ -295,4 +295,33 @@ class ChatController extends Controller
 
     }
 
+    public function messageDetails (Request $request,$message_id) {
+
+        try {
+
+            $msg = Message::with('joiner','admin','replies')->find($message_id);
+
+            $message = '';
+
+            return response()->json([
+                'type' => 'success',
+                'message' => $message,
+                'data' => ['message' => $msg],
+            ]);
+
+        }
+        catch (\Exception $e) {
+
+            $message = $e->getMessage();
+
+            return response()->json([
+                'type' => 'error',
+                'message' => $message,
+                'data' => '',
+            ]);
+
+        }
+
+    }
+
 }

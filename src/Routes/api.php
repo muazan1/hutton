@@ -341,6 +341,7 @@ Route::group(['prefix' => 'api/v1', 'as' => 'api/v1'], function () {
 
     Route::get('message/{message_id}/mark_read',[ChatController::class,'markRead']);
 
+    Route::get('message/{message_id}/details',[ChatController::class,'messageDetails']);
 
 });
 //});
