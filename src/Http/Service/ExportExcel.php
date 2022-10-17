@@ -11,7 +11,8 @@ use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Concerns\WithDrawings;
 use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
 
-class ExportExcel implements FromView
+
+class ExportExcel implements FromView,WithColumnWidths
 {
     public $data;
     public $view;
@@ -28,6 +29,16 @@ class ExportExcel implements FromView
         $data = $this->data;
 
         return view($view, compact('data'));
+    }
+
+    public function columnWidths(): array
+    {
+        return [
+            'A' => 55,
+            'B' => 45,
+            'C' => 200,
+            'D' => 45,
+        ];
     }
 
 }
