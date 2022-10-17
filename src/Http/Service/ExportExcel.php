@@ -31,14 +31,14 @@ class ExportExcel implements FromView,ShouldAutoSize
         return view($view, compact('data'));
     }
 
-    public function columnWidths(): array
-    {
-        return [
-            'A' => 'auto',
-            'B' => 'auto',
-            'C' => 'auto',
-            'D' => 'auto',
-        ];
-    }
+//    public function columnWidths(): array
+//    {
+//        return [
+//            'A' => 'auto',
+//            'B' => 'auto',
+//            'C' => 'auto',
+//            'D' => 'auto',
+//        ];
+//    }
 
 }
