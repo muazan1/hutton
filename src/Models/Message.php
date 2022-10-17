@@ -12,5 +12,16 @@ class Message extends Model
 
     protected $guarded = ['id', 'created_at', 'updated_at'];
 
+    public function admin(){
+        return $this->belongsTo(HuttonUser::class,'admin_id','id');
+    }
+
+    public function joiner() {
+        return $this->belongsTo(HuttonUser::class,'joiner_id','id');
+    }
+
+    public function replies() {
+        return $this->hasMany(MessageReplay::class);
+    }
 
 }

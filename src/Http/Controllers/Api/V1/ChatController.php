@@ -174,7 +174,10 @@ class ChatController extends Controller
 
             $admin = User::where('uuid',$uuid)->first();
 
-            $chats = Message::where('admin_id',$admin->id)->where('is_read',0)->get();
+            $chats = Message::with('admin','joiner','replies')
+                                ->where('admin_id',$admin->id)
+                                ->where('is_read',0)
+                                ->get();
 
             return response()->json([
                 'type' => 'success',
