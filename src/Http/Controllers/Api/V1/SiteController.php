@@ -40,10 +40,16 @@ class SiteController extends Controller
             })
             ->paginate(10);
 
+
+        $locations = collect(Site::where('customer_id', $customer->id)->get())
+                    ->map(function ($item) {
+                        return ['lat' => $item->latitude,'lng' => $item->longitude];
+                    });
+
         return response()->json([
             'type' => 'success',
             'message' => '',
-            'data' => ['meta' => $meta],
+            'data' => ['meta' => $meta,'locations' => $locations],
         ]);
     }
 
