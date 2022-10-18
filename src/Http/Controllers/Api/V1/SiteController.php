@@ -45,7 +45,7 @@ class SiteController extends Controller
                     ->map(function ($item) {
 
                         if($item->latitude && $item->longitude != null) {
-                            return ['lat' => $item->latitude, 'lng' => $item->longitude];
+                            return ['lat' => floatval($item->latitude), 'lng' => floatval($item->longitude)];
                         }
                         return ;
                     });
