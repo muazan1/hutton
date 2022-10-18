@@ -23,7 +23,15 @@ class CustomerController extends Controller
 {
     public function index(Request $request)
     {
-        $customers = Customer::all();
+        $search = $request->safe()->search ?? '';
+        
+        $customers = Customer::where(function ($query) use ($search) {
+            $query
+                ->where('customer_name', 'LIKE', '%' . $search . '%')
+                ->orWhere('email', 'LIKE', '%' . $search . '%');
+        })
+            ->orderBy('customer_name')
+            ->paginate(10);
 
         return response()->json([
             'type' => 'success',
