@@ -33,9 +33,26 @@ class CustomerController extends Controller
             ->orderBy('customer_name')
             ->paginate(10);
 
+
+
+        $locations = collect(Customer::all())
+            ->map(function ($item) {
+
+                if($item->latitude && $item->longitude != null) {
+
+                    return [
+                        'lat' => floatval($item->latitude),
+                        'lng' => floatval($item->longitude),
+                        'title' => $item->customer_name,
+                        'label' => $item->customer_name
+                    ];
+                }
+                return ;
+            });
+
         return response()->json([
             'type' => 'success',
-            'data' => $customers,
+            'data' => ['customers' => $customers,'locations' => $locations],
         ]);
     }
 
