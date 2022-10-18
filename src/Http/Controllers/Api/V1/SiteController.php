@@ -50,6 +50,7 @@ class SiteController extends Controller
                                 'lat' => floatval($item->latitude),
                                 'lng' => floatval($item->longitude),
                                 'title' => $item->site_name,
+                                'label' => $item->site_name
                             ];
                         }
                         return ;
