@@ -5,6 +5,7 @@ namespace Sty\Hutton\Http\Controllers\Api\V1;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use DataTables;
@@ -33,6 +34,18 @@ class CustomerController extends Controller
     public function store(CreateCustomerRequest $request)
     {
         try {
+
+            $apiKey = env('GOOGLE_MAP_API_KEY');
+
+            $address = $request->street_1.' '. $request->street_2.', '.$request->city.', '.$request->county.', '.$request->postcode;
+
+            $location = Http::acceptJson()
+                ->get('https://maps.googleapis.com/maps/api/geocode/json?address='.$address.'&key='.$apiKey);
+
+            $latitude = json_decode($location)->results[0]->geometry->location->lat;
+
+            $longitude = json_decode($location)->results[0]->geometry->location->lng;
+
             $data = [
                 'uuid' => $request->uuid,
                 'customer_name' => $request->customer_name,
@@ -42,6 +55,8 @@ class CustomerController extends Controller
                 'street_2' => $request->street_2,
                 'city' => $request->city,
                 'postcode' => $request->postcode,
+                'latitude' => $latitude,
+                'longitude' => $longitude,
                 'telephone_number' => $request->telephone_number,
                 'county' => $request->county,
             ];
@@ -117,6 +132,17 @@ class CustomerController extends Controller
                 ]);
             }
 
+            $apiKey = env('GOOGLE_MAP_API_KEY');
+
+            $address = $request->street_1.' '. $request->street_2.', '.$request->city.', '.$request->county.', '.$request->postcode;
+
+            $location = Http::acceptJson()
+                ->get('https://maps.googleapis.com/maps/api/geocode/json?address='.$address.'&key='.$apiKey);
+
+            $latitude = json_decode($location)->results[0]->geometry->location->lat;
+
+            $longitude = json_decode($location)->results[0]->geometry->location->lng;
+
             $data = [
                 'customer_name' => $request->customer_name,
                 'slug' => $request->slug,
@@ -125,6 +151,8 @@ class CustomerController extends Controller
                 'street_2' => $request->street_2,
                 'city' => $request->city,
                 'postcode' => $request->postcode,
+                'latitude' => $latitude,
+                'longitude' => $longitude,
                 'telephone_number' => $request->telephone_number,
                 'county' => $request->county,
             ];
