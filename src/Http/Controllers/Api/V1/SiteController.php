@@ -43,7 +43,11 @@ class SiteController extends Controller
 
         $locations = collect(Site::where('customer_id', $customer->id)->get())
                     ->map(function ($item) {
-                        return ['lat' => $item->latitude,'lng' => $item->longitude];
+
+                        if($item->latitude && $item->longitude != null) {
+                            return ['lat' => $item->latitude, 'lng' => $item->longitude];
+                        }
+                        return ;
                     });
 
         return response()->json([
