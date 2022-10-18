@@ -23,8 +23,8 @@ class CustomerController extends Controller
 {
     public function index(Request $request)
     {
-        $search = $request->safe()->search ?? '';
-        
+        $search = $request->search ?? '';
+
         $customers = Customer::where(function ($query) use ($search) {
             $query
                 ->where('customer_name', 'LIKE', '%' . $search . '%')
