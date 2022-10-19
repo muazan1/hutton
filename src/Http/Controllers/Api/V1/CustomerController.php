@@ -50,9 +50,11 @@ class CustomerController extends Controller
                 return ;
             });
 
+        $all_customers = Customer::all();
+
         return response()->json([
             'type' => 'success',
-            'data' => ['customers' => $customers,'locations' => $locations],
+            'data' => ['customers' => $customers,'locations' => $locations,'all_customers'=> $all_customers],
         ]);
     }
 
