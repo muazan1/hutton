@@ -15,7 +15,7 @@ class InstallHuttonScope extends Command
      *
      * @var string
      */
-    protected $signature = 'module:install:huttonscope';
+    protected $signature = 'install:huttonscope';
 
     /**
      * The console command description.
