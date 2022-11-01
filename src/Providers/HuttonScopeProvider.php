@@ -6,6 +6,8 @@ use Illuminate\Support\ServiceProvider;
 
 use Sty\Hutton\Console\Commands\StartNewWeek;
 
+use Sty\Hutton\Console\Commands\InstallHuttonScope;
+
 class HuttonScopeProvider extends ServiceProvider
 {
     /**
@@ -49,6 +51,8 @@ class HuttonScopeProvider extends ServiceProvider
         ]);
 
         if ($this->app->runningInConsole()) {
+            $this->commands([InstallHuttonScope::class]);
+
             $this->commands([StartNewWeek::class]);
         }
 
