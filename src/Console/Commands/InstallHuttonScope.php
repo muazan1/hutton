@@ -69,6 +69,8 @@ class InstallHuttonScope extends Command
                 'Sty\Hutton\Database\Seeders\HuttonRolePermissionsSeeder',
         ]);
 
+        $this->info('Installed Successfully');
+
         return 0;
     }
 }
