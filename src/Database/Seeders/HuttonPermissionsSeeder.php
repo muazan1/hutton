@@ -1,6 +1,6 @@
 <?php
 
-namespace Database\Seeders;
+namespace Sty\Hutton\Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -327,7 +327,7 @@ class HuttonPermissionsSeeder extends Seeder
                 'api_permission' => 'work:weekly',
             ],
 
-//            permission for admin reports
+            //            permission for admin reports
             [
                 'id' => 150,
                 'name' => 'Admin Reports',
@@ -336,7 +336,7 @@ class HuttonPermissionsSeeder extends Seeder
                 'api_permission' => 'admin:reports',
             ],
 
-//            for joiner message
+            //            for joiner message
             [
                 'id' => 151,
                 'name' => 'Joiner message',
@@ -351,7 +351,7 @@ class HuttonPermissionsSeeder extends Seeder
                 'permission' => 'joinerNotification',
                 'api_permission' => 'joinerNotification:joinerNotification',
             ],
-//            for admin notifications
+            //            for admin notifications
             [
                 'id' => 152,
                 'name' => 'Admin notification',

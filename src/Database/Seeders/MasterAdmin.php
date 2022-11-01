@@ -1,12 +1,17 @@
 <?php
 
-namespace Database\Seeders;
+namespace Sty\Hutton\Database\Seeders;
+
 use Illuminate\Database\Seeder;
+
 use Sty\Hutton\Models\Role;
+
 use App\Models\User;
 
 use Illuminate\Support\Facades\DB;
+
 use Illuminate\Support\Facades\Hash;
+
 use Illuminate\Support\Str;
 
 class MasterAdmin extends Seeder
@@ -63,6 +68,5 @@ class MasterAdmin extends Seeder
             'password' => Hash::make('password'),
             'address' => 'Jump Street',
         ]);
-
     }
 }

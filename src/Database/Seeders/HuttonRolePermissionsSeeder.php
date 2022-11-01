@@ -1,6 +1,6 @@
 <?php
 
-namespace Database\Seeders;
+namespace Sty\Hutton\Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -234,7 +234,8 @@ class HuttonRolePermissionsSeeder extends Seeder
                 'permission_id' => 151,
                 'permissionable_id' => '3',
                 'permissionable_type' => 'App\Models\Role',
-            ], [
+            ],
+            [
                 'permission_id' => 153,
                 'permissionable_id' => '3',
                 'permissionable_type' => 'App\Models\Role',

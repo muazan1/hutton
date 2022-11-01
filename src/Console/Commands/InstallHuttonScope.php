@@ -6,6 +6,8 @@ use Illuminate\Console\Command;
 
 use Sty\Hutton\Http\Service\GenerateNewWeeks;
 
+// use S
+
 class InstallHuttonScope extends Command
 {
     /**
@@ -48,13 +50,16 @@ class InstallHuttonScope extends Command
         ]);
 
         $this->info('Running Database Seeder');
+
         // Run the database seeders
         $this->info('Adding Roles...');
+
         $this->call('db:seed', [
             '--class' => 'Sty\Hutton\Database\Seeders\RolesSeeder',
         ]);
 
         $this->info('Adding Permissions...');
+
         $this->call('db:seed', [
             '--class' => 'Sty\Hutton\Database\Seeders\HuttonPermissionsSeeder',
         ]);

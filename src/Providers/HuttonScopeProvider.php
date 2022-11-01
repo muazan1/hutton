@@ -17,8 +17,7 @@ class HuttonScopeProvider extends ServiceProvider
      */
     public function register()
     {
-        // dd('Package is Working');
-        // dd(database_path('seeders'));
+        //
     }
 
     /**
@@ -32,6 +31,7 @@ class HuttonScopeProvider extends ServiceProvider
             __DIR__ . '/../publishable/database/migrations',
             'migrations'
         );
+
         // $this->publishes([
         //     __DIR__ . '/../publishable/database/migrations' => database_path(
         //         'migrations'
@@ -44,11 +44,11 @@ class HuttonScopeProvider extends ServiceProvider
 
         // $this->loadViewsFrom(__DIR__ . '/../resources/views', 'blogpackage');
 
-        $this->publishes([
-            __DIR__ . '/../publishable/database/seeders' => database_path(
-                'seeders'
-            ),
-        ]);
+        // $this->publishes([
+        //     __DIR__ . '/../publishable/database/seeders' => database_path(
+        //         'seeders'
+        //     ),
+        // ]);
 
         if ($this->app->runningInConsole()) {
             $this->commands([InstallHuttonScope::class]);

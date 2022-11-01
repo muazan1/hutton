@@ -1,6 +1,5 @@
 <?php
-
-namespace Database\Seeders;
+namespace Sty\Hutton\Database\Seeders;
 
 use App\Models\User;
 use Illuminate\Database\Seeder;
@@ -9,7 +8,15 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
-use Sty\Hutton\Models\{Customer, JoinerPricing, Plot, ServicePricing, Site, BuildingType, Service};
+use Sty\Hutton\Models\{
+    Customer,
+    JoinerPricing,
+    Plot,
+    ServicePricing,
+    Site,
+    BuildingType,
+    Service
+};
 
 class DummyData extends Seeder
 {
@@ -205,7 +212,7 @@ class DummyData extends Seeder
             ['building_type_id' => 2, 'plot_name' => 'PL-020'],
         ]);
 
-//        for generating joiners
+        //        for generating joiners
 
         User::create([
             'role_id' => 3,
@@ -218,38 +225,30 @@ class DummyData extends Seeder
             'address' => 'Jump Street',
         ]);
 
-//        for joiner pricings
+        //        for joiner pricings
 
         $services = Service::all();
 
-        $builders = User::where('role_id',2)->get();
+        $builders = User::where('role_id', 2)->get();
 
         $buildingTypes = BuildingType::all();
 
-        foreach($services as $service) {
-
-            foreach ($builders as $builder)
-            {
-                JoinerPricing::create(
-                    [
-                        'builder_id'    => $builder->id,
-                        'service_id'    => $service->id,
-                        'price'        => rand(50,500)
-                    ]
-                );
+        foreach ($services as $service) {
+            foreach ($builders as $builder) {
+                JoinerPricing::create([
+                    'builder_id' => $builder->id,
+                    'service_id' => $service->id,
+                    'price' => rand(50, 500),
+                ]);
             }
 
             foreach ($buildingTypes as $buildingType) {
-                ServicePricing::create(
-                    [
-                        'building_type_id'    => $buildingType->id,
-                        'service_id'     => $service->id,
-                        'price' => rand(50,500)
-                    ]
-                );
+                ServicePricing::create([
+                    'building_type_id' => $buildingType->id,
+                    'service_id' => $service->id,
+                    'price' => rand(50, 500),
+                ]);
             }
-
         }
-
     }
 }
