@@ -2,6 +2,8 @@
 
 namespace Sty\Hutton\Http\Controllers\Api\V1;
 
+use App\Http\Resources\Customer\CustomerResource;
+use App\Http\Resources\Customer\CustomerSiteResource;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Hash;
@@ -16,6 +18,7 @@ use Illuminate\Validation\Rules\Password;
 use Illuminate\Database\Eloquent\Collection;
 use App\Models\User;
 use App\Models\Role;
+use App\Models\Site;
 use Sty\Hutton\Models\HuttonUser;
 
 class JoinerController extends Controller
@@ -33,6 +36,28 @@ class JoinerController extends Controller
             $options
         );
     }
+
+    public function map(Request $request)
+    {
+        $sites = Site::with(['customer'])->get();
+        $collection = [];
+        foreach($sites as $site) {
+            if ($site->latitude && $site->longitude) {
+                $collection[] = (object)[
+                    'lat' => floatval($site->latitude),
+                    'lng' => floatval($site->longitude),
+                    'customer' => new CustomerResource($site->customer),
+                    'site' => new CustomerSiteResource($site),
+                ];
+            }
+        }
+
+        return response()->json([
+            'type' => 'success',
+            'data' => $collection
+        ]);
+    }
+
     public function index(Request $request)
     {
         try {

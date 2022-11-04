@@ -46,7 +46,7 @@ class InstallHuttonScope extends Command
         // Run all the Ticket migrations for the database
         $this->info('Running Migrations');
         $this->call('migrate', [
-            '--path' => 'vendor/sty/hutton/src/publishable/database/migrations',
+            '--path' => 'vendor/sty/hutton/src/Database/migrations',
         ]);
 
         $this->info('Running Database Seeder');
@@ -64,10 +64,10 @@ class InstallHuttonScope extends Command
             '--class' => 'Sty\Hutton\Database\Seeders\HuttonPermissionsSeeder',
         ]);
 
-        $this->call('db:seed', [
-            '--class' =>
-                'Sty\Hutton\Database\Seeders\HuttonRolePermissionsSeeder',
-        ]);
+        // $this->call('db:seed', [
+        //     '--class' =>
+        //         'Sty\Hutton\Database\Seeders\HuttonRolePermissionsSeeder',
+        // ]);
 
         return 0;
     }

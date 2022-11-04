@@ -32,6 +32,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::group(['prefix' => 'api/v1', 'as' => 'api/v1'], function () {
 
+    Route::get('joiners/map', [JoinerController::class, 'map']);
+
     // Routes for Builders|Customers Module
     Route::resource('customers', CustomerController::class);
 

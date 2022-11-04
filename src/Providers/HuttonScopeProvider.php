@@ -28,7 +28,7 @@ class HuttonScopeProvider extends ServiceProvider
     public function boot()
     {
         $this->loadMigrationsFrom(
-            __DIR__ . '/../publishable/database/migrations',
+            __DIR__ . '/../Database/migrations',
             'migrations'
         );
 

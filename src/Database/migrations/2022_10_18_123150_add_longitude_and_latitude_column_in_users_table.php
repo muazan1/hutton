@@ -14,9 +14,9 @@ class AddLongitudeAndLatitudeColumnInUsersTable extends Migration
     public function up()
     {
         Schema::table('customers', function (Blueprint $table) {
-            $table->string('longitude')->nullable()->after('postcode');
+            // $table->string('longitude')->nullable()->after('postcode');
 
-            $table->string('latitude')->nullable()->after('longitude');
+            // $table->string('latitude')->nullable()->after('longitude');
         });
     }
 

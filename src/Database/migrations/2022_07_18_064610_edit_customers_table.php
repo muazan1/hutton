@@ -17,7 +17,7 @@ class EditCustomersTable extends Migration
             $table
                 ->string('main_contact')
                 ->nullable()
-                ->after('contract_expiry_date');
+                ->after('vat_number');
 
             $table
                 ->string('main_contact_number')

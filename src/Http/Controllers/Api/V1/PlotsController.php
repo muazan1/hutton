@@ -43,7 +43,7 @@ class PlotsController extends Controller
         try {
             $validator = Validator::make($request->all(), [
                 'building_type_id' => ['required'],
-                'plot_name' => ['required', 'string', 'max:255'],
+                'plots' => ['required', 'array'],
             ]);
 
             if ($validator->fails()) {
@@ -56,19 +56,29 @@ class PlotsController extends Controller
                 ]);
             }
 
-            $data = [
-                'building_type_id' => $request->building_type_id,
-                'plot_name' => $request->plot_name,
-            ];
+            $plots = [];
+            foreach($request->plots as $plot) {
+                if ($plot) {
+                    $plots[] = Plot::create([
+                        'building_type_id' => $request->building_type_id,
+                        'plot_name' => $plot,
+                    ]);
+                }
+            }
+
+            // $data = [
+            //     'building_type_id' => $request->building_type_id,
+            //     'plot_name' => $request->plot_name,
+            // ];
 
             $message = 'Plot Created Successfully';
 
-            $plot = Plot::create($data);
+            // $plot = Plot::create($data);
 
             return response()->json([
                 'type' => 'success',
                 'message' => $message,
-                'data' => $plot,
+                'data' => $plots,
             ]);
         } catch (\Throwable $th) {
             $message = $th->getMessage();

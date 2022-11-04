@@ -11,7 +11,9 @@ use Illuminate\Support\Facades\Hash;
 
 use Illuminate\Support\Str;
 
-class RolesSeeder extends Seeder
+use App\Database\Seeders\ModuleSeeder;
+
+class RolesSeeder extends ModuleSeeder
 {
     /*
      *
@@ -22,9 +24,10 @@ class RolesSeeder extends Seeder
 
     public function run()
     {
-        DB::table('roles')->insert([
-            'id' => 3,
-            'name' => 'joiner',
-        ]);
+        $this->createRole('joiner');
+        // DB::table('roles')->insert([
+        //     'id' => 3,
+        //     'name' => 'joiner',
+        // ]);
     }
 }
