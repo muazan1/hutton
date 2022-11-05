@@ -145,7 +145,7 @@ class PlotsController extends Controller
         try {
             $plot = Plot::findOrFail($plotId);
 
-            $plot->update(['name' => $request->plot_name]);
+            $plot->update(['plot_name' => $request->plot_name]);
 
             $message = 'Plot Updated Successfully';
 
@@ -187,7 +187,7 @@ class PlotsController extends Controller
             $message = $th->getMessage();
 
             return response()->json([
-                'type' => 'success',
+                'type' => 'error',
                 'message' => $message,
                 'data' => '',
             ]);
