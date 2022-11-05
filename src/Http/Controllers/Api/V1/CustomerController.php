@@ -41,8 +41,8 @@ class CustomerController extends Controller
                 if($item->latitude && $item->longitude != null) {
 
                     return [
-                        'lat' => $item->latitude != null ? floatval($item->latitude) : 0.0,
-                        'lng' => $item->longitude != null ? floatval($item->longitude) : 0.0,
+                        'lat' => $item->latitude != null ? floatval($item->latitude) : floatval(0.0),
+                        'lng' => $item->longitude != null ? floatval($item->longitude) : floatval(0.0),
                         'title' => $item->customer_name,
                         'label' => $item->customer_name
                     ];

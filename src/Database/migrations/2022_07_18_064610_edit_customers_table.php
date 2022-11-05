@@ -16,8 +16,7 @@ class EditCustomersTable extends Migration
         Schema::table('customers', function (Blueprint $table) {
             $table
                 ->string('main_contact')
-                ->nullable()
-                ->after('vat_number');
+                ->nullable();
 
             $table
                 ->string('main_contact_number')
