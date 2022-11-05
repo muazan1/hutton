@@ -26,7 +26,7 @@ class Plot extends Model
 
         self::deleting(function($plot) {
 
-            $plot->comments()->each(function($jobs) {
+            $plot->job()->each(function($jobs) {
                 $jobs->delete();
             });
 
