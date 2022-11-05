@@ -25,6 +25,8 @@ class RolesSeeder extends ModuleSeeder
     public function run()
     {
         $this->createRole('joiner');
+
+        $this->createRole('supervisor');
         // DB::table('roles')->insert([
         //     'id' => 3,
         //     'name' => 'joiner',

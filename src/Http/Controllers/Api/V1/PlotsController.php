@@ -138,4 +138,59 @@ class PlotsController extends Controller
             ]);
         }
     }
+
+
+    public function update(Request $request, $plotId)
+    {
+        try {
+            $plot = Plot::findOrFail($plotId);
+
+            $plot->update(['name' => $request->plot_name]);
+
+            $message = 'Plot Updated Successfully';
+
+            return response()->json([
+                'type' => 'success',
+                'message' => $message,
+                'data' => '',
+            ]);
+
+
+        } catch (\Throwable $th) {
+            $message = $th->getMessage();
+
+            return response()->json([
+                'type' => 'error',
+                'message' => $message,
+                'data' => '',
+            ]);
+        }
+    }
+
+
+
+    public function destroy(Request $request, $plotId)
+    {
+        try {
+            $plot = Plot::find($plotId);
+
+            $plot->delete();
+
+            $message = 'Plot Deleted Successfully';
+
+            return response()->json([
+                'type' => 'success',
+                'message' => $message,
+                'data' => '',
+            ]);
+        } catch (\Throwable $th) {
+            $message = $th->getMessage();
+
+            return response()->json([
+                'type' => 'success',
+                'message' => $message,
+                'data' => '',
+            ]);
+        }
+    }
 }
