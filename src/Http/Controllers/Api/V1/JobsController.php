@@ -161,7 +161,7 @@ class JobsController extends Controller
                     'day' => null,
                     'work_carried' => null,
                     'time_taken' => null,
-                    'amount' => $jp->price,
+                    'amount' => '0.00',
                 ];
 
                 $message = 'Daily Work Added Successfully';
