@@ -139,24 +139,56 @@ class PlotsController extends Controller
         }
     }
 
-    public function delete(Request $request)
+    public function update(Request $request, $plotId)
     {
-        if ($request->plots) {
-            $plotIds = $request->plots;
+        try {
+            $plot = Plot::findOrFail($plotId);
 
-            $plots = Plot::whereIn('id', $plotIds)->delete();
+            $plot->update(['plot_name' => $request->plot_name]);
+
+            $message = 'Plot Updated Successfully';
 
             return response()->json([
                 'type' => 'success',
-                'message' => 'Plots deleted successfully',
+                'message' => $message,
+                'data' => '',
+            ]);
+
+
+        } catch (\Throwable $th) {
+            $message = $th->getMessage();
+
+            return response()->json([
+                'type' => 'error',
+                'message' => $message,
                 'data' => '',
             ]);
         }
-        else {
+    }
+
+
+
+    public function destroy(Request $request, $plotId)
+    {
+        try {
+            $plot = Plot::find($plotId);
+
+            $plot->delete();
+
+            $message = 'Plot Deleted Successfully';
+
+            return response()->json([
+                'type' => 'success',
+                'message' => $message,
+                'data' => '',
+            ]);
+        } catch (\Throwable $th) {
+            $message = $th->getMessage();
+
             return response()->json([
                 'type' => 'error',
-                'message' => 'Unable to delete plots',
-                'data' => ''
+                'message' => $message,
+                'data' => '',
             ]);
         }
     }

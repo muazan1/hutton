@@ -20,4 +20,17 @@ class Plot extends Model
     {
         return $this->belongsTo(BuildingType::class, 'building_type_id', 'id');
     }
+
+    public static function boot() {
+        parent::boot();
+
+        self::deleting(function($plot) {
+
+            $plot->job()->each(function($jobs) {
+                $jobs->delete();
+            });
+
+        });
+    }
+
 }
