@@ -139,7 +139,6 @@ class PlotsController extends Controller
         }
     }
 
-
     public function update(Request $request, $plotId)
     {
         try {
