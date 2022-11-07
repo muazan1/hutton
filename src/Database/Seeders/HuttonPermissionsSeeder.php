@@ -288,8 +288,8 @@ class HuttonPermissionsSeeder extends ModuleSeeder
             'daily-work' => $this->insertPermission(
                 'My Daily Work',
                 'work',
-                'daily-work',
-                'work:daily'
+                'my-daily-work',
+                'mywork:daily'
             ),
         ];
 
