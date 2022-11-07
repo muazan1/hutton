@@ -8,7 +8,13 @@ use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\{Hash, Mail, Validator};
 
-use Sty\Hutton\Models\{BuildingType, HsJob, DailyWork, WeeklyWork};
+use Sty\Hutton\Models\{
+    JoinerPricing,
+    BuildingType,
+    HsJob,
+    DailyWork,
+    WeeklyWork
+};
 
 use Illuminate\Database\Eloquent\Collection;
 
@@ -44,6 +50,13 @@ class JobsController extends Controller
                     ]);
                 }
 
+                $jp = JoinerPricing::where('service_id', $plotJob->service_id)
+                    ->where(
+                        'builder_id',
+                        $plotJob->plot->buildingType->site->customer_id
+                    )
+                    ->first();
+
                 if ($plotJob->status == 'completed') {
                     $message = 'Job has Already Completed';
 
@@ -60,10 +73,10 @@ class JobsController extends Controller
                     'site_id' => $plotJob->plot->buildingType->site_id,
                     'plot_id' => $plotJob->plot_id,
                     'service_id' => $plotJob->service_id,
-                    'day' => '',
-                    'work_carried' => '',
-                    'time_taken' => '',
-                    'amount' => $request->amount,
+                    'day' => null,
+                    'work_carried' => null,
+                    'time_taken' => null,
+                    'amount' => $jp->price,
                 ];
 
                 $message = 'Daily Work Added Successfully';
@@ -132,16 +145,23 @@ class JobsController extends Controller
                     ]);
                 }
 
+                $jp = JoinerPricing::where('service_id', $plotJob->service_id)
+                    ->where(
+                        'builder_id',
+                        $plotJob->plot->buildingType->site->customer_id
+                    )
+                    ->first();
+
                 $data = [
                     'week_id' => $week->id,
                     'plot_job_id' => $plotJob->id,
                     'site_id' => $plotJob->plot->buildingType->site_id,
                     'plot_id' => $plotJob->plot_id,
                     'service_id' => $plotJob->service_id,
-                    'day' => '',
-                    'work_carried' => '',
-                    'time_taken' => '',
-                    'amount' => $request->amount,
+                    'day' => null,
+                    'work_carried' => null,
+                    'time_taken' => null,
+                    'amount' => $jp->price,
                 ];
 
                 $message = 'Daily Work Added Successfully';
