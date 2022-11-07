@@ -216,20 +216,18 @@ class HuttonPermissionsSeeder extends ModuleSeeder
                 'admin:jobs'
             ),
 
-            'weekly-work' => $this->insertPermission(
-                'Weekly Work',
-                'work',
-                'weekly-work',
-                'work:weekly'
-            ),
-
+            // 'weekly-work' => $this->insertPermission(
+            //     'Weekly Work',
+            //     'work',
+            //     'weekly-work',
+            //     'work:weekly'
+            // ),
             'wage-work' => $this->insertPermission(
                 'Wage Work',
                 'work',
                 'wage-sheet',
                 'work:daily'
             ),
-
             'admin-reports' => $this->insertPermission(
                 'Admin Reports',
                 'reports',
