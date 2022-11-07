@@ -138,4 +138,26 @@ class PlotsController extends Controller
             ]);
         }
     }
+
+    public function delete(Request $request)
+    {
+        if ($request->plots) {
+            $plotIds = $request->plots;
+
+            $plots = Plot::whereIn('id', $plotIds)->delete();
+
+            return response()->json([
+                'type' => 'success',
+                'message' => 'Plots deleted successfully',
+                'data' => '',
+            ]);
+        }
+        else {
+            return response()->json([
+                'type' => 'error',
+                'message' => 'Unable to delete plots',
+                'data' => ''
+            ]);
+        }
+    }
 }
