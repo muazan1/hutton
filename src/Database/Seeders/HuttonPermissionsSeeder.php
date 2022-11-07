@@ -283,12 +283,6 @@ class HuttonPermissionsSeeder extends ModuleSeeder
         ];
 
         $supervisorMap = [
-            'joiner-dashboard' => $this->insertPermission(
-                'Joiner Dashboard',
-                'dashboard',
-                'joinerDashboard',
-                'joiner:dashboard'
-            ),
             'admin-dashboard' => $this->insertPermission(
                 'Admin Dashboard',
                 'dashboard',
