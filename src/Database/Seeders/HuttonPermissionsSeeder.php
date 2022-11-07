@@ -34,12 +34,7 @@ class HuttonPermissionsSeeder extends ModuleSeeder
                 'buildersDashboard',
                 'builder:dashboard'
             ),
-            // 'joiner-dashboard' => $this->insertPermission(
-            //     'Joiner Dashboard',
-            //     'dashboard',
-            //     'joinerDashboard',
-            //     'joiner:dashboard'
-            // ),
+
             'joiners-view' => $this->insertPermission(
                 'Joiners view',
                 'joiners',
@@ -220,60 +215,28 @@ class HuttonPermissionsSeeder extends ModuleSeeder
                 'admin-jobs',
                 'admin:jobs'
             ),
-            // 'joiner-jobs' => $this->insertPermission(
-            //     'Joiner Jobs',
-            //     'jobs',
-            //     'joiner-jobs',
-            //     'joiner:jobs'
-            // ),
+
             'weekly-work' => $this->insertPermission(
                 'Weekly Work',
                 'work',
                 'weekly-work',
                 'work:weekly'
             ),
-            // 'work-history' => $this->insertPermission(
-            //     'My Work History',
-            //     'work',
-            //     'my-work-history',
-            //     'work:history'
-            // ),
-            // 'daily-work' => $this->insertPermission(
-            //     'My Daily Work',
-            //     'work',
-            //     'daily-work',
-            //     'work:daily'
-            // ),
+
             'wage-work' => $this->insertPermission(
                 'Wage Work',
                 'work',
                 'wage-sheet',
                 'work:daily'
             ),
-            // 'weekly-work' => $this->insertPermission(
-            //     'My Weekly Work',
-            //     'work',
-            //     'my-weekly-work',
-            //     'work:weekly'
-            // ),
+
             'admin-reports' => $this->insertPermission(
                 'Admin Reports',
                 'reports',
                 'reports',
                 'admin:reports'
             ),
-            // 'joiner-message' => $this->insertPermission(
-            //     'Joiner message',
-            //     'message',
-            //     'message',
-            //     'message:message'
-            // ),
-            // 'joiner-notification' => $this->insertPermission(
-            //     'Joiner Notification',
-            //     'joinerNotification',
-            //     'joinerNotification',
-            //     'joinerNotification:joinerNotification'
-            // ),
+
             'admin-notification' => $this->insertPermission(
                 'Admin notification',
                 'notification',
@@ -303,12 +266,7 @@ class HuttonPermissionsSeeder extends ModuleSeeder
                 'my-work-history',
                 'work:history'
             ),
-            'daily-work' => $this->insertPermission(
-                'My Daily Work',
-                'work',
-                'daily-work',
-                'work:daily'
-            ),
+
             'weekly-work' => $this->insertPermission(
                 'My Weekly Work',
                 'work',
@@ -326,6 +284,12 @@ class HuttonPermissionsSeeder extends ModuleSeeder
                 'joinerNotification',
                 'joinerNotification',
                 'joinerNotification:joinerNotification'
+            ),
+            'daily-work' => $this->insertPermission(
+                'My Daily Work',
+                'work',
+                'daily-work',
+                'work:daily'
             ),
         ];
 
