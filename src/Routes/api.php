@@ -45,7 +45,6 @@ Route::group(['prefix' => 'api/v1', 'as' => 'api/v1'], function () {
     // Routes for Buidling Types Crud
     Route::resource('building-types', BuildingTypeController::class);
 
-    Route::post('plots/delete', [PlotsController::class, 'delete']);
     // Routes for Plots Crud
     Route::resource('plots', PlotsController::class);
 
