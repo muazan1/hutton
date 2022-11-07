@@ -215,13 +215,6 @@ class HuttonPermissionsSeeder extends ModuleSeeder
                 'admin-jobs',
                 'admin:jobs'
             ),
-
-            // 'weekly-work' => $this->insertPermission(
-            //     'Weekly Work',
-            //     'work',
-            //     'weekly-work',
-            //     'work:weekly'
-            // ),
             'wage-work' => $this->insertPermission(
                 'Wage Work',
                 'work',
@@ -242,8 +235,6 @@ class HuttonPermissionsSeeder extends ModuleSeeder
                 'notification:notification'
             ),
         ];
-
-        $this->assignPermissionsToRole($map, 'admin');
 
         $joinerMap = [
             'joiner-dashboard' => $this->insertPermission(
@@ -291,6 +282,110 @@ class HuttonPermissionsSeeder extends ModuleSeeder
             ),
         ];
 
+        $supervisorMap = [
+            'joiner-dashboard' => $this->insertPermission(
+                'Joiner Dashboard',
+                'dashboard',
+                'joinerDashboard',
+                'joiner:dashboard'
+            ),
+            'admin-dashboard' => $this->insertPermission(
+                'Admin Dashboard',
+                'dashboard',
+                'adminDashboard',
+                'admin:dashboard'
+            ),
+            'builder-dashboard' => $this->insertPermission(
+                'Builder Dashboard',
+                'dashboard',
+                'buildersDashboard',
+                'builder:dashboard'
+            ),
+            'site-dashboard' => $this->insertPermission(
+                'Site Dashboard',
+                'dashboard',
+                'buildersDashboard',
+                'builder:dashboard'
+            ),
+
+            'joiners-view' => $this->insertPermission(
+                'Joiners view',
+                'joiners',
+                'view',
+                'joiners:view'
+            ),
+            'joiners-browse' => $this->insertPermission(
+                'Joiners browse',
+                'joiners',
+                'browse',
+                'joiners:browse'
+            ),
+            'builders-browse' => $this->insertPermission(
+                'Browse Builder',
+                'builders',
+                'browse',
+                'builders:browse'
+            ),
+            'browse-sites' => $this->insertPermission(
+                'Browse Sites',
+                'sites',
+                'browse-site',
+                'sites:browse'
+            ),
+            'browse-building' => $this->insertPermission(
+                'Browse Building Types',
+                'building_types',
+                'browse',
+                'building_types:browse'
+            ),
+            'browse-plots' => $this->insertPermission(
+                'Browse Plots',
+                'plots',
+                'browse',
+                'building_types:browse'
+            ),
+            'browse-service-price' => $this->insertPermission(
+                'Browse Service Pricing',
+                'service_pricing',
+                'browse',
+                'service_pricing:browse'
+            ),
+            'browse-joiner-pricing' => $this->insertPermission(
+                'Browse Joiner Pricing',
+                'joiner_pricing',
+                'browse',
+                'joiner_pricing:browse'
+            ),
+            'browse-services' => $this->insertPermission(
+                'Browse Services',
+                'services',
+                'browse',
+                'services:browse'
+            ),
+            'admin-jobs' => $this->insertPermission(
+                'Admin Jobs',
+                'jobs',
+                'admin-jobs',
+                'admin:jobs'
+            ),
+            'wage-work' => $this->insertPermission(
+                'Wage Work',
+                'work',
+                'wage-sheet',
+                'work:daily'
+            ),
+            'admin-reports' => $this->insertPermission(
+                'Admin Reports',
+                'reports',
+                'reports',
+                'admin:reports'
+            ),
+        ];
+
+        $this->assignPermissionsToRole($map, 'admin');
+
         $this->assignPermissionsToRole($joinerMap, 'joiner');
+
+        $this->assignPermissionsToRole($supervisorMap, 'supervisor');
     }
 }
