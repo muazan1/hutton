@@ -22,11 +22,11 @@ class CreateDailyWorksTable extends Migration
 
             $table->integer('plot_id');
 
-            $table->integer('day');
+            $table->integer('day')->nullable();
 
             $table->text('work_carried')->nullable();
 
-            $table->time('time_taken');
+            $table->time('time_taken')->nullable();
 
             $table->decimal('amount', $precision = 8, $scale = 2)->default(0.0);
 

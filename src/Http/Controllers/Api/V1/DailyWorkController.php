@@ -60,8 +60,7 @@ class DailyWorkController extends Controller
                 ->where('service_id', $request->service_id)
                 ->first();
 
-            if ($plotJob->status == 'completed')
-            {
+            if ($plotJob->status == 'completed') {
                 $message = 'Job has Already Completed';
 
                 return response()->json([
@@ -71,7 +70,7 @@ class DailyWorkController extends Controller
                 ]);
             }
 
-            $site = Site::where('slug',$request->site_id)->first();
+            $site = Site::where('slug', $request->site_id)->first();
 
             $data = [
                 'week_id' => $request->week_id,
@@ -91,12 +90,10 @@ class DailyWorkController extends Controller
 
             $weekly_work = WeeklyWork::find($request->week_id);
 
-            $plotJob->update(
-                [
-                    'status' => $request->status,
-                    'completed_by' => $weekly_work->user_id
-                ]
-            );
+            $plotJob->update([
+                'status' => $request->status,
+                'completed_by' => $weekly_work->user_id,
+            ]);
 
             return response()->json([
                 'type' => 'success',

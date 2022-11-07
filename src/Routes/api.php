@@ -20,7 +20,8 @@ use Sty\Hutton\Http\Controllers\Api\V1\{
     WorkController,
     DashboardController,
     ReportController,
-    ChatController
+    ChatController,
+    JobsController
 };
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
@@ -29,9 +30,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 //Route::middleware(['auth:sanctum'])->group(function () {
 
-
 Route::group(['prefix' => 'api/v1', 'as' => 'api/v1'], function () {
-
     Route::get('joiners/map', [JoinerController::class, 'map']);
 
     // Routes for Builders|Customers Module
@@ -270,81 +269,96 @@ Route::group(['prefix' => 'api/v1', 'as' => 'api/v1'], function () {
     ]);
 
     //  Route for site details
-    Route::get('site/{slug}',[SiteController::class,'details']);
+    Route::get('site/{slug}', [SiteController::class, 'details']);
 
-//    for site dashboard
-    Route::get('site/{slug}/jobs',[HsJobsController::class,'jobsOnSite']);
+    //    for site dashboard
+    Route::get('site/{slug}/jobs', [HsJobsController::class, 'jobsOnSite']);
 
-//    for jobs on each builder
-    Route::get('builder/{slug}/jobs',[HsJobsController::class,'jobsOnBuilder']);
+    //    for jobs on each builder
+    Route::get('builder/{slug}/jobs', [
+        HsJobsController::class,
+        'jobsOnBuilder',
+    ]);
 
-//    Route for site dashboard
+    //    Route for site dashboard
 
-    Route::controller( DashboardController::class)->group(function () {
+    Route::controller(DashboardController::class)->group(function () {
+        Route::get('site/{slug}/dashboard', 'siteDashboard');
 
-        Route::get('site/{slug}/dashboard','siteDashboard');
+        Route::get('site/{slug}/dashboard/bars', 'siteDashboardBars');
 
-        Route::get('site/{slug}/dashboard/bars','siteDashboardBars');
+        Route::get(
+            'site/{slug}/dashboard/completions',
+            'siteDashboardCompletionChart'
+        );
 
-        Route::get('site/{slug}/dashboard/completions','siteDashboardCompletionChart');
+        Route::get('builder/{slug}/dashboard/pieChart', 'BuilderPieChart');
 
-        Route::get('builder/{slug}/dashboard/pieChart','BuilderPieChart');
-
-        Route::get('admin/dashboard/pieChart','AdminPieChart');
-
-
+        Route::get('admin/dashboard/pieChart', 'AdminPieChart');
     });
 
-//    Admin Report Routes
+    //    Admin Report Routes
     Route::controller(ReportController::class)->group(function () {
-
         Route::prefix('admin/reports/')->group(function () {
+            Route::post('builder-jobs-completed', 'builderJobsCompleted');
 
-            Route::post('builder-jobs-completed','builderJobsCompleted');
+            Route::post('builder-remaining-jobs', 'builderRemainingJobs');
 
-            Route::post('builder-remaining-jobs','builderRemainingJobs');
+            Route::post('joiner-completed-jobs', 'joinerCompletedJobs');
 
-            Route::post('joiner-completed-jobs','joinerCompletedJobs');
+            Route::post('joiner-wage-sheet', 'joinerWageSheet');
 
-            Route::post('joiner-wage-sheet','joinerWageSheet');
+            Route::post('builder-invoice-sheet', 'builderInvoiceSheet');
 
-            Route::post('builder-invoice-sheet','builderInvoiceSheet');
-
-            Route::post('report-by-site','ReportBySite');
-
+            Route::post('report-by-site', 'ReportBySite');
         });
-
     });
 
-//    Chat Routes
+    //    Chat Routes
 
     Route::controller(ChatController::class)->group(function () {
-
         Route::prefix('chat/')->group(function () {
+            Route::post('create', 'CreateChat');
 
-            Route::post('create','CreateChat');
+            Route::post('{chat}/message', 'CreateMessage');
 
-            Route::post('{chat}/message','CreateMessage');
+            Route::get('{chat}', 'GetChat');
 
-            Route::get('{chat}','GetChat');
-
-            Route::post('send-message','sendMessage');
-
+            Route::post('send-message', 'sendMessage');
         });
-
     });
 
-//    ROute for getting admins
-    Route::get('admins',[DashboardController::class,'getAdmins']);
+    //    ROute for getting admins
+    Route::get('admins', [DashboardController::class, 'getAdmins']);
 
-    Route::get('admin/{uuid}/notifications',[ChatController::class,'adminNotifications']);
+    Route::get('admin/{uuid}/notifications', [
+        ChatController::class,
+        'adminNotifications',
+    ]);
 
-    Route::get('joiner/{uuid}/notifications',[ChatController::class,'joinerNotifications']);
+    Route::get('joiner/{uuid}/notifications', [
+        ChatController::class,
+        'joinerNotifications',
+    ]);
 
-    Route::post('message/reply',[ChatController::class,'chatReply']);
+    Route::post('message/reply', [ChatController::class, 'chatReply']);
 
-    Route::get('message/{message_id}/mark_read',[ChatController::class,'markRead']);
+    Route::get('message/{message_id}/mark_read', [
+        ChatController::class,
+        'markRead',
+    ]);
 
-    Route::get('message/{message_id}/details',[ChatController::class,'messageDetails']);
+    Route::get('message/{message_id}/details', [
+        ChatController::class,
+        'messageDetails',
+    ]);
 
+    // automatic complet jobs
+    Route::controller(JobsController::class)->group(function () {
+        Route::prefix('joiner/{joiner}/job/{job}')->group(function () {
+            Route::post('complete', 'CompleteJob');
+
+            Route::post('part-complete', 'PartCompleteJob');
+        });
+    });
 });
