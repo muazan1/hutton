@@ -14,6 +14,7 @@ use Exception;
 use Illuminate\Validation\Rule;
 
 use Sty\Hutton\Models\Plot;
+use Sty\Hutton\Models\BuildingType;
 
 class PlotsController extends Controller
 {
@@ -85,12 +86,15 @@ class PlotsController extends Controller
         }
     }
 
-    public function BuildingTypePlots(Request $request, $btId)
+    public function BuildingTypePlots(Request $request, $uuid)
     {
         try {
             $search = $request->search ?? '';
+
+            $building_type = BuildingType::where('uuid', $uuid)->first();
+
             $plots = Plot::with('job')
-                ->where('building_type_id', $btId)
+                ->where('building_type_id', $building_type->id)
                 ->where(function ($query) use ($search) {
                     $query->where('plot_name', 'LIKE', '%' . $search . '%');
                 })
@@ -112,10 +116,10 @@ class PlotsController extends Controller
         }
     }
 
-    public function edit(Request $request, $plotId)
+    public function edit(Request $request, $uuid)
     {
         try {
-            $plot = Plot::findOrFail($plotId);
+            $plot = Plot::where('uuid', $uuid)->first();
 
             return response()->json([
                 'type' => 'success',
@@ -133,10 +137,10 @@ class PlotsController extends Controller
         }
     }
 
-    public function update(Request $request, $plotId)
+    public function update(Request $request, $uuid)
     {
         try {
-            $plot = Plot::findOrFail($plotId);
+            $plot = Plot::where('uuid', $uuid)->first();
 
             $plot->update(['plot_name' => $request->plot_name]);
 
@@ -158,10 +162,10 @@ class PlotsController extends Controller
         }
     }
 
-    public function destroy(Request $request, $plotId)
+    public function destroy(Request $request, $uuid)
     {
         try {
-            $plot = Plot::find($plotId);
+            $plot = Plot::where('uuid', $uuid)->first();
 
             $plot->delete();
 
