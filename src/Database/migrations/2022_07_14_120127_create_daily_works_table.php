@@ -16,6 +16,8 @@ class CreateDailyWorksTable extends Migration
         Schema::create('daily_works', function (Blueprint $table) {
             $table->id();
 
+            $table->string('uuid')->unique();
+
             $table->integer('week_id');
 
             $table->integer('site_id');

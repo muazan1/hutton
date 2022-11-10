@@ -3,35 +3,39 @@
 namespace Sty\Hutton\Http\Controllers\Api\V1;
 
 use Illuminate\Routing\Controller;
+
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Validator;
+
+use Illuminate\Support\Facades\{Hash, Validator, Mail};
+
 use DataTables;
+
 use DB;
+
 use Str;
+
 use Exception;
+
 use Illuminate\Validation\Rule;
+
 use Illuminate\Validation\Rules\Password;
 
-use Sty\Hutton\Models\JoinerPricing;
-
 use App\Models\User;
-use Sty\Hutton\Models\Customer;
-use Sty\Hutton\Models\Service;
+use Sty\Hutton\Models\{Customer, Service, JoinerPricing, BuildingType};
 
 class JoinerPricingController extends Controller
 {
     public function store(Request $request)
     {
         try {
-            $builder = Customer::select('id')
-                ->where('slug', $request->builder_id)
-                ->first();
+            $building_type = BuildingType::where(
+                'uuid',
+                $request->builing_type
+            )->first();
 
-            $bid = $builder['id'];
+            $bid = $building_type->id;
 
-            $jp = JoinerPricing::where('builder_id', $bid)
+            $jp = JoinerPricing::where('building_type_id', $bid)
                 ->where('service_id', $request->service_id)
                 ->count();
 
@@ -46,7 +50,8 @@ class JoinerPricingController extends Controller
             }
 
             $data = [
-                'builder_id' => $bid,
+                'uuid' => Str::uuid(),
+                'building_type_id' => $bid,
                 'service_id' => $request->service_id,
                 'price' => $request->price,
             ];
@@ -71,12 +76,14 @@ class JoinerPricingController extends Controller
         }
     }
 
-    public function update(Request $request, $jpId)
+    public function update(Request $request, $uuid)
     {
         try {
-            $servicePricing = JoinerPricing::find($jpId)->update([
-                'price' => $request->price,
-            ]);
+            $servicePricing = JoinerPricing::where('uuid', $uuid)
+                ->first()
+                ->update([
+                    'price' => $request->price,
+                ]);
 
             $message = 'Price Updated Successfully';
 
@@ -96,10 +103,12 @@ class JoinerPricingController extends Controller
         }
     }
 
-    public function destroy(Request $request, $jpId)
+    public function destroy(Request $request, $uuid)
     {
         try {
-            $service = JoinerPricing::findOrFail($jpId)->delete();
+            $service = JoinerPricing::where('uuid', $uuid)
+                ->first()
+                ->delete();
 
             $message = 'Service Removed for Pricing';
 
@@ -119,15 +128,13 @@ class JoinerPricingController extends Controller
         }
     }
 
-    public function builderJoinerPricings(Request $request, $builderId)
+    public function builderJoinerPricings(Request $request, $uuid)
     {
         try {
-            $builder = Customer::select('id')
-                ->where('slug', $builderId)
-                ->first();
+            $building_type = BuildingType::where('uuid', $uuid)->first();
 
             $joinerPricings = JoinerPricing::with('service')
-                ->where('builder_id', $builder->id)
+                ->where('building_type_id', $building_type->id)
                 ->paginate(10);
 
             return response()->json([
@@ -148,17 +155,12 @@ class JoinerPricingController extends Controller
             ]);
         }
     }
-    public function builderJoinerPricingsServices(
-        Request $request,
-        $builderslug
-    ) {
+    public function builderJoinerPricingsServices(Request $request, $uuid)
+    {
         try {
-
             $search = $request->search ?? '';
 
-            $builder = Customer::select('id')
-                ->where('slug', $builderslug)
-                ->first();
+            $building_type = BuildingType::where('uuid', $uuid)->first();
 
             $services = Service::where(function ($query) use ($search) {
                 $query
@@ -166,17 +168,18 @@ class JoinerPricingController extends Controller
                     ->orWhere('description', 'LIKE', '%' . $search . '%');
             })
                 ->with([
-                'joinerPricings' => function ($query) use ($builder) {
-                    $query->where('builder_id', $builder->id);
-                },
-            ])->paginate(10);
+                    'joinerPricings' => function ($query) use ($building_type) {
+                        $query->where('building_type_id', $building_type->id);
+                    },
+                ])
+                ->paginate(10);
 
             return response()->json([
                 'type' => 'success',
                 'message' => '',
                 'data' => [
                     'services' => $services,
-                    'builder' => $builder,
+                    'building_type' => $building_type,
                 ],
             ]);
         } catch (\Throwable $th) {

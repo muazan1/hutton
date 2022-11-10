@@ -67,16 +67,16 @@ class HsJobsController extends Controller
                         ->first();
 
                     if (!$job) {
-
                         $ser = Service::find($service->service_id);
 
                         HsJob::create([
+                            'uuid' => Str::uuid(),
                             'plot_id' => $plot->id,
                             'service_id' => $service->service_id,
                             'percent_complete' => 0.0,
                             'amount' => $service->price,
                             'status' => 'not-started',
-                            'priority' => $ser->priority
+                            'priority' => $ser->priority,
                         ]);
                     }
                 }
@@ -98,17 +98,19 @@ class HsJobsController extends Controller
         }
     }
 
-    public function jobsOnPlot(Request $request, $plotId)
+    public function jobsOnPlot(Request $request, $uuid)
     {
         try {
             $search = $request->search ?? '';
 
+            $plot = Plot::where('uuid', $uuid)->first();
+
             $alljobs = HsJob::with('service', 'plot', 'joiners')
-                ->where('plot_id', $plotId)
+                ->where('plot_id', $plot->id)
                 ->get();
 
             $jobs = HsJob::with('service', 'plot', 'joiners')
-                ->where('plot_id', $plotId)
+                ->where('plot_id', $plot->id)
                 ->paginate(10);
 
             $completed = $alljobs->where('status', 'completed')->count();
@@ -165,10 +167,10 @@ class HsJobsController extends Controller
         }
     }
 
-    public function assignJobToJoiner(Request $request, $jobId)
+    public function assignJobToJoiner(Request $request, $uuid)
     {
         try {
-            $job = HsJob::find($jobId);
+            $job = HsJob::where('uuid', $uuid)->first();
 
             $job->joiners()->attach($request->joiner_id);
 
@@ -201,10 +203,10 @@ class HsJobsController extends Controller
         }
     }
 
-    public function removeJobToJoiner(Request $request, $jobId)
+    public function removeJobToJoiner(Request $request, $uuid)
     {
         try {
-            $job = HsJob::find($jobId);
+            $job = HsJob::where('uuid', $uuid)->first();
 
             $job->joiners()->detach($request->joiner_id);
 
@@ -299,11 +301,13 @@ class HsJobsController extends Controller
         }
     }
 
-    public function servicesByPlot(Request $request, $plotId)
+    public function servicesByPlot(Request $request, $uuid)
     {
         try {
+            $plot = Plot::where('uuid', $uuid)->first();
+
             $services = HsJob::with('service')
-                ->where('plot_id', $plotId)
+                ->where('plot_id', $plot->id)
                 ->get();
 
             return response()->json([
@@ -322,10 +326,12 @@ class HsJobsController extends Controller
         }
     }
 
-    public function getJob(Request $request, $jobId)
+    public function getJob(Request $request, $uuid)
     {
         try {
-            $job = HsJob::with('joiners')->find($jobId);
+            $job = HsJob::with('joiners')
+                ->where('uuid', $uuid)
+                ->first();
 
             $roleId = Role::where('name', 'joiner')->first();
 
@@ -347,110 +353,108 @@ class HsJobsController extends Controller
         }
     }
 
-    public function jobsOnSite(Request $request,$slug)
+    public function jobsOnSite(Request $request, $slug)
     {
-        try{
+        try {
+            $site = Site::with('buildingTypes.plots.job')
+                ->where('slug', $slug)
+                ->first();
 
-            $site = Site::with('buildingTypes.plots.job')->where('slug',$slug)->first();
-
-            $jobs = HsJob::with('service','plot.buildingType.site.builder')
-                    ->whereHas('plot.buildingType.site',function ($query) use($slug) {
-                        $query->where('slug',$slug);
-                      })
-                    ->paginate(10);
+            $jobs = HsJob::with('service', 'plot.buildingType.site.builder')
+                ->whereHas('plot.buildingType.site', function ($query) use (
+                    $slug
+                ) {
+                    $query->where('slug', $slug);
+                })
+                ->paginate(10);
 
             return response()->json([
                 'type' => 'success',
                 'message' => '',
                 'data' => [
                     'site' => $site,
-                    'jobs' => $jobs
-                ]
+                    'jobs' => $jobs,
+                ],
             ]);
-
-        }catch(\Exception $e)
-        {
+        } catch (\Exception $e) {
             $message = $e->getMessage();
 
             return response()->json([
                 'type' => 'error',
                 'message' => $message,
-                'data' => ''
+                'data' => '',
             ]);
         }
-
     }
 
-    public function jobsOnBuilder(Request $request,$slug) {
-
-        try{
-
-            $jobs = HsJob::with('service','plot.buildingType.site.builder')
-                ->whereHas('plot.buildingType.site.builder',function ($query) use($slug) {
-                    $query->where('slug',$slug);
+    public function jobsOnBuilder(Request $request, $slug)
+    {
+        try {
+            $jobs = HsJob::with('service', 'plot.buildingType.site.builder')
+                ->whereHas('plot.buildingType.site.builder', function (
+                    $query
+                ) use ($slug) {
+                    $query->where('slug', $slug);
                 })
                 ->paginate(10);
 
-            $collection = collect(Site::with('builder','buildingTypes.plots.job')
-                            ->whereHas('builder',function ($query) use($slug) {
-                                $query->where('slug',$slug);
-                            })
-//                            ->where('slug',$slug)
-                            ->get())->map(function ($item) {
-                                $site_name = $item->site_name;
-                                $completed = 0;
-                                $not_completed = 0;
+            $collection = collect(
+                Site::with('builder', 'buildingTypes.plots.job')
+                    ->whereHas('builder', function ($query) use ($slug) {
+                        $query->where('slug', $slug);
+                    })
+                    //                            ->where('slug',$slug)
+                    ->get()
+            )->map(function ($item) {
+                $site_name = $item->site_name;
+                $completed = 0;
+                $not_completed = 0;
 
-                                if($item->buildingTypes != null )
-                                {
-                                    foreach($item->buildingTypes as $buildinType)
-                                    {
-                                        if($buildinType->plots != null )
-                                        {
-//
-                                            foreach($buildinType->plots as $plot)
-                                            {
-//                                                dump($plot->job->count());
-                                                $completed += $plot->job->where('status','completed')->count();
-                                                $not_completed += $plot->job->where('status','!=','completed')->count();
-                                            }
-                                        }else{
-                                            $completed += 0;
-                                            $not_completed += 0;
-                                        }
-                                    }
-                                }
-                                else{
-                                    $completed += 0;
-                                    $not_completed += 0;
-                                }
+                if ($item->buildingTypes != null) {
+                    foreach ($item->buildingTypes as $buildinType) {
+                        if ($buildinType->plots != null) {
+                            //
+                            foreach ($buildinType->plots as $plot) {
+                                //                                                dump($plot->job->count());
+                                $completed += $plot->job
+                                    ->where('status', 'completed')
+                                    ->count();
+                                $not_completed += $plot->job
+                                    ->where('status', '!=', 'completed')
+                                    ->count();
+                            }
+                        } else {
+                            $completed += 0;
+                            $not_completed += 0;
+                        }
+                    }
+                } else {
+                    $completed += 0;
+                    $not_completed += 0;
+                }
 
-                                return [$site_name,$completed,$not_completed];
-                            });
+                return [$site_name, $completed, $not_completed];
+            });
 
-//            $completed = $collection->where('status','completed')->count();
-//            $not_completed = $collection->where('status','!=','completed')->count();
+            //            $completed = $collection->where('status','completed')->count();
+            //            $not_completed = $collection->where('status','!=','completed')->count();
 
             return response()->json([
                 'type' => 'success',
                 'message' => '',
                 'data' => [
                     'collection' => $collection,
-                    'jobs' => $jobs
-                ]
+                    'jobs' => $jobs,
+                ],
             ]);
-
-        }catch(\Exception $e)
-        {
+        } catch (\Exception $e) {
             $message = $e->getMessage();
 
             return response()->json([
                 'type' => 'error',
                 'message' => $message,
-                'data' => ''
+                'data' => '',
             ]);
         }
-
     }
-
 }

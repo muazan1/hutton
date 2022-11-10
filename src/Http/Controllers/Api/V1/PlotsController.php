@@ -57,7 +57,8 @@ class PlotsController extends Controller
             }
 
             $plots = [];
-            foreach($request->plots as $plot) {
+
+            foreach ($request->plots as $plot) {
                 if ($plot) {
                     $plots[] = Plot::create([
                         'building_type_id' => $request->building_type_id,
@@ -66,14 +67,7 @@ class PlotsController extends Controller
                 }
             }
 
-            // $data = [
-            //     'building_type_id' => $request->building_type_id,
-            //     'plot_name' => $request->plot_name,
-            // ];
-
             $message = 'Plot Created Successfully';
-
-            // $plot = Plot::create($data);
 
             return response()->json([
                 'type' => 'success',
@@ -153,8 +147,6 @@ class PlotsController extends Controller
                 'message' => $message,
                 'data' => '',
             ]);
-
-
         } catch (\Throwable $th) {
             $message = $th->getMessage();
 
@@ -165,8 +157,6 @@ class PlotsController extends Controller
             ]);
         }
     }
-
-
 
     public function destroy(Request $request, $plotId)
     {

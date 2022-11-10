@@ -16,6 +16,8 @@ class CreateMiscWorkTable extends Migration
         Schema::create('misc_works', function (Blueprint $table) {
             $table->id();
 
+            $table->string('uuid')->unique();
+
             $table->integer('week_id');
 
             $table->string('title');

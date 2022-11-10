@@ -4,15 +4,9 @@ namespace Sty\Hutton\Http\Controllers\Api\V1;
 
 use Illuminate\Routing\Controller;
 
-use Sty\Hutton\Models\BuildingType;
-
 use Illuminate\Http\Request;
 
-use Illuminate\Support\Facades\Hash;
-
-use Illuminate\Support\Facades\Mail;
-
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\{Hash, Mail, Validator};
 
 use Illuminate\Validation\Rule;
 
@@ -20,7 +14,7 @@ use Illuminate\Database\Eloquent\Collection;
 
 use Exception;
 
-use Sty\Hutton\Models\Site;
+use Sty\Hutton\Models\{Site, BuildingType};
 
 use Str;
 
@@ -31,7 +25,7 @@ class BuildingTypeController extends Controller
         try {
             $search = $request->search ?? '';
 
-            $site = Site::where('slug',$slug)->first();
+            $site = Site::where('slug', $slug)->first();
 
             $buildingTypes = BuildingType::where('site_id', $site->id)
                 ->where(function ($query) use ($search) {
@@ -86,7 +80,7 @@ class BuildingTypeController extends Controller
     {
         try {
             $validator = Validator::make($request->all(), [
-                'site_id' => ['required'],
+                'site_slug' => ['required'],
                 'building_type_name' => ['required', 'string', 'max:255'],
                 'description' => ['nullable'],
             ]);
@@ -101,7 +95,7 @@ class BuildingTypeController extends Controller
                 ]);
             }
 
-            $site = Site::where('slug',$request->site_id)->first();
+            $site = Site::where('slug', $request->site_slug)->first();
 
             $data = [
                 'uuid' => Str::uuid(),
@@ -130,10 +124,12 @@ class BuildingTypeController extends Controller
         }
     }
 
-    public function edit(Request $request, $btId)
+    public function edit(Request $request, $uuid)
     {
         try {
-            $buildingType = BuildingType::with('site.builder')->findOrFail($btId);
+            $buildingType = BuildingType::with('site.builder')
+                ->where('uuid', $uuid)
+                ->first();
 
             return response()->json([
                 'type' => 'success',
@@ -151,7 +147,7 @@ class BuildingTypeController extends Controller
         }
     }
 
-    public function update(Request $request, $btId)
+    public function update(Request $request, $uuid)
     {
         try {
             $validator = Validator::make($request->all(), [
@@ -170,7 +166,7 @@ class BuildingTypeController extends Controller
                 ]);
             }
 
-            $site = Site::where('slug',$request->site_id)->first();
+            $site = Site::where('slug', $request->site_slug)->first();
 
             $data = [
                 'site_id' => $site->id,
@@ -178,7 +174,7 @@ class BuildingTypeController extends Controller
                 'description' => $request->description,
             ];
 
-            $buildingType = BuildingType::findOrFail($btId);
+            $buildingType = BuildingType::where('uuid', $uuid)->first();
 
             $buildingType->update($data);
 
@@ -200,10 +196,10 @@ class BuildingTypeController extends Controller
         }
     }
 
-    public function destroy(Request $request, $btId)
+    public function destroy(Request $request, $uuid)
     {
         try {
-            $buildingType = BuildingType::findOrFail($btId);
+            $buildingType = BuildingType::where('uuid', $uuid)->first();
 
             $buildingType->delete();
 

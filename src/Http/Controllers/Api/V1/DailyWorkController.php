@@ -3,19 +3,27 @@
 namespace Sty\Hutton\Http\Controllers\Api\V1;
 
 use Illuminate\Http\Request;
+
 use Illuminate\Routing\Controller;
+
 use Illuminate\Support\Facades\{Hash, Mail, Validator};
 
 use DataTables;
+
 use DB;
+
 use Str;
+
 use Exception;
+
 use Illuminate\Validation\Rule;
+
 use Mockery\Container;
 
 use Sty\Hutton\Http\Requests\CreateSiteRequest;
 
 use Sty\Hutton\Models\{HsJob, MiscWork, Plot, Site, WeeklyWork, DailyWork};
+
 use Whoops\Util\Misc;
 
 class DailyWorkController extends Controller
@@ -23,7 +31,7 @@ class DailyWorkController extends Controller
     public function dailyWork(Request $request)
     {
         try {
-            $week = WeeklyWork::find($request->week_id);
+            $week = WeeklyWork::find('uuid', $request->week_id)->first();
 
             if ($week->status === 'completed') {
                 $message = 'Week is Closed';
@@ -73,6 +81,7 @@ class DailyWorkController extends Controller
             $site = Site::where('slug', $request->site_id)->first();
 
             $data = [
+                'uuid' => Str::uuid(),
                 'week_id' => $request->week_id,
                 'plot_job_id' => $plotJob->id,
                 'site_id' => $site->id,
@@ -88,7 +97,10 @@ class DailyWorkController extends Controller
 
             $week = DailyWork::create($data);
 
-            $weekly_work = WeeklyWork::find($request->week_id);
+            $weekly_work = WeeklyWork::where(
+                'uuid',
+                $request->week_id
+            )->first();
 
             $plotJob->update([
                 'status' => $request->status,
@@ -114,7 +126,7 @@ class DailyWorkController extends Controller
     public function dailyMiscWork(Request $request)
     {
         try {
-            $week = WeeklyWork::find($request->week_id);
+            $week = WeeklyWork::where('uuid', $request->week_id)->first();
 
             if ($week->status === 'completed') {
                 $message = 'Week is Closed';
@@ -146,6 +158,7 @@ class DailyWorkController extends Controller
             }
 
             $data = [
+                'uuid' => Str::uuid(),
                 'week_id' => $request->week_id,
                 'site_id' => $request->site_id,
                 'title' => $request->title,
@@ -175,10 +188,10 @@ class DailyWorkController extends Controller
         }
     }
 
-    public function deleteDailyWork(Request $request, $workId)
+    public function deleteDailyWork(Request $request, $uuid)
     {
         try {
-            $dailyWork = DailyWork::find($workId);
+            $dailyWork = DailyWork::where('uuid', $uuid)->first();
 
             $dailyWork->delete();
 
@@ -200,10 +213,10 @@ class DailyWorkController extends Controller
         }
     }
 
-    public function deleteDailyMiscWork(Request $request, $workId)
+    public function deleteDailyMiscWork(Request $request, $uuid)
     {
         try {
-            $dailyWork = MiscWork::find($workId);
+            $dailyWork = MiscWork::where('uuid', $uuid)->first();
 
             $dailyWork->delete();
 

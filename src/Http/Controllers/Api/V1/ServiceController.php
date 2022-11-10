@@ -3,21 +3,26 @@
 namespace Sty\Hutton\Http\Controllers\Api\V1;
 
 use Illuminate\Http\Request;
+
 use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Validator;
+
+use Illuminate\Support\Facades\{Hash, Validator, Mail};
+
 use DataTables;
+
 use DB;
+
 use Str;
+
 use Exception;
+
 use Illuminate\Validation\Rule;
+
 use Mockery\Container;
 
 use Sty\Hutton\Http\Requests\CreateSiteRequest;
-use Sty\Hutton\Models\Site;
-use Sty\Hutton\Models\Customer;
-use Sty\Hutton\Models\Service;
+
+use Sty\Hutton\Models\{Site, Service, Customer};
 
 class ServiceController extends Controller
 {
@@ -50,10 +55,10 @@ class ServiceController extends Controller
         }
     }
 
-    public function show(Request $request, $sId)
+    public function show(Request $request, $uuid)
     {
         try {
-            $service = Service::findOrFail($sId);
+            $service = Service::where('uuid', $uuid)->first();
 
             return response()->json([
                 'type' => 'success',
@@ -89,6 +94,7 @@ class ServiceController extends Controller
             }
 
             $data = [
+                'uuid' => Str::uuid(),
                 'service_name' => $request->service_name,
                 'description' => $request->description,
                 'priority' => $request->priority,
@@ -114,10 +120,10 @@ class ServiceController extends Controller
         }
     }
 
-    public function edit(Request $request, $sId)
+    public function edit(Request $request, $uuid)
     {
         try {
-            $service = Service::findOrFail($sId);
+            $service = Service::where('uuid', $uuid)->first();
 
             return response()->json([
                 'type' => 'success',
@@ -135,10 +141,10 @@ class ServiceController extends Controller
         }
     }
 
-    public function update(Request $request, $sId)
+    public function update(Request $request, $uuid)
     {
         try {
-            $service = Service::findOrFail($sId);
+            $service = Service::where('uuid', $uuid)->first();
 
             $validator = Validator::make($request->all(), [
                 'service_name' => 'required',
@@ -180,10 +186,10 @@ class ServiceController extends Controller
         }
     }
 
-    public function destroy(Request $request, $sId)
+    public function destroy(Request $request, $uuid)
     {
         try {
-            $service = Service::findOrFail($sId);
+            $service = Service::where('uuid', $uuid)->first();
 
             $service->delete();
 

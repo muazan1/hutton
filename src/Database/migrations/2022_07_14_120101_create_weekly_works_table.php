@@ -16,6 +16,8 @@ class CreateWeeklyWorksTable extends Migration
         Schema::create('weekly_works', function (Blueprint $table) {
             $table->id();
 
+            $table->string('uuid')->unique();
+
             $table->integer('user_id');
 
             $table->date('week_start');

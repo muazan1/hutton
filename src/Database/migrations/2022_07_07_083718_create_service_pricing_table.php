@@ -16,6 +16,8 @@ class CreateServicePricingTable extends Migration
         Schema::create('service_pricings', function (Blueprint $table) {
             $table->id();
 
+            $table->string('uuid')->unique();
+
             $table->integer('building_type_id');
 
             $table->integer('service_id');

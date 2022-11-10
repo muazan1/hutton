@@ -3,21 +3,26 @@
 namespace Sty\Hutton\Http\Controllers\Api\V1;
 
 use Illuminate\Http\Request;
+
 use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Validator;
+
+use Illuminate\Support\Facades\{Hash, Validator, Http, Mail};
+
 use DataTables;
+
 use DB;
+
 use Str;
+
 use Exception;
+
 use Illuminate\Validation\Rule;
+
 use Mockery\Container;
 
 use Sty\Hutton\Http\Requests\CreateSiteRequest;
-use Sty\Hutton\Models\Site;
-use Sty\Hutton\Models\Customer;
+
+use Sty\Hutton\Models\{Site, Customer};
 
 class SiteController extends Controller
 {
@@ -40,26 +45,24 @@ class SiteController extends Controller
             })
             ->paginate(10);
 
-
-        $locations = collect(Site::where('customer_id', $customer->id)->get())
-                    ->map(function ($item) {
-
-                        if($item->latitude && $item->longitude != null) {
-
-                            return [
-                                'lat' => floatval($item->latitude),
-                                'lng' => floatval($item->longitude),
-                                'title' => $item->site_name,
-                                'label' => $item->site_name
-                            ];
-                        }
-                        return ;
-                    });
+        $locations = collect(
+            Site::where('customer_id', $customer->id)->get()
+        )->map(function ($item) {
+            if ($item->latitude && $item->longitude != null) {
+                return [
+                    'lat' => floatval($item->latitude),
+                    'lng' => floatval($item->longitude),
+                    'title' => $item->site_name,
+                    'label' => $item->site_name,
+                ];
+            }
+            return;
+        });
 
         return response()->json([
             'type' => 'success',
             'message' => '',
-            'data' => ['meta' => $meta,'locations' => $locations],
+            'data' => ['meta' => $meta, 'locations' => $locations],
         ]);
     }
 
@@ -81,14 +84,29 @@ class SiteController extends Controller
 
             $apiKey = env('GOOGLE_MAP_API_KEY');
 
-            $address = $request->street_1.' '. $request->street_2.', '.$request->city.', '.$request->county.', '.$request->postcode;
+            $address =
+                $request->street_1 .
+                ' ' .
+                $request->street_2 .
+                ', ' .
+                $request->city .
+                ', ' .
+                $request->county .
+                ', ' .
+                $request->postcode;
 
-            $location = Http::acceptJson()
-                ->get('https://maps.googleapis.com/maps/api/geocode/json?address='.$address.'&key='.$apiKey);
+            $location = Http::acceptJson()->get(
+                'https://maps.googleapis.com/maps/api/geocode/json?address=' .
+                    $address .
+                    '&key=' .
+                    $apiKey
+            );
 
-            $latitude = json_decode($location)->results[0]->geometry->location->lat;
+            $latitude = json_decode($location)->results[0]->geometry->location
+                ->lat;
 
-            $longitude = json_decode($location)->results[0]->geometry->location->lng;
+            $longitude = json_decode($location)->results[0]->geometry->location
+                ->lng;
 
             $data = [
                 'uuid' => $request->uuid,
@@ -127,8 +145,7 @@ class SiteController extends Controller
 
     public function edit(Request $request, $slug)
     {
-
-        $site = Site::where('slug',$slug)->first();
+        $site = Site::where('slug', $slug)->first();
 
         return response()->json([
             'type' => 'success',
@@ -139,8 +156,9 @@ class SiteController extends Controller
 
     public function details(Request $request, $slug)
     {
-
-        $site = Site::with('builder')->where('slug',$slug)->first();
+        $site = Site::with('builder')
+            ->where('slug', $slug)
+            ->first();
 
         return response()->json([
             'type' => 'success',
@@ -149,7 +167,7 @@ class SiteController extends Controller
         ]);
     }
 
-    public function update(Request $request, $siteId)
+    public function update(Request $request, $uuid)
     {
         try {
             $request->merge([
@@ -178,20 +196,35 @@ class SiteController extends Controller
                 ]);
             }
 
-            $site = Site::findOrFail($siteId);
+            $site = Site::where('uuid', $uuid)->first();
 
-            $customer = Customer::where('uuid',$request->customer_id)->first();
+            $customer = Customer::where('uuid', $request->customer_id)->first();
 
             $apiKey = env('GOOGLE_MAP_API_KEY');
 
-            $address = $request->street_1.' '. $request->street_2.', '.$request->city.', '.$request->county.', '.$request->postcode;
+            $address =
+                $request->street_1 .
+                ' ' .
+                $request->street_2 .
+                ', ' .
+                $request->city .
+                ', ' .
+                $request->county .
+                ', ' .
+                $request->postcode;
 
-            $location = Http::acceptJson()
-                ->get('https://maps.googleapis.com/maps/api/geocode/json?address='.$address.'&key='.$apiKey);
+            $location = Http::acceptJson()->get(
+                'https://maps.googleapis.com/maps/api/geocode/json?address=' .
+                    $address .
+                    '&key=' .
+                    $apiKey
+            );
 
-            $latitude = json_decode($location)->results[0]->geometry->location->lat;
+            $latitude = json_decode($location)->results[0]->geometry->location
+                ->lat;
 
-            $longitude = json_decode($location)->results[0]->geometry->location->lng;
+            $longitude = json_decode($location)->results[0]->geometry->location
+                ->lng;
 
             $data = [
                 'customer_id' => $customer->id,
@@ -227,10 +260,10 @@ class SiteController extends Controller
         }
     }
 
-    public function destroy(Request $request, $siteId)
+    public function destroy(Request $request, $uuid)
     {
         try {
-            $site = Site::where('uuid', $siteId)->first();
+            $site = Site::where('uuid', $uuid)->first();
 
             $site->delete();
 

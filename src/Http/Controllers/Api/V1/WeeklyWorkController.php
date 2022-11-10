@@ -3,14 +3,21 @@
 namespace Sty\Hutton\Http\Controllers\Api\V1;
 
 use Illuminate\Http\Request;
+
 use Illuminate\Routing\Controller;
+
 use Illuminate\Support\Facades\{Hash, Mail, Validator};
 
 use DataTables;
+
 use DB;
+
 use Str;
+
 use Exception;
+
 use Illuminate\Validation\Rule;
+
 use Mockery\Container;
 
 use Carbon\Carbon;
@@ -29,6 +36,8 @@ use Sty\Hutton\Models\{
     DailyWork,
     WeeklyWork
 };
+
+use App\Models\User;
 
 use Sty\Hutton\Http\Service\GeneratePDF;
 
@@ -81,7 +90,7 @@ class WeeklyWorkController extends Controller
         }
     }
 
-    public function EndWeek(Request $request, $weekId)
+    public function EndWeek(Request $request, $uuid)
     {
         try {
             $data = [];
@@ -90,17 +99,15 @@ class WeeklyWorkController extends Controller
 
             $reportname = 'Joiner Weekly Work.pdf';
 
-            $week = WeeklyWork::with('dailyWork')->findOrFail($weekId);
-
-//            dd($week);
+            $week = WeeklyWork::with('dailyWork')
+                ->where('uuid', $uuid)
+                ->first();
 
             $pdf = GeneratePDF::generateReport($week, $filename, $reportname);
 
             $work = $week->update([
                 'status' => 'completed',
             ]);
-
-//            return $week;
 
             $mail = Mail::to('admin@admin.com')->send(
                 new WorkSend($week, $pdf)
@@ -124,7 +131,7 @@ class WeeklyWorkController extends Controller
         }
     }
 
-    public function joinerWeeklyWork(Request $request, $weekId)
+    public function joinerWeeklyWork(Request $request, $uuid)
     {
         try {
             $weeklyWork = WeeklyWork::with(
@@ -132,7 +139,9 @@ class WeeklyWorkController extends Controller
                 'dailyWork.site',
                 'dailyWork.plot',
                 'miscWork'
-            )->findOrFail($weekId);
+            )
+                ->where('uuid', $uuid)
+                ->first();
 
             return response()->json([
                 'type' => 'success',
@@ -150,21 +159,24 @@ class WeeklyWorkController extends Controller
         }
     }
 
-    public function currentWeek(Request $request, $joinerId)
+    public function currentWeek(Request $request, $uuid)
     {
         try {
+            $joiner = User::where('uuid', $uuid)->first();
+
             $weeklyWork = WeeklyWork::with('dailyWork')
-                ->where('user_id', $joinerId)
+                ->where('user_id', $joiner->id)
                 ->where('status', 'in-progress')
                 ->first();
 
-
-            $dailyWork = DailyWork::with('site', 'plot','service')
+            $dailyWork = DailyWork::with('site', 'plot', 'service')
                 ->where('week_id', $weeklyWork->id)
                 ->paginate(10);
 
-            $dailyMiscWork = MiscWork::where('week_id', $weeklyWork->id)
-                ->paginate(10);
+            $dailyMiscWork = MiscWork::where(
+                'week_id',
+                $weeklyWork->id
+            )->paginate(10);
 
             return response()->json([
                 'type' => 'success',
@@ -186,15 +198,17 @@ class WeeklyWorkController extends Controller
         }
     }
 
-    public function currentDay(Request $request, $joinerId)
+    public function currentDay(Request $request, $uuid)
     {
         try {
+            $joiner = User::where('uuid', $uuid)->first();
+
             $weeklyWork = WeeklyWork::with('dailyWork')
-                ->where('user_id', $joinerId)
+                ->where('user_id', $joiner->id)
                 ->where('status', 'in-progress')
                 ->first();
 
-            $dailyWork = DailyWork::with('site', 'plot','service')
+            $dailyWork = DailyWork::with('site', 'plot', 'service')
                 ->where('week_id', $weeklyWork->id)
                 ->whereDate('created_at', Carbon::now())
                 ->paginate(10);

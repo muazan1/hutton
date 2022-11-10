@@ -14,15 +14,6 @@ class AddCustomColumnsToUsersTable extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            // $table
-            //     ->uuid('uuid')
-            //     ->unique()
-            //     ->after('id');
-
-            // $table
-            //     ->foreignId('role_id')
-            //     ->default(2)
-            //     ->after('uuid');
 
             $table
                 ->string('phone')
@@ -34,15 +25,6 @@ class AddCustomColumnsToUsersTable extends Migration
                 ->after('phone')
                 ->nullable();
 
-            // $table
-            //     ->string('two_factor_secret')
-            //     ->after('address')
-            //     ->nullable();
-
-            // $table
-            //     ->string('two_factor_recovery_codes')
-            //     ->after('two_factor_secret')
-            //     ->nullable();
         });
     }
 

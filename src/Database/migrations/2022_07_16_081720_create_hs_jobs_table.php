@@ -16,13 +16,11 @@ class CreateHsJobsTable extends Migration
         Schema::create('plot_jobs', function (Blueprint $table) {
             $table->id();
 
+            $table->string('uuid')->unique();
+
             $table->integer('plot_id');
 
             $table->integer('service_id');
-
-            // $table->integer('user_id')->nullable();
-
-            // $table->integer('assigned_user_id')->nullable();
 
             $table
                 ->decimal('percent_complete', $precision = 3, $scale = 2)

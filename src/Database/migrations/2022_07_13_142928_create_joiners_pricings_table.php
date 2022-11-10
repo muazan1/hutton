@@ -16,7 +16,9 @@ class CreateJoinersPricingsTable extends Migration
         Schema::create('joiner_pricings', function (Blueprint $table) {
             $table->id();
 
-            $table->integer('builder_id');
+            $table->string('uuid')->unique();
+
+            $table->integer('building_type_id');
 
             $table->integer('service_id');
 

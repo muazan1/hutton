@@ -17,6 +17,8 @@ class CreateChatsTable extends Migration
 
             $table->id();
 
+            $table->string('uuid')->unique();
+
             $table->integer('message_id');
 
             $table->text('message');

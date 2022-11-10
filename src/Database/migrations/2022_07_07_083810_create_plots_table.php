@@ -16,6 +16,8 @@ class CreatePlotsTable extends Migration
         Schema::create('plots', function (Blueprint $table) {
             $table->id();
 
+            $table->string('uuid')->unique();
+
             $table->integer('building_type_id');
 
             $table->string('plot_name');

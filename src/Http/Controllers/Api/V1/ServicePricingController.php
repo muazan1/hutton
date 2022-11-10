@@ -3,23 +3,26 @@
 namespace Sty\Hutton\Http\Controllers\Api\V1;
 
 use Illuminate\Http\Request;
+
 use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Validator;
+
+use Illuminate\Support\Facades\{Hash, Mail, Validator};
+
 use DataTables;
+
 use DB;
+
 use Str;
+
 use Exception;
+
 use Illuminate\Validation\Rule;
+
 use Mockery\Container;
 
 use Sty\Hutton\Http\Requests\CreateSiteRequest;
-use Sty\Hutton\Models\Site;
-use Sty\Hutton\Models\Customer;
-use Sty\Hutton\Models\Service;
-use Sty\Hutton\Models\ServicePricing;
-use Sty\Hutton\Models\BuildingType;
+
+use Sty\Hutton\Models\{Site, BuildingType, Customer, Service, ServicePricing};
 
 class ServicePricingController extends Controller
 {
@@ -44,6 +47,7 @@ class ServicePricingController extends Controller
             }
 
             $data = [
+                'uuid' => Str::uuid(),
                 'building_type_id' => $request->building_type_id,
                 'service_id' => $request->service_id,
                 'price' => $request->price,
@@ -94,10 +98,12 @@ class ServicePricingController extends Controller
         }
     }
 
-    public function destroy(Request $request, $spId)
+    public function destroy(Request $request, $uuid)
     {
         try {
-            $service = ServicePricing::findOrFail($spId)->delete();
+            $service = ServicePricing::where('uuid', $uuid)
+                ->first()
+                ->delete();
 
             $message = 'Service Removed for Pricing';
 
@@ -117,13 +123,13 @@ class ServicePricingController extends Controller
         }
     }
 
-    public function servicePricings(Request $request, $btId)
+    public function servicePricings(Request $request, $uuid)
     {
         try {
-            $buildingType = BuildingType::find($btId);
+            $buildingType = BuildingType::where('uuid', $uuid)->first();
 
             $pricings = ServicePricing::with('service')
-                ->where('building_type_id', $btId)
+                ->where('building_type_id', $buildingType->id)
                 ->paginate(10);
 
             return response()->json([
@@ -145,14 +151,14 @@ class ServicePricingController extends Controller
         }
     }
 
-    public function servicesWithPricings(Request $request, $btId)
+    public function servicesWithPricings(Request $request, $uuid)
     {
         try {
-            $buildingType = BuildingType::find($btId);
+            $buildingType = BuildingType::where('uuid', $uuid)->first();
 
             $services = Service::with([
-                'pricings' => function ($query) use ($btId) {
-                    $query->where('building_type_id', $btId);
+                'pricings' => function ($query) use ($buildingType) {
+                    $query->where('building_type_id', $buildingType->id);
                 },
             ])->paginate(10);
 

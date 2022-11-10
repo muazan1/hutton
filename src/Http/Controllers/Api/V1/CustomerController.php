@@ -33,45 +33,64 @@ class CustomerController extends Controller
             ->orderBy('customer_name')
             ->paginate(10);
 
-
-
-        $locations = collect(Customer::all())
-            ->map(function ($item) {
-
-                if($item->latitude && $item->longitude != null) {
-
-                    return [
-                        'lat' => $item->latitude != null ? floatval($item->latitude) : floatval(0.0),
-                        'lng' => $item->longitude != null ? floatval($item->longitude) : floatval(0.0),
-                        'title' => $item->customer_name,
-                        'label' => $item->customer_name
-                    ];
-                }
-                return ;
-            });
+        $locations = collect(Customer::all())->map(function ($item) {
+            if ($item->latitude && $item->longitude != null) {
+                return [
+                    'lat' =>
+                        $item->latitude != null
+                            ? floatval($item->latitude)
+                            : floatval(0.0),
+                    'lng' =>
+                        $item->longitude != null
+                            ? floatval($item->longitude)
+                            : floatval(0.0),
+                    'title' => $item->customer_name,
+                    'label' => $item->customer_name,
+                ];
+            }
+            return;
+        });
 
         $all_customers = Customer::all();
 
         return response()->json([
             'type' => 'success',
-            'data' => ['customers' => $customers,'locations' => $locations,'all_customers'=> $all_customers],
+            'data' => [
+                'customers' => $customers,
+                'locations' => $locations,
+                'all_customers' => $all_customers,
+            ],
         ]);
     }
 
     public function store(CreateCustomerRequest $request)
     {
         try {
-
             $apiKey = env('GOOGLE_MAP_API_KEY');
 
-            $address = $request->street_1.' '. $request->street_2.', '.$request->city.', '.$request->county.', '.$request->postcode;
+            $address =
+                $request->street_1 .
+                ' ' .
+                $request->street_2 .
+                ', ' .
+                $request->city .
+                ', ' .
+                $request->county .
+                ', ' .
+                $request->postcode;
 
-            $location = Http::acceptJson()
-                ->get('https://maps.googleapis.com/maps/api/geocode/json?address='.$address.'&key='.$apiKey);
+            $location = Http::acceptJson()->get(
+                'https://maps.googleapis.com/maps/api/geocode/json?address=' .
+                    $address .
+                    '&key=' .
+                    $apiKey
+            );
 
-            $latitude = json_decode($location)->results[0]->geometry->location->lat;
+            $latitude = json_decode($location)->results[0]->geometry->location
+                ->lat;
 
-            $longitude = json_decode($location)->results[0]->geometry->location->lng;
+            $longitude = json_decode($location)->results[0]->geometry->location
+                ->lng;
 
             $data = [
                 'uuid' => $request->uuid,
@@ -109,15 +128,13 @@ class CustomerController extends Controller
     public function edit(Request $request, $customerSlug)
     {
         try {
-            $customer = Customer::where('slug',$customerSlug)->first();
+            $customer = Customer::where('slug', $customerSlug)->first();
 
             return response()->json([
                 'type' => 'success',
                 'data' => $customer,
             ]);
-
         } catch (Exception $th) {
-
             return response()->json([
                 'type' => 'error',
                 'data' => $th->getMessage(),
@@ -161,14 +178,29 @@ class CustomerController extends Controller
 
             $apiKey = env('GOOGLE_MAP_API_KEY');
 
-            $address = $request->street_1.' '. $request->street_2.', '.$request->city.', '.$request->county.', '.$request->postcode;
+            $address =
+                $request->street_1 .
+                ' ' .
+                $request->street_2 .
+                ', ' .
+                $request->city .
+                ', ' .
+                $request->county .
+                ', ' .
+                $request->postcode;
 
-            $location = Http::acceptJson()
-                ->get('https://maps.googleapis.com/maps/api/geocode/json?address='.$address.'&key='.$apiKey);
+            $location = Http::acceptJson()->get(
+                'https://maps.googleapis.com/maps/api/geocode/json?address=' .
+                    $address .
+                    '&key=' .
+                    $apiKey
+            );
 
-            $latitude = json_decode($location)->results[0]->geometry->location->lat;
+            $latitude = json_decode($location)->results[0]->geometry->location
+                ->lat;
 
-            $longitude = json_decode($location)->results[0]->geometry->location->lng;
+            $longitude = json_decode($location)->results[0]->geometry->location
+                ->lng;
 
             $data = [
                 'customer_name' => $request->customer_name,
@@ -207,7 +239,7 @@ class CustomerController extends Controller
     public function destroy(Request $request, $customerSlug)
     {
         try {
-            $customer = Customer::where('slug',$customerSlug)->first();
+            $customer = Customer::where('slug', $customerSlug)->first();
 
             $customer->delete();
 
