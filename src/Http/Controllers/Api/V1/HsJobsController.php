@@ -131,8 +131,8 @@ class HsJobsController extends Controller
                 );
 
                 $joinerPricing = JoinerPricing::where(
-                    'builder_id',
-                    $buidlingType->site->customer_id
+                    'builder_type_id',
+                    $buidlingType->id
                 )
                     ->where('service_id', $job->service_id)
                     ->first();
