@@ -54,7 +54,7 @@ class HsJobsController extends Controller
             $plots = $request->plots;
 
             foreach ($plots as $plot) {
-                $plot = Plot::find($plot);
+                $plot = Plot::where('uuid', $plot)->first();
 
                 $services = ServicePricing::where(
                     'building_type_id',
