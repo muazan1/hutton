@@ -29,11 +29,15 @@ class ServicePricingController extends Controller
     public function store(Request $request)
     {
         try {
-            $sp = ServicePricing::where(
-                'building_type_id',
-                $request->building_type_id
-            )
-                ->where('service_id', $request->service_id)
+            $service = Service::where('uuid', $request->service)->first();
+
+            $building_type = BuildingType::where(
+                'uuid',
+                $request->building_type
+            )->first();
+
+            $sp = ServicePricing::where('building_type_id', $building_type->id)
+                ->where('service_id', $service->id)
                 ->count();
 
             if ($sp > 0) {
@@ -73,12 +77,14 @@ class ServicePricingController extends Controller
         }
     }
 
-    public function update(Request $request, $spId)
+    public function update(Request $request, $uuid)
     {
         try {
-            $servicePricing = ServicePricing::find($spId)->update([
-                'price' => $request->price,
-            ]);
+            $servicePricing = ServicePricing::where('uuid', $uuid)
+                ->first()
+                ->update([
+                    'price' => $request->price,
+                ]);
 
             $message = 'Price Updated Successfully';
 
