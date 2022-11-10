@@ -128,7 +128,7 @@ class JoinerPricingController extends Controller
         }
     }
 
-    public function builderJoinerPricings(Request $request, $uuid)
+    public function buildingTypeJoinerPricings(Request $request, $uuid)
     {
         try {
             $building_type = BuildingType::where('uuid', $uuid)->first();
@@ -142,7 +142,7 @@ class JoinerPricingController extends Controller
                 'message' => '',
                 'data' => [
                     'joiner_pricing' => $joinerPricings,
-                    'builder' => $builder,
+                    'building_type' => $building_type,
                 ],
             ]);
         } catch (\Throwable $th) {
@@ -155,7 +155,7 @@ class JoinerPricingController extends Controller
             ]);
         }
     }
-    public function builderJoinerPricingsServices(Request $request, $uuid)
+    public function buildingTypeJoinerPricingsServices(Request $request, $uuid)
     {
         try {
             $search = $request->search ?? '';
