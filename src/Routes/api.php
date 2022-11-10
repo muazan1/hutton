@@ -81,25 +81,25 @@ Route::group(['prefix' => 'api/v1', 'as' => 'api/v1'], function () {
     ])->name('servicesbyPlots');
 
     // route for getting building types service pricing
-    Route::get('building/{btId}/pricings', [
+    Route::get('building-type/{btId}/pricings', [
         ServicePricingController::class,
         'servicePricings',
     ])->name('bt.sp');
 
-    Route::get('building/{btId}/pricings/services', [
+    Route::get('building-type/{btId}/pricings/services', [
         ServicePricingController::class,
         'servicesWithPricings',
     ])->name('bt.wsp');
 
     // route for getting building types service pricing
-    Route::get('builder/{builderId}/joiner-pricings', [
+    Route::get('building-type//{builderId}/joiner-pricings', [
         JoinerPricingController::class,
-        'buildingTypeJoinerPricings',
+        'builderJoinerPricings',
     ])->name('bld.jp');
 
-    Route::get('builder/{builderId}/joiner-pricings/services', [
+    Route::get('building-type/{builderId}/joiner-pricings/services', [
         JoinerPricingController::class,
-        'buildingTypeJoinerPricingsServices',
+        'builderJoinerPricingsServices',
     ])->name('bld.jps');
 
     // Route for generating the Jobs || Tasks
