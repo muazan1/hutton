@@ -3,18 +3,21 @@
 namespace Sty\Hutton\Http\Controllers\Api\V1;
 
 use Illuminate\Routing\Controller;
+
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Validator;
+
+use Illuminate\Support\Facades\{Hash, Validator, Mail};
 use DataTables;
+
 use DB;
+
 use Str;
+
 use Exception;
+
 use Illuminate\Validation\Rule;
 
-use Sty\Hutton\Models\Plot;
-use Sty\Hutton\Models\BuildingType;
+use Sty\Hutton\Models\{Plot, BuildingType};
 
 class PlotsController extends Controller
 {
@@ -59,10 +62,16 @@ class PlotsController extends Controller
 
             $plots = [];
 
+            $building_type = BuildingType::where(
+                'uuid',
+                $request->building_type_id
+            )->first();
+
             foreach ($request->plots as $plot) {
                 if ($plot) {
                     $plots[] = Plot::create([
-                        'building_type_id' => $request->building_type_id,
+                        'uuid' => Str::uuid(),
+                        'building_type_id' => $building_type->id,
                         'plot_name' => $plot,
                     ]);
                 }
