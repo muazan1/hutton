@@ -35,12 +35,14 @@ class JoinerPricingController extends Controller
 
             $bid = $building_type->id;
 
+            $service = Service::where('uuid', $request->service_id)->first();
+
             $jp = JoinerPricing::where('building_type_id', $bid)
-                ->where('service_id', $request->service_id)
+                ->where('service_id', $service->id)
                 ->count();
 
             if ($jp > 0) {
-                $message = 'Joiner Pricing Already Exsist';
+                $message = 'Joiner Pricing Already Exist';
 
                 return response()->json([
                     'type' => 'error',
