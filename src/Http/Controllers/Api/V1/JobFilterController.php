@@ -62,17 +62,16 @@ class JobFilterController extends Controller
     public function adminJobFilter(Request $request)
     {
         try {
-
             $jobs = HsJob::with('plot.buildingType.site.builder', 'service');
 
             if ($request->builder != null) {
-                $jobs = $jobs->whereHas('plot.buildingType.site.builder', function (
-                    $query
-                ) use ($request) {
-                    $query->where('slug', $request->builder);
-                });
+                $jobs = $jobs->whereHas(
+                    'plot.buildingType.site.builder',
+                    function ($query) use ($request) {
+                        $query->where('slug', $request->builder);
+                    }
+                );
             }
-
 
             if ($request->site != null) {
                 $jobs = $jobs->whereHas('plot.buildingType.site', function (
@@ -82,7 +81,6 @@ class JobFilterController extends Controller
                 });
             }
 
-
             if ($request->buidling_type != null) {
                 $jobs = $jobs->whereHas('plot.buildingType', function (
                     $query
@@ -90,7 +88,6 @@ class JobFilterController extends Controller
                     $query->where('id', $request->building_type);
                 });
             }
-
 
             if ($request->plot != null) {
                 $jobs = $jobs->where('plot_id', $request->plot);
@@ -125,17 +122,16 @@ class JobFilterController extends Controller
     public function joinerJobFilter(Request $request)
     {
         try {
-
             $jobs = HsJob::with('plot.buildingType.site', 'service');
 
             if ($request->builder != null) {
-                $jobs = $jobs->whereHas('plot.buildingType.site.builder', function (
-                    $query
-                ) use ($request) {
-                    $query->where('slug', $request->builder);
-                });
+                $jobs = $jobs->whereHas(
+                    'plot.buildingType.site.builder',
+                    function ($query) use ($request) {
+                        $query->where('slug', $request->builder);
+                    }
+                );
             }
-
 
             if ($request->site != 'null' && $request->site != null) {
                 $jobs = $jobs->whereHas('plot.buildingType.site', function (
@@ -145,8 +141,10 @@ class JobFilterController extends Controller
                 });
             }
 
-            if ($request->building_type != 'null' && $request->building_type != null) {
-
+            if (
+                $request->building_type != 'null' &&
+                $request->building_type != null
+            ) {
                 $jobs = $jobs->whereHas('plot.buildingType', function (
                     $query
                 ) use ($request) {
@@ -155,9 +153,7 @@ class JobFilterController extends Controller
             }
 
             if ($request->plot != 'null' && $request->plot != null) {
-
-                $jobs = $jobs->where('plot_id',$request->get('plot'));
-
+                $jobs = $jobs->where('plot_id', $request->get('plot'));
             }
 
             if ($request->service != 'null' && $request->service != null) {
@@ -165,11 +161,36 @@ class JobFilterController extends Controller
             }
 
             if ($request->status != 'null' && $request->status != null) {
-
                 $jobs = $jobs->where('status', $request->get('status'));
             }
 
             $jobs = $jobs->paginate(10);
+
+            $min = collect($jobs->min('priority'))[0];
+
+            $max = collect($jobs->max('priority'))[0];
+
+            for ($i = $min; $i <= $max; $i++) {
+                $count = $jobs
+                    ->where('priority', $i)
+                    ->where('status', '!=', 'completed')
+                    ->count();
+
+                $updated = 0;
+
+                $jobs->map(function ($item) use ($i, &$updated) {
+                    if ($item->priority == $i && $item->status != 'completed') {
+                        $item->is_locked = 0;
+                        $updated++;
+                    }
+
+                    return $item;
+                });
+
+                if ($count > 0) {
+                    break;
+                }
+            }
 
             return response()->json([
                 'type' => 'success',

@@ -3,19 +3,23 @@
 namespace Sty\Hutton\Http\Controllers\Api\V1;
 
 use Illuminate\Http\Request;
+
 use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Mail;
+
+use Illuminate\Support\Facades\{Http, Mail, Hash};
+
 use Illuminate\Support\Facades\Validator;
 use DataTables;
+
 use DB;
+
 use Str;
+
 use Exception;
+
 use Illuminate\Validation\Rule;
 
-use Sty\Hutton\Http\Requests\CreateCustomerRequest;
-use Sty\Hutton\Http\Requests\UpdateCustomerRequest;
+use Sty\Hutton\Http\Requests\{CreateCustomerRequest, UpdateCustomerRequest};
 
 use Sty\Hutton\Models\Customer;
 
@@ -33,22 +37,23 @@ class CustomerController extends Controller
             ->orderBy('customer_name')
             ->paginate(10);
 
-        $locations = collect(Customer::all())->map(function ($item) {
-            if ($item->latitude && $item->longitude != null) {
-                return [
-                    'lat' =>
-                        $item->latitude != null
-                            ? floatval($item->latitude)
-                            : floatval(0.0),
-                    'lng' =>
-                        $item->longitude != null
-                            ? floatval($item->longitude)
-                            : floatval(0.0),
-                    'title' => $item->customer_name,
-                    'label' => $item->customer_name,
-                ];
-            }
-            return;
+        $locations = collect(
+            Customer::where('latitude', '!=', null)
+                ->where('longitude', '!=', null)
+                ->get()
+        )->map(function ($item) {
+            return [
+                'lat' =>
+                    $item->latitude != null
+                        ? floatval($item->latitude)
+                        : floatval(0.0),
+                'lng' =>
+                    $item->longitude != null
+                        ? floatval($item->longitude)
+                        : floatval(0.0),
+                'title' => $item->customer_name,
+                'label' => $item->customer_name,
+            ];
         });
 
         $all_customers = Customer::all();
@@ -56,8 +61,8 @@ class CustomerController extends Controller
         return response()->json([
             'type' => 'success',
             'data' => [
-                'customers' => $customers,
                 'locations' => $locations,
+                'customers' => $customers,
                 'all_customers' => $all_customers,
             ],
         ]);
@@ -129,6 +134,22 @@ class CustomerController extends Controller
     {
         try {
             $customer = Customer::where('slug', $customerSlug)->first();
+
+            return response()->json([
+                'type' => 'success',
+                'data' => $customer,
+            ]);
+        } catch (Exception $th) {
+            return response()->json([
+                'type' => 'error',
+                'data' => $th->getMessage(),
+            ]);
+        }
+    }
+    public function show(Request $request, $uuid)
+    {
+        try {
+            $customer = Customer::where('uuid', $uuid)->first();
 
             return response()->json([
                 'type' => 'success',

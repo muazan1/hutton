@@ -20,14 +20,16 @@ use Str;
 
 class BuildingTypeController extends Controller
 {
-    public function SiteBuildingTypes(Request $request, $slug)
+    public function SiteBuildingTypes(Request $request, $uuid)
     {
         try {
             $search = $request->search ?? '';
 
-            $site = Site::where('slug', $slug)->first();
+            $site = Site::where('uuid', $uuid)->first();
 
-            $buildingTypes = BuildingType::where('site_id', $site->id)
+
+            $buildingTypes = BuildingType::with('site.builder')
+                ->where('site_id', $site->id)
                 ->where(function ($query) use ($search) {
                     $query
                         ->where(

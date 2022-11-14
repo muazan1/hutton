@@ -41,9 +41,9 @@ class JoinerController extends Controller
     {
         $sites = Site::with(['customer'])->get();
         $collection = [];
-        foreach($sites as $site) {
+        foreach ($sites as $site) {
             if ($site->latitude && $site->longitude) {
-                $collection[] = (object)[
+                $collection[] = (object) [
                     'lat' => floatval($site->latitude),
                     'lng' => floatval($site->longitude),
                     'customer' => new CustomerResource($site->customer),
@@ -54,7 +54,7 @@ class JoinerController extends Controller
 
         return response()->json([
             'type' => 'success',
-            'data' => $collection
+            'data' => $collection,
         ]);
     }
 
@@ -149,10 +149,10 @@ class JoinerController extends Controller
         }
     }
 
-    public function edit(Request $request, $joinerId)
+    public function edit(Request $request, $uuid)
     {
         try {
-            $joiner = User::findOrFail($joinerId);
+            $joiner = User::where('uuid', $uuid)->first();
 
             return response()->json([
                 'type' => 'success',
@@ -170,7 +170,7 @@ class JoinerController extends Controller
         }
     }
 
-    public function update(Request $request, $joinerId)
+    public function update(Request $request, $uuid)
     {
         try {
             $role = Role::where('name', 'joiner')->first();
@@ -178,21 +178,14 @@ class JoinerController extends Controller
             $request->merge([
                 'role_id' => $role->id,
             ]);
-            $joiner = User::findOrFail($joinerId);
+
+            $joiner = User::where('uuid', $uuid)->first();
 
             $validator = Validator::make($request->all(), [
                 'role_id' => 'required',
                 'first_name' => 'required',
                 'last_name' => 'required',
-                'email' => Rule::unique('users')->ignore($joinerId),
-                // 'phone' => 'required|unique:users',
-                // 'password' => ['required', Password::min(8)],
-                // 'confirm_password' => [
-                //     'required_with:password',
-                //     'same:password',
-                //     Password::min(8),
-                // ],
-                // 'address' => 'nullable',
+                'email' => Rule::unique('users')->ignore($joiner->id),
             ]);
 
             if ($validator->fails()) {
@@ -239,10 +232,10 @@ class JoinerController extends Controller
         }
     }
 
-    public function destroy(Request $request, $joinerId)
+    public function destroy(Request $request, $uuid)
     {
         try {
-            $joiner = User::findOrFail($joinerId);
+            $joiner = User::where('uuid', $uuid)->first();
 
             $joiner->delete();
 

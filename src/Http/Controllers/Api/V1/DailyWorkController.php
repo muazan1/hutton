@@ -22,18 +22,33 @@ use Mockery\Container;
 
 use Sty\Hutton\Http\Requests\CreateSiteRequest;
 
-use Sty\Hutton\Models\{HsJob, MiscWork, Plot, Site, WeeklyWork, DailyWork};
+use Sty\Hutton\Models\{
+    HsJob,
+    MiscWork,
+    Plot,
+    Site,
+    WeeklyWork,
+    DailyWork,
+    Service
+};
 
 use Whoops\Util\Misc;
+use Sty\Hutton\Models\BuildingType;
 
 class DailyWorkController extends Controller
 {
     public function dailyWork(Request $request)
     {
         try {
-            $week = WeeklyWork::find('uuid', $request->week_id)->first();
+            $week = WeeklyWork::where('uuid', $request->week)->first();
 
-            if ($week->status === 'completed') {
+            $site = Site::where('uuid', $request->site)->first();
+
+            $plot = Plot::where('uuid', $request->plot)->first();
+
+            $service = Service::where('uuid', $request->service)->first();
+
+            if (isset($week) && $week->status === 'completed') {
                 $message = 'Week is Closed';
 
                 return response()->json([
@@ -44,10 +59,10 @@ class DailyWorkController extends Controller
             }
 
             $validator = Validator::make($request->all(), [
-                'week_id' => ['required'],
-                'site_id' => ['required'],
-                'plot_id' => ['required'],
-                'service_id' => ['required'],
+                'week' => ['required'],
+                'site' => ['required'],
+                'plot' => ['required'],
+                'service' => ['required'],
                 'day' => ['required'],
                 'work_carried' => ['required'],
                 'time_taken' => ['required'],
@@ -64,8 +79,8 @@ class DailyWorkController extends Controller
                 ]);
             }
 
-            $plotJob = HsJob::where('plot_id', $request->plot_id)
-                ->where('service_id', $request->service_id)
+            $plotJob = HsJob::where('plot_id', $plot->id)
+                ->where('service_id', $service->id)
                 ->first();
 
             if ($plotJob->status == 'completed') {
@@ -78,15 +93,13 @@ class DailyWorkController extends Controller
                 ]);
             }
 
-            $site = Site::where('slug', $request->site_id)->first();
-
             $data = [
                 'uuid' => Str::uuid(),
-                'week_id' => $request->week_id,
+                'week_id' => $week->id,
                 'plot_job_id' => $plotJob->id,
                 'site_id' => $site->id,
-                'plot_id' => $request->plot_id,
-                'service_id' => $request->service_id,
+                'plot_id' => $plot->id,
+                'service_id' => $service->id,
                 'day' => $request->day,
                 'work_carried' => $request->work_carried,
                 'time_taken' => $request->time_taken,
@@ -97,14 +110,12 @@ class DailyWorkController extends Controller
 
             $week = DailyWork::create($data);
 
-            $weekly_work = WeeklyWork::where(
-                'uuid',
-                $request->week_id
-            )->first();
+            $weekly_work = WeeklyWork::where('uuid', $request->week)->first();
 
             $plotJob->update([
                 'status' => $request->status,
                 'completed_by' => $weekly_work->user_id,
+                'is_locked' => 0,
             ]);
 
             return response()->json([
@@ -126,7 +137,7 @@ class DailyWorkController extends Controller
     public function dailyMiscWork(Request $request)
     {
         try {
-            $week = WeeklyWork::where('uuid', $request->week_id)->first();
+            $week = WeeklyWork::where('uuid', $request->week)->first();
 
             if ($week->status === 'completed') {
                 $message = 'Week is Closed';
@@ -139,8 +150,8 @@ class DailyWorkController extends Controller
             }
 
             $validator = Validator::make($request->all(), [
-                'week_id' => ['required'],
-                'site_id' => ['required'],
+                'week' => ['required'],
+                'site' => ['required'],
                 'title' => ['required'],
                 'work_carried' => ['required'],
                 'time_taken' => ['required'],
@@ -157,10 +168,12 @@ class DailyWorkController extends Controller
                 ]);
             }
 
+            $site = Site::where('uuid', $request->site)->first();
+
             $data = [
                 'uuid' => Str::uuid(),
-                'week_id' => $request->week_id,
-                'site_id' => $request->site_id,
+                'week_id' => $week->id,
+                'site_id' => $site->id,
                 'title' => $request->title,
                 'work_carried' => $request->work_carried,
                 'time_taken' => $request->time_taken,

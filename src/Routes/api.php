@@ -57,8 +57,10 @@ Route::group(['prefix' => 'api/v1', 'as' => 'api/v1'], function () {
     // Route for Joiner Pricing CRUD
     Route::resource('joiner-pricings', JoinerPricingController::class);
 
+    Route::resource('plot-jobs', HsJobsController::class);
+
     // Route for builder sites || Customer sites
-    Route::get('customer/{customer}/sites', [
+    Route::get('builder/{customer}/sites', [
         SiteController::class,
         'customerSites',
     ])->name('customer.site');
@@ -174,15 +176,6 @@ Route::group(['prefix' => 'api/v1', 'as' => 'api/v1'], function () {
     ])->name('weekly.wage-sheet');
 
     /* Routes for jobs filters */
-
-    // route for getting building typpes by site
-
-    // Route::get('site/{siteId}/building-type', [
-    //     JobFilterController::class,
-    //     'buildingTypeBySite',
-    // ])->name('jf.get_bt');
-
-    // route for completed jobs
 
     //    Route for Jobs Main filter for admin
     Route::post('admin/jobs/filter', [

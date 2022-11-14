@@ -52,8 +52,8 @@ class ServicePricingController extends Controller
 
             $data = [
                 'uuid' => Str::uuid(),
-                'building_type_id' => $request->building_type_id,
-                'service_id' => $request->service_id,
+                'building_type_id' => $building_type->id,
+                'service_id' => $service->id,
                 'price' => $request->price,
             ];
 

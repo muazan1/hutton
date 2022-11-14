@@ -35,6 +35,8 @@ use Sty\Hutton\Models\{
 
 use App\Models\{Role};
 
+use Illuminate\Pagination\LengthAwarePaginator;
+
 class HsJobsController extends Controller
 {
     public function GenerateJobs(Request $request)
@@ -98,6 +100,26 @@ class HsJobsController extends Controller
         }
     }
 
+    public function paginate(
+        $perPage,
+        $total = null,
+        $page = null,
+        $pageName = 'page'
+    ) {
+        $page = $page ?: LengthAwarePaginator::resolveCurrentPage($pageName);
+
+        return new LengthAwarePaginator(
+            $this->forPage($page, $perPage),
+            $total ?: $this->count(),
+            $perPage,
+            $page,
+            [
+                'path' => LengthAwarePaginator::resolveCurrentPath(),
+                'pageName' => $pageName,
+            ]
+        );
+    }
+
     public function jobsOnPlot(Request $request, $uuid)
     {
         try {
@@ -111,7 +133,34 @@ class HsJobsController extends Controller
 
             $jobs = HsJob::with('service', 'plot', 'joiners')
                 ->where('plot_id', $plot->id)
-                ->paginate(10);
+                ->orderBy('priority', 'asc')
+                ->paginate();
+
+            $min = collect($jobs->min('priority'))[0];
+
+            $max = collect($jobs->max('priority'))[0];
+
+            for ($i = $min; $i <= $max; $i++) {
+                $count = $jobs
+                    ->where('priority', $i)
+                    ->where('status', '!=', 'completed')
+                    ->count();
+
+                $updated = 0;
+
+                $jobs->map(function ($item) use ($i, &$updated) {
+                    if ($item->priority == $i && $item->status != 'completed') {
+                        $item->is_locked = 0;
+                        $updated++;
+                    }
+
+                    return $item;
+                });
+
+                if ($count > 0) {
+                    break;
+                }
+            }
 
             $completed = $alljobs->where('status', 'completed')->count();
 
@@ -155,6 +204,7 @@ class HsJobsController extends Controller
                     'totalAmount' => $totalAmount,
                     'joinerPay' => $joinerPay,
                     'profit' => $profit,
+                    'plot' => $plot,
                 ],
             ]);
         } catch (\Throwable $th) {
@@ -449,6 +499,29 @@ class HsJobsController extends Controller
             ]);
         } catch (\Exception $e) {
             $message = $e->getMessage();
+
+            return response()->json([
+                'type' => 'error',
+                'message' => $message,
+                'data' => '',
+            ]);
+        }
+    }
+
+    public function show(Request $request, $uuid)
+    {
+        try {
+            $job = HsJob::with('plot.buildingType.site', 'service')
+                ->where('uuid', $uuid)
+                ->first();
+
+            return response()->json([
+                'type' => 'success',
+                'message' => '',
+                'data' => ['job' => $job],
+            ]);
+        } catch (\Throwable $th) {
+            $message = $th->getMessage();
 
             return response()->json([
                 'type' => 'error',

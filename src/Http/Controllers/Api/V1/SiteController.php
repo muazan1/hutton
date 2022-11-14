@@ -26,13 +26,14 @@ use Sty\Hutton\Models\{Site, Customer};
 
 class SiteController extends Controller
 {
-    public function customerSites(Request $request, $customerSlug)
+    public function customerSites(Request $request, $uuid)
     {
         $search = $request->search ?? '';
 
-        $customer = Customer::where('slug', $customerSlug)->first();
+        $customer = Customer::where('uuid', $uuid)->first();
 
-        $meta = Site::where('customer_id', $customer->id)
+        $meta = Site::with('builder')
+            ->where('customer_id', $customer->id)
             ->where(function ($query) use ($search) {
                 $query
                     ->where('site_name', 'LIKE', '%' . $search . '%')
@@ -46,17 +47,23 @@ class SiteController extends Controller
             ->paginate(10);
 
         $locations = collect(
-            Site::where('customer_id', $customer->id)->get()
+            Site::where('customer_id', $customer->id)
+                ->where('latitude', '!=', null)
+                ->where('longitude', '!=', null)
+                ->get()
         )->map(function ($item) {
-            if ($item->latitude && $item->longitude != null) {
-                return [
-                    'lat' => floatval($item->latitude),
-                    'lng' => floatval($item->longitude),
-                    'title' => $item->site_name,
-                    'label' => $item->site_name,
-                ];
-            }
-            return;
+            return [
+                'lat' =>
+                    $item->latitude != null
+                        ? floatval($item->latitude)
+                        : floatval(0.0),
+                'lng' =>
+                    $item->longitude != null
+                        ? floatval($item->longitude)
+                        : floatval(0.0),
+                'title' => $item->site_name,
+                'label' => $item->site_name,
+            ];
         });
 
         return response()->json([
@@ -143,9 +150,9 @@ class SiteController extends Controller
         }
     }
 
-    public function edit(Request $request, $slug)
+    public function edit(Request $request, $uuid)
     {
-        $site = Site::where('slug', $slug)->first();
+        $site = Site::where('uuid', $uuid)->first();
 
         return response()->json([
             'type' => 'success',

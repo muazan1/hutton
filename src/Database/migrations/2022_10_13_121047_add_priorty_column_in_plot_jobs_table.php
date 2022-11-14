@@ -14,9 +14,15 @@ class AddPriortyColumnInPlotJobsTable extends Migration
     public function up()
     {
         Schema::table('plot_jobs', function (Blueprint $table) {
+            $table
+                ->integer('priority')
+                ->nullable()
+                ->after('status');
 
-            $table->integer('priority')->nullable()->after('status');
-
+            $table
+                ->integer('is_locked')
+                ->default(1)
+                ->after('priority');
         });
     }
 

@@ -14,10 +14,15 @@ class AddLongitudeLatitudeColumnInSiteTable extends Migration
     public function up()
     {
         Schema::table('sites', function (Blueprint $table) {
+            $table
+                ->string('longitude')
+                ->nullable()
+                ->after('postcode');
 
-            // $table->string('longitude')->nullable()->after('postcode');
-
-            // $table->string('latitude')->nullable()->after('longitude');
+            $table
+                ->string('latitude')
+                ->nullable()
+                ->after('longitude');
         });
     }
 

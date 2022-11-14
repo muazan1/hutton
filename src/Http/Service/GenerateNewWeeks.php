@@ -10,6 +10,7 @@ use Carbon\Carbon;
 
 use Sty\Hutton\Models\WeeklyWork;
 use phpDocumentor\Reflection\Types\Null_;
+use Str;
 
 class GenerateNewWeeks
 {
@@ -29,6 +30,7 @@ class GenerateNewWeeks
             }
 
             $data = [
+                'uuid' => Str::uuid(),
                 'user_id' => $joiner->id,
                 'status' => 'in-progress',
                 'week_start' => Carbon::now(),
