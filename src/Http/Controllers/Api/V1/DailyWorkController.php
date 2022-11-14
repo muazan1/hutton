@@ -32,9 +32,6 @@ use Sty\Hutton\Models\{
     Service
 };
 
-use Whoops\Util\Misc;
-use Sty\Hutton\Models\BuildingType;
-
 class DailyWorkController extends Controller
 {
     public function dailyWork(Request $request)

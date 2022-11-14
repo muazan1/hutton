@@ -6,23 +6,9 @@ use Illuminate\Http\Request;
 
 use Illuminate\Routing\Controller;
 
-use Illuminate\Support\Facades\{Hash, Mail, Validator};
-
-use DataTables;
-
-use DB;
-
-use Str;
-
-use Exception;
-
-use Illuminate\Validation\Rule;
-
-use Mockery\Container;
+use Illuminate\Support\Facades\{Mail, Validator};
 
 use Carbon\Carbon;
-
-use Sty\Hutton\Http\Requests\CreateSiteRequest;
 
 use Sty\Hutton\Mail\Work\WorkSend;
 

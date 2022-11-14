@@ -21,14 +21,15 @@ use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
 
 use App\Models\User;
-use Sty\Hutton\Models\{Customer, Service, JoinerPricing, BuildingType};
+
+use Sty\Hutton\Models\{Customer, Service, JoinerPricing, HouseType};
 
 class JoinerPricingController extends Controller
 {
     public function store(Request $request)
     {
         try {
-            $building_type = BuildingType::where(
+            $building_type = HouseType::where(
                 'uuid',
                 $request->builing_type
             )->first();
@@ -133,7 +134,7 @@ class JoinerPricingController extends Controller
     public function buildingTypeJoinerPricings(Request $request, $uuid)
     {
         try {
-            $building_type = BuildingType::where('uuid', $uuid)->first();
+            $building_type = HouseType::where('uuid', $uuid)->first();
 
             $joinerPricings = JoinerPricing::with('service')
                 ->where('building_type_id', $building_type->id)
@@ -162,7 +163,7 @@ class JoinerPricingController extends Controller
         try {
             $search = $request->search ?? '';
 
-            $building_type = BuildingType::where('uuid', $uuid)->first();
+            $building_type = HouseType::where('uuid', $uuid)->first();
 
             $services = Service::where(function ($query) use ($search) {
                 $query

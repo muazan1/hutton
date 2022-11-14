@@ -6,9 +6,8 @@ use App\Http\Resources\Customer\CustomerResource;
 use App\Http\Resources\Customer\CustomerSiteResource;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\{Hash, Mail, Validator};
+
 use DataTables;
 use DB;
 use Str;
@@ -16,9 +15,8 @@ use Exception;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\Database\Eloquent\Collection;
-use App\Models\User;
-use App\Models\Role;
-use App\Models\Site;
+use App\Models\{User, Role, Site};
+
 use Sty\Hutton\Models\HuttonUser;
 
 class JoinerController extends Controller

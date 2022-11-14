@@ -8,17 +8,7 @@ use Illuminate\Routing\Controller;
 
 use Illuminate\Support\Facades\{Hash, Validator, Http, Mail};
 
-use DataTables;
-
-use DB;
-
 use Str;
-
-use Exception;
-
-use Illuminate\Validation\Rule;
-
-use Mockery\Container;
 
 use Sty\Hutton\Http\Requests\CreateSiteRequest;
 

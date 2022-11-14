@@ -17,7 +17,7 @@ use Exception;
 
 use Illuminate\Validation\Rule;
 
-use Sty\Hutton\Models\{Plot, BuildingType};
+use Sty\Hutton\Models\{Plot, HouseType};
 
 class PlotsController extends Controller
 {
@@ -62,7 +62,7 @@ class PlotsController extends Controller
 
             $plots = [];
 
-            $building_type = BuildingType::where(
+            $building_type = HouseType::where(
                 'uuid',
                 $request->building_type_id
             )->first();
@@ -100,7 +100,7 @@ class PlotsController extends Controller
         try {
             $search = $request->search ?? '';
 
-            $building_type = BuildingType::where('uuid', $uuid)->first();
+            $building_type = HouseType::where('uuid', $uuid)->first();
 
             $plots = Plot::with('job')
                 ->where('building_type_id', $building_type->id)

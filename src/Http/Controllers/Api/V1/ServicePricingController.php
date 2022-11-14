@@ -6,23 +6,9 @@ use Illuminate\Http\Request;
 
 use Illuminate\Routing\Controller;
 
-use Illuminate\Support\Facades\{Hash, Mail, Validator};
-
-use DataTables;
-
-use DB;
-
 use Str;
 
-use Exception;
-
-use Illuminate\Validation\Rule;
-
-use Mockery\Container;
-
-use Sty\Hutton\Http\Requests\CreateSiteRequest;
-
-use Sty\Hutton\Models\{Site, BuildingType, Customer, Service, ServicePricing};
+use Sty\Hutton\Models\{HouseType, Service, ServicePricing};
 
 class ServicePricingController extends Controller
 {
@@ -31,7 +17,7 @@ class ServicePricingController extends Controller
         try {
             $service = Service::where('uuid', $request->service)->first();
 
-            $building_type = BuildingType::where(
+            $building_type = HouseType::where(
                 'uuid',
                 $request->building_type
             )->first();
@@ -132,7 +118,7 @@ class ServicePricingController extends Controller
     public function servicePricings(Request $request, $uuid)
     {
         try {
-            $buildingType = BuildingType::where('uuid', $uuid)->first();
+            $buildingType = HouseType::where('uuid', $uuid)->first();
 
             $pricings = ServicePricing::with('service')
                 ->where('building_type_id', $buildingType->id)
@@ -160,7 +146,7 @@ class ServicePricingController extends Controller
     public function servicesWithPricings(Request $request, $uuid)
     {
         try {
-            $buildingType = BuildingType::where('uuid', $uuid)->first();
+            $buildingType = HouseType::where('uuid', $uuid)->first();
 
             $services = Service::with([
                 'pricings' => function ($query) use ($buildingType) {

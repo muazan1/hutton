@@ -14,7 +14,7 @@ use Illuminate\Database\Eloquent\Collection;
 
 use Exception;
 
-use Sty\Hutton\Models\{Site, BuildingType};
+use Sty\Hutton\Models\{Site, HouseType};
 
 use Str;
 
@@ -28,7 +28,7 @@ class BuildingTypeController extends Controller
             $site = Site::where('uuid', $uuid)->first();
 
 
-            $buildingTypes = BuildingType::with('site.builder')
+            $buildingTypes = HouseType::with('site.builder')
                 ->where('site_id', $site->id)
                 ->where(function ($query) use ($search) {
                     $query
@@ -60,7 +60,7 @@ class BuildingTypeController extends Controller
     public function index(Request $request)
     {
         try {
-            $buildingTypes = BuildingType::all();
+            $buildingTypes = HouseType::all();
 
             return response()->json([
                 'type' => 'success',
@@ -106,7 +106,7 @@ class BuildingTypeController extends Controller
                 'description' => $request->description,
             ];
 
-            $buildingType = BuildingType::create($data);
+            $buildingType = HouseType::create($data);
 
             $message = 'Building Type Added Successfully';
 
@@ -129,7 +129,7 @@ class BuildingTypeController extends Controller
     public function edit(Request $request, $uuid)
     {
         try {
-            $buildingType = BuildingType::with('site.builder')
+            $buildingType = HouseType::with('site.builder')
                 ->where('uuid', $uuid)
                 ->first();
 
@@ -176,7 +176,7 @@ class BuildingTypeController extends Controller
                 'description' => $request->description,
             ];
 
-            $buildingType = BuildingType::where('uuid', $uuid)->first();
+            $buildingType = HouseType::where('uuid', $uuid)->first();
 
             $buildingType->update($data);
 
@@ -201,7 +201,7 @@ class BuildingTypeController extends Controller
     public function destroy(Request $request, $uuid)
     {
         try {
-            $buildingType = BuildingType::where('uuid', $uuid)->first();
+            $buildingType = HouseType::where('uuid', $uuid)->first();
 
             $buildingType->delete();
 

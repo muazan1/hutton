@@ -13,7 +13,7 @@ class Site extends Model
 
     public function buildingTypes ()
     {
-        return $this->hasMany(BuildingType::class,'site_id','id');
+        return $this->hasMany(HouseType::class,'site_id','id');
     }
 
     public function builder() {

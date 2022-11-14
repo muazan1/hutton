@@ -18,7 +18,7 @@ class Plot extends Model
 
     public function buildingType()
     {
-        return $this->belongsTo(BuildingType::class, 'building_type_id', 'id');
+        return $this->belongsTo(HouseType::class, 'building_type_id', 'id');
     }
 
     public static function boot() {

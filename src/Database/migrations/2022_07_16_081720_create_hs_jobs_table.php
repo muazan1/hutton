@@ -30,13 +30,17 @@ class CreateHsJobsTable extends Migration
                 ->decimal('amount', $precision = 10, $scale = 2)
                 ->default(0.0);
 
-            $table
-                ->enum('status', [
-                    'not-started',
-                    'completed',
-                    'partial-complete',
-                ])
-                ->default('not-started');
+            $table->enum('status', [
+                'not-started',
+                'completed',
+                'partial-complete',
+            ]);
+
+            $table->integer('completed_by')->nullable();
+
+            $table->integer('priority')->nullable();
+
+            $table->integer('is_locked')->default(1);
 
             $table->date('date_start')->nullable();
 

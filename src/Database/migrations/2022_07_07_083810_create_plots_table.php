@@ -18,7 +18,7 @@ class CreatePlotsTable extends Migration
 
             $table->string('uuid')->unique();
 
-            $table->integer('building_type_id');
+            $table->integer('house_type_id');
 
             $table->string('plot_name');
 

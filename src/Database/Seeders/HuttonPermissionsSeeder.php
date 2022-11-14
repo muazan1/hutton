@@ -15,6 +15,7 @@ class HuttonPermissionsSeeder extends ModuleSeeder
      */
     public function run()
     {
+        /* Admin Role Permissions */
         $map = [
             'admin-dashboard' => $this->insertPermission(
                 'Admin Dashboard',
@@ -236,6 +237,7 @@ class HuttonPermissionsSeeder extends ModuleSeeder
             ),
         ];
 
+        /* Joiner Role Permissions */
         $joinerMap = [
             'joiner-dashboard' => $this->insertPermission(
                 'Joiner Dashboard',
@@ -282,6 +284,7 @@ class HuttonPermissionsSeeder extends ModuleSeeder
             ),
         ];
 
+        /* SuperVisor Role Permissions */
         $supervisorMap = [
             'admin-dashboard' => $this->insertPermission(
                 'Admin Dashboard',

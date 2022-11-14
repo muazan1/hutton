@@ -6,8 +6,6 @@ use Illuminate\Console\Command;
 
 use Sty\Hutton\Http\Service\GenerateNewWeeks;
 
-// use S
-
 class InstallHuttonScope extends Command
 {
     /**
@@ -15,7 +13,7 @@ class InstallHuttonScope extends Command
      *
      * @var string
      */
-    protected $signature = 'module:huttonscope:install';
+    protected $signature = 'module:hutton:install';
 
     /**
      * The console command description.
@@ -45,9 +43,16 @@ class InstallHuttonScope extends Command
 
         // Run all the Ticket migrations for the database
         $this->info('Running Migrations');
-        $this->call('migrate', [
-            '--path' => 'vendor/sty/hutton/src/Database/migrations',
-        ]);
+
+        // for development
+        // $this->call('migrate', [
+        //     '--path' => 'packages/sty/hutton/src/Database/migrations',
+        // ]);
+
+        //  for live
+        // $this->call('migrate', [
+        //     '--path' => 'vendor/sty/hutton/src/Database/migrations',
+        // ]);
 
         $this->info('Running Database Seeder');
 
@@ -58,15 +63,10 @@ class InstallHuttonScope extends Command
             '--class' => 'Sty\Hutton\Database\Seeders\RolesSeeder',
         ]);
 
-        $this->info('Adding Permissions...');
-
-        $this->call('db:seed', [
-            '--class' => 'Sty\Hutton\Database\Seeders\HuttonPermissionsSeeder',
-        ]);
+        // $this->info('Adding Permissions...');
 
         // $this->call('db:seed', [
-        //     '--class' =>
-        //         'Sty\Hutton\Database\Seeders\HuttonRolePermissionsSeeder',
+        //     '--class' => 'Sty\Hutton\Database\Seeders\HuttonPermissionsSeeder',
         // ]);
 
         $this->info('Installed Successfully');

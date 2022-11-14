@@ -8,9 +8,7 @@ use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\{Hash, Mail, Validator};
 
-use Sty\Hutton\Models\BuildingType;
-
-use Sty\Hutton\Models\HsJob;
+use Sty\Hutton\Models\{HouseType, HsJob};
 
 use Illuminate\Database\Eloquent\Collection;
 

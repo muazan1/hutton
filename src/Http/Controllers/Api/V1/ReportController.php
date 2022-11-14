@@ -6,7 +6,7 @@ use Illuminate\Routing\Controller;
 
 use Illuminate\Http\Request;
 
-use Sty\Hutton\Models\{DailyWork, WeeklyWork, HsJob, Service};
+use Sty\Hutton\Models\{DailyWork, HsJob};
 
 use Sty\Hutton\Http\Service\ExportExcel;
 

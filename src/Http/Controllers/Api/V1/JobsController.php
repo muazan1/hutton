@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\{Hash, Mail, Validator};
 
 use Sty\Hutton\Models\{
     JoinerPricing,
-    BuildingType,
+    HouseType,
     HsJob,
     DailyWork,
     WeeklyWork

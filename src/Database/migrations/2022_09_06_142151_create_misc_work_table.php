@@ -20,6 +20,8 @@ class CreateMiscWorkTable extends Migration
 
             $table->integer('week_id');
 
+            $table->integer('site_id');
+
             $table->string('title');
 
             $table->text('work_carried')->nullable();

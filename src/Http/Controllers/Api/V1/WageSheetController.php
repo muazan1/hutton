@@ -4,20 +4,10 @@ namespace Sty\Hutton\Http\Controllers\Api\V1;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\{Hash, Mail, Validator};
-
-use DataTables;
-use DB;
-use Str;
-use Exception;
-use Illuminate\Validation\Rule;
-use Mockery\Container;
-
-use Sty\Hutton\Http\Requests\CreateSiteRequest;
 
 use App\Models\{User, Role};
 
-use Sty\Hutton\Models\{HsJobs, HuttonUser, Plot, Site, WeeklyWork, DailyWork};
+use Sty\Hutton\Models\{HuttonUser};
 
 use Carbon\Carbon;
 

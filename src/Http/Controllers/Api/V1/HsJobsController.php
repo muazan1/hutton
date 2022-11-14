@@ -27,7 +27,7 @@ use Sty\Hutton\Models\{
     HuttonUser,
     Plot,
     Site,
-    BuildingType,
+    HouseType,
     JoinerPricing,
     ServicePricing,
     Service
@@ -175,7 +175,7 @@ class HsJobsController extends Controller
             $joinerPay = 0;
 
             foreach ($alljobs as $job) {
-                $buidlingType = BuildingType::find(
+                $buidlingType = HouseType::find(
                     $job->plot->building_type_id
                 );
 

@@ -13,14 +13,14 @@ class CreateBuildingTypesTable extends Migration
      */
     public function up()
     {
-        Schema::create('building_types', function (Blueprint $table) {
+        Schema::create('house_types', function (Blueprint $table) {
             $table->id();
 
             $table->string('uuid')->unique();
 
             $table->integer('site_id');
 
-            $table->string('building_type_name');
+            $table->string('house_type_name');
 
             $table->text('description')->nullable();
 

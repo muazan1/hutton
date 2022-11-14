@@ -21,6 +21,8 @@ class CreateServicesTable extends Migration
 
             $table->string('service_name');
 
+            $table->integer('priority')->nullable();
+
             $table->text('description')->nullable();
 
             $table->timestamps();
