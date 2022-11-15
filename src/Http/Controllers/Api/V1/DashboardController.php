@@ -189,7 +189,7 @@ class DashboardController extends Controller
     {
         try {
 
-            $recent_completed_work = HsJob::where('status','completed')
+            $recent_completed_work = PlotJob::where('status','completed')
                 ->with('plot','service','joiners','plot.buildingType.site.builder')
                 ->paginate(10);
 
@@ -216,7 +216,7 @@ class DashboardController extends Controller
 
         try{
 
-            $plots = HsJob::with('plot.buildingType.site','service')
+            $plots = PlotJob::with('plot.buildingType.site','service')
                         ->whereHas('plot.buildingType.site', function ($query) use($slug) {
                             $query->where('slug',$slug);
                         })->paginate(10);
@@ -284,7 +284,7 @@ class DashboardController extends Controller
 
         try{
 
-            $collect = collect(HsJob::with('plot.buildingType.site')
+            $collect = collect(PlotJob::with('plot.buildingType.site')
                         ->whereHas('plot.buildingType.site', function ($item) use($slug) {
                             $item->where('slug',$slug);
                         })
@@ -325,7 +325,7 @@ class DashboardController extends Controller
             $builder = Customer::where('slug',$slug)->first();
 
             $collect = collect(
-                HsJob::with([
+                PlotJob::with([
                 'plot.buildingType.site.builder',
                 'plot.buildingType.pricing',
                 'service.pricings',
@@ -382,7 +382,7 @@ class DashboardController extends Controller
         try{
 
             $collect = collect(
-                HsJob::with([
+                PlotJob::with([
                     'plot.buildingType.site.builder',
                     'plot.buildingType.pricing',
                     'service.pricings',

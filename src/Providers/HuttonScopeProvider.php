@@ -34,43 +34,28 @@ class HuttonScopeProvider extends ServiceProvider
      */
     public function boot()
     {
-        // $this->loadMigrationsFrom(
-        //     __DIR__ . '/../Database/migrations',
-        //     'migrations'
-        // );
-
-        // $this->publishes([
-        //     __DIR__ . '/../publishable/database/migrations' => database_path(
-        //         'migrations'
-        //     ),
-        // ]);
-
-        // $this->loadRoutesFrom(__DIR__ . '/../Routes/api.php');
-
-        // $this->loadViewsFrom(__DIR__ . '/../Resources/views', 'Hutton');
-
-        // $this->loadViewsFrom(__DIR__ . '/../resources/views', 'blogpackage');
-
-        // $this->publishes([
-        //     __DIR__ . '/../publishable/database/seeders' => database_path(
-        //         'seeders'
-        //     ),
-        // ]);
-
-        // if ($this->app->runningInConsole()) {
-        //     $this->commands([InstallHuttonScope::class]);
-
-        //     $this->commands([StartNewWeek::class]);
-        // }
-
+        $this->registerConfig();
         $this->registerConsoleCommands();
         $this->registerRoutes();
         $this->registerViews();
         $this->registerDatabaseMigrations();
+    }
 
-        // $this->app->register(\Barryvdh\DomPDF\ServiceProvider::class);
+    public function registerConfig()
+    {
+        $this->mergeConfigFrom(
+            __DIR__ . "/../config/{$this->module}.php",
+            $this->module
+        );
 
-        // $this->app->register(\Maatwebsite\Excel\ExcelServiceProvider::class);
+        $this->publishes(
+            [
+                __DIR__ . '/../config/' . $this->module . '.php' => config_path(
+                    "{$this->module}.php"
+                ),
+            ],
+            "{$this->module}-config"
+        );
     }
 
     public function registerRoutes()

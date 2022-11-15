@@ -13,7 +13,7 @@ class Plot extends Model
 
     public function job()
     {
-        return $this->hasMany(HsJob::class, 'plot_id', 'id');
+        return $this->hasMany(PlotJob::class, 'plot_id', 'id');
     }
 
     public function buildingType()

@@ -186,29 +186,29 @@ class HuttonPermissionsSeeder extends ModuleSeeder
                 'create',
                 'joiner_pricing:create'
             ),
-            'browse-services' => $this->insertPermission(
-                'Browse Services',
-                'services',
+            'browse-fixes' => $this->insertPermission(
+                'Browse Fixes',
+                'fixes',
                 'browse',
-                'services:browse'
+                'fixes:browse'
             ),
-            'add-services' => $this->insertPermission(
-                'Add Services',
-                'services',
+            'add-fixes' => $this->insertPermission(
+                'Add fixes',
+                'fixes',
                 'create',
-                'services:create'
+                'fixes:create'
             ),
-            'edit-services' => $this->insertPermission(
-                'Edit Services',
-                'services',
+            'edit-fixes' => $this->insertPermission(
+                'Edit fixes',
+                'fixes',
                 'edit',
-                'services:edit'
+                'fixes:edit'
             ),
-            'delete-services' => $this->insertPermission(
-                'Delete Services',
-                'services',
+            'delete-fixes' => $this->insertPermission(
+                'Delete fixes',
+                'fixes',
                 'delete',
-                'services:delete'
+                'fixes:delete'
             ),
             'admin-jobs' => $this->insertPermission(
                 'Admin Jobs',

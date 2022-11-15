@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+
 use Illuminate\Support\Facades\Route;
 
 use Sty\Hutton\Http\Controllers\Api\V1\{
@@ -12,7 +13,7 @@ use Sty\Hutton\Http\Controllers\Api\V1\{
     JoinerController,
     ServiceController,
     ServicePricingController,
-    HsJobsController,
+    PlotJobsController,
     WeeklyWorkController,
     DailyWorkController,
     WageSheetController,
@@ -49,7 +50,7 @@ Route::group(['prefix' => 'api/v1', 'as' => 'api/v1'], function () {
     Route::resource('plots', PlotsController::class);
 
     // Routes for services Crud
-    Route::resource('services', ServiceController::class);
+    Route::resource('fixes', ServiceController::class);
 
     // Routes for services pricing  Crud
     Route::resource('service-pricings', ServicePricingController::class);
@@ -57,7 +58,7 @@ Route::group(['prefix' => 'api/v1', 'as' => 'api/v1'], function () {
     // Route for Joiner Pricing CRUD
     Route::resource('joiner-pricings', JoinerPricingController::class);
 
-    Route::resource('plot-jobs', HsJobsController::class);
+    Route::resource('plot-jobs', PlotJobsController::class);
 
     // Route for builder sites || Customer sites
     Route::get('builder/{customer}/sites', [
@@ -78,7 +79,7 @@ Route::group(['prefix' => 'api/v1', 'as' => 'api/v1'], function () {
     ])->name('buildingTypes.plots');
 
     Route::get('plot/{plotId}/services', [
-        HsJobsController::class,
+        PlotJobsController::class,
         'servicesByPlot',
     ])->name('servicesbyPlots');
 
@@ -106,7 +107,7 @@ Route::group(['prefix' => 'api/v1', 'as' => 'api/v1'], function () {
 
     // Route for generating the Jobs || Tasks
     Route::post('generate-jobs', [
-        HsJobsController::class,
+        PlotJobsController::class,
         'GenerateJobs',
     ])->name('generate.jobs');
 
@@ -195,7 +196,7 @@ Route::group(['prefix' => 'api/v1', 'as' => 'api/v1'], function () {
 
     // route for getting
     Route::get('plot/{plot}/jobs', [
-        HsJobsController::class,
+        PlotJobsController::class,
         'jobsOnPlot',
     ])->name('jobPlots');
 
@@ -203,13 +204,13 @@ Route::group(['prefix' => 'api/v1', 'as' => 'api/v1'], function () {
 
     // route for assigning job to joiner
     Route::post('job/{jobId}/assign-joiner', [
-        HsJobsController::class,
+        PlotJobsController::class,
         'assignJobToJoiner',
     ])->name('assign.joiner');
 
     // route for removeing job to joiner
     Route::post('job/{jobId}/remove-joiner', [
-        HsJobsController::class,
+        PlotJobsController::class,
         'removeJobToJoiner',
     ])->name('remove.joiner');
 
@@ -221,17 +222,17 @@ Route::group(['prefix' => 'api/v1', 'as' => 'api/v1'], function () {
 
     /* Admin Jobs Controller*/
 
-    Route::get('admin/jobs', [HsJobsController::class, 'adminJobs'])->name(
+    Route::get('admin/jobs', [PlotJobsController::class, 'adminJobs'])->name(
         'admin.jobs'
     );
 
     //    Route for joiner jobs
     Route::get('joiner/{uuid}/jobs', [
-        HsJobsController::class,
+        PlotJobsController::class,
         'joinerJobs',
     ])->name('joiner.jobs');
 
-    Route::get('jobs/{job}', [HsJobsController::class, 'getJob'])->name(
+    Route::get('jobs/{job}', [PlotJobsController::class, 'getJob'])->name(
         'get.job'
     );
 
@@ -265,11 +266,11 @@ Route::group(['prefix' => 'api/v1', 'as' => 'api/v1'], function () {
     Route::get('site/{slug}', [SiteController::class, 'details']);
 
     //    for site dashboard
-    Route::get('site/{slug}/jobs', [HsJobsController::class, 'jobsOnSite']);
+    Route::get('site/{slug}/jobs', [PlotJobsController::class, 'jobsOnSite']);
 
     //    for jobs on each builder
     Route::get('builder/{slug}/jobs', [
-        HsJobsController::class,
+        PlotJobsController::class,
         'jobsOnBuilder',
     ]);
 
@@ -346,7 +347,7 @@ Route::group(['prefix' => 'api/v1', 'as' => 'api/v1'], function () {
         'messageDetails',
     ]);
 
-    // automatic complet jobs
+    // automatic complete jobs
     Route::controller(JobsController::class)->group(function () {
         Route::prefix('joiner/{joiner}/job/{job}')->group(function () {
             Route::post('complete', 'CompleteJob');

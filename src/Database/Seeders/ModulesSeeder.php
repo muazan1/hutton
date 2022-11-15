@@ -3,7 +3,7 @@ namespace Sty\Hutton\Database\Seeders;
 
 use App\Database\Seeders\ModuleSeeder;
 
-class RolesSeeder extends ModuleSeeder
+class ModulesSeeder extends ModuleSeeder
 {
     /*
      *
@@ -14,8 +14,8 @@ class RolesSeeder extends ModuleSeeder
 
     public function run()
     {
-        $this->createRole('joiner');
+        // Fixes Module
 
-        $this->createRole('supervisor');
+        $this->insertModule('fixes', 'user-group', 'Fixes');
     }
 }

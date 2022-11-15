@@ -30,7 +30,8 @@ class ServiceController extends Controller
             return response()->json([
                 'type' => 'success',
                 'message' => '',
-                'data' => ['services' => $services, 'meta' => $meta],
+                'data' => $services,
+                'meta' => $meta,
             ]);
         } catch (\Throwable $th) {
             $message = $th->getMessage();

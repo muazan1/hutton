@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\{Hash, Mail, Validator};
 
-use Sty\Hutton\Models\{HouseType, HsJob};
+use Sty\Hutton\Models\{HouseType, PlotJob};
 
 use Illuminate\Database\Eloquent\Collection;
 
@@ -39,7 +39,7 @@ class JobFilterController extends Controller
     public function completedJobs(Request $request)
     {
         try {
-            $jobs = HsJob::where('status', 'completed')->paginate();
+            $jobs = PlotJob::where('status', 'completed')->paginate();
 
             return response()->json([
                 'type' => 'success',
@@ -60,7 +60,7 @@ class JobFilterController extends Controller
     public function adminJobFilter(Request $request)
     {
         try {
-            $jobs = HsJob::with('plot.buildingType.site.builder', 'service');
+            $jobs = PlotJob::with('plot.buildingType.site.builder', 'service');
 
             if ($request->builder != null) {
                 $jobs = $jobs->whereHas(
@@ -120,7 +120,7 @@ class JobFilterController extends Controller
     public function joinerJobFilter(Request $request)
     {
         try {
-            $jobs = HsJob::with('plot.buildingType.site', 'service');
+            $jobs = PlotJob::with('plot.buildingType.site', 'service');
 
             if ($request->builder != null) {
                 $jobs = $jobs->whereHas(

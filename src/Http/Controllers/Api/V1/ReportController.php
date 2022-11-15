@@ -6,7 +6,7 @@ use Illuminate\Routing\Controller;
 
 use Illuminate\Http\Request;
 
-use Sty\Hutton\Models\{DailyWork, HsJob};
+use Sty\Hutton\Models\{DailyWork, PlotJob};
 
 use Sty\Hutton\Http\Service\ExportExcel;
 
@@ -18,7 +18,7 @@ class ReportController extends Controller
 {
     public function builderJobsCompleted(Request $request)
     {
-        $data = HsJob::where('status', 'completed')->with(
+        $data = PlotJob::where('status', 'completed')->with(
             'plot.buildingType.site.builder',
             'service',
             'jobjoiner'
@@ -49,7 +49,7 @@ class ReportController extends Controller
 
     public function builderRemainingJobs(Request $request)
     {
-        $data = HsJob::with('plot.buildingType.site.builder', 'service')->where(
+        $data = PlotJob::with('plot.buildingType.site.builder', 'service')->where(
             'status',
             '!=',
             'completed'
@@ -162,7 +162,7 @@ class ReportController extends Controller
 
     public function builderInvoiceSheet(Request $request)
     {
-        $data = HsJob::with('plot.buildingType.site.builder', 'service')->where(
+        $data = PlotJob::with('plot.buildingType.site.builder', 'service')->where(
             'status',
             '!=',
             'completed'

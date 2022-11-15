@@ -4,7 +4,7 @@ namespace Sty\Hutton\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class HsJob extends Model
+class PlotJob extends Model
 {
     use HasFactory;
 

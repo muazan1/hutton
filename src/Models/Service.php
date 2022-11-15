@@ -15,13 +15,13 @@ class Service extends Model
         return $this->hasMany(ServicePricing::class);
     }
 
-
     public function joinerPricings()
     {
         return $this->hasMany(JoinerPricing::class);
     }
 
-    public function jobs () {
-        return $this->hasMany(HsJob::class,'service_id','id');
+    public function jobs()
+    {
+        return $this->hasMany(PlotJob::class, 'service_id', 'id');
     }
 }

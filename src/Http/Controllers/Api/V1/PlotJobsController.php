@@ -23,7 +23,7 @@ use Mockery\Container;
 use Sty\Hutton\Http\Requests\CreateSiteRequest;
 
 use Sty\Hutton\Models\{
-    HsJob,
+    PlotJob,
     HuttonUser,
     Plot,
     Site,
@@ -64,14 +64,14 @@ class HsJobsController extends Controller
                 )->get();
 
                 foreach ($services as $service) {
-                    $job = HsJob::where('plot_id', $plot->id)
+                    $job = PlotJob::where('plot_id', $plot->id)
                         ->where('service_id', $service->service_id)
                         ->first();
 
                     if (!$job) {
                         $ser = Service::find($service->service_id);
 
-                        HsJob::create([
+                        PlotJob::create([
                             'uuid' => Str::uuid(),
                             'plot_id' => $plot->id,
                             'service_id' => $service->service_id,
@@ -127,11 +127,11 @@ class HsJobsController extends Controller
 
             $plot = Plot::where('uuid', $uuid)->first();
 
-            $alljobs = HsJob::with('service', 'plot', 'joiners')
+            $alljobs = PlotJob::with('service', 'plot', 'joiners')
                 ->where('plot_id', $plot->id)
                 ->get();
 
-            $jobs = HsJob::with('service', 'plot', 'joiners')
+            $jobs = PlotJob::with('service', 'plot', 'joiners')
                 ->where('plot_id', $plot->id)
                 ->orderBy('priority', 'asc')
                 ->paginate();
@@ -175,9 +175,7 @@ class HsJobsController extends Controller
             $joinerPay = 0;
 
             foreach ($alljobs as $job) {
-                $buidlingType = HouseType::find(
-                    $job->plot->building_type_id
-                );
+                $buidlingType = HouseType::find($job->plot->building_type_id);
 
                 $joinerPricing = JoinerPricing::where(
                     'building_type_id',
@@ -220,7 +218,7 @@ class HsJobsController extends Controller
     public function assignJobToJoiner(Request $request, $uuid)
     {
         try {
-            $job = HsJob::where('uuid', $uuid)->first();
+            $job = PlotJob::where('uuid', $uuid)->first();
 
             $job->joiners()->attach($request->joiner_id);
 
@@ -256,7 +254,7 @@ class HsJobsController extends Controller
     public function removeJobToJoiner(Request $request, $uuid)
     {
         try {
-            $job = HsJob::where('uuid', $uuid)->first();
+            $job = PlotJob::where('uuid', $uuid)->first();
 
             $job->joiners()->detach($request->joiner_id);
 
@@ -284,7 +282,7 @@ class HsJobsController extends Controller
 
             $status = $request->status ?? '';
 
-            $jobs = HsJob::with(
+            $jobs = PlotJob::with(
                 'plot',
                 'plot.buildingType',
                 'plot.buildingType.site',
@@ -323,7 +321,7 @@ class HsJobsController extends Controller
 
             $joiner = HuttonUser::where('uuid', $uuid)->first();
 
-            $jobs = HsJob::with(
+            $jobs = PlotJob::with(
                 'joiners',
                 'plot',
                 'plot.buildingType',
@@ -356,7 +354,7 @@ class HsJobsController extends Controller
         try {
             $plot = Plot::where('uuid', $uuid)->first();
 
-            $services = HsJob::with('service')
+            $services = PlotJob::with('service')
                 ->where('plot_id', $plot->id)
                 ->get();
 
@@ -379,7 +377,7 @@ class HsJobsController extends Controller
     public function getJob(Request $request, $uuid)
     {
         try {
-            $job = HsJob::with('joiners')
+            $job = PlotJob::with('joiners')
                 ->where('uuid', $uuid)
                 ->first();
 
@@ -410,7 +408,7 @@ class HsJobsController extends Controller
                 ->where('slug', $slug)
                 ->first();
 
-            $jobs = HsJob::with('service', 'plot.buildingType.site.builder')
+            $jobs = PlotJob::with('service', 'plot.buildingType.site.builder')
                 ->whereHas('plot.buildingType.site', function ($query) use (
                     $slug
                 ) {
@@ -440,7 +438,7 @@ class HsJobsController extends Controller
     public function jobsOnBuilder(Request $request, $slug)
     {
         try {
-            $jobs = HsJob::with('service', 'plot.buildingType.site.builder')
+            $jobs = PlotJob::with('service', 'plot.buildingType.site.builder')
                 ->whereHas('plot.buildingType.site.builder', function (
                     $query
                 ) use ($slug) {
@@ -511,7 +509,7 @@ class HsJobsController extends Controller
     public function show(Request $request, $uuid)
     {
         try {
-            $job = HsJob::with('plot.buildingType.site', 'service')
+            $job = PlotJob::with('plot.buildingType.site', 'service')
                 ->where('uuid', $uuid)
                 ->first();
 

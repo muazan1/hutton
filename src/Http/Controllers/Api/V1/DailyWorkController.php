@@ -76,7 +76,7 @@ class DailyWorkController extends Controller
                 ]);
             }
 
-            $plotJob = HsJob::where('plot_id', $plot->id)
+            $plotJob = PlotJob::where('plot_id', $plot->id)
                 ->where('service_id', $service->id)
                 ->first();
 

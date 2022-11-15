@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\{Hash, Mail, Validator};
 use Sty\Hutton\Models\{
     JoinerPricing,
     HouseType,
-    HsJob,
+    PlotJob,
     DailyWork,
     WeeklyWork
 };
@@ -38,7 +38,7 @@ class JobsController extends Controller
                 ->first();
 
             if ($week != null) {
-                $plotJob = HsJob::find($job);
+                $plotJob = PlotJob::find($job);
 
                 if ($plotJob->status == 'completed') {
                     $message = 'Job has Already Completed';
@@ -123,7 +123,7 @@ class JobsController extends Controller
                 ->first();
 
             if ($week != null) {
-                $plotJob = HsJob::find($job);
+                $plotJob = PlotJob::find($job);
 
                 if ($plotJob->status == 'completed') {
                     $message = 'Job has Already Completed';
