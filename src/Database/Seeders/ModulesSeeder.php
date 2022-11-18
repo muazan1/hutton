@@ -14,8 +14,46 @@ class ModulesSeeder extends ModuleSeeder
 
     public function run()
     {
-        // Fixes Module
+        /* Admin Modules */
 
+        // Fixes Module
         $this->insertModule('fixes', 'user-group', 'Fixes');
+
+        // Joiners Module
+        $this->insertModule('joiners', 'user-group', 'Joiners');
+
+        // Joiners Module
+        $this->insertModule('builders', 'user-group', 'Builder');
+
+        // Jobs Module
+        $this->insertModule('hutton-jobs', 'user-group', 'Hutton Jobs');
+
+        // Jobs Module
+        $this->insertModule('wage-sheet', 'user-group', 'WageSheet');
+
+        // Reports Module
+        $this->insertModule('reports', 'user-group', 'Reports');
+
+        /* Joiner Modules */
+
+        // Joiner Jobs Module
+        $this->insertModule('joiner-jobs', 'user-group', 'My Jobs');
+
+        // Joiner Weekly Work Module
+        $this->insertModule(
+            'joiner-weekly-work',
+            'user-group',
+            'My Weekly Work'
+        );
+
+        // Joiner Daily Work Module
+        $this->insertModule('joiner-daily-work', 'user-group', 'My Daily Work');
+
+        // Joiner Work History Module
+        $this->insertModule(
+            'joiner-work-history',
+            'user-group',
+            'My Work History'
+        );
     }
 }

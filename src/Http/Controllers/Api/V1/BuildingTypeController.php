@@ -20,31 +20,59 @@ use Str;
 
 class BuildingTypeController extends Controller
 {
+    public function paginate($items, $perPage = 50, $page = null, $options = [])
+    {
+        $page = $page ?: (Paginator::resolveCurrentPage() ?: 1);
+        $items =
+            $items instanceof Collection ? $items : Collection::make($items);
+        return new LengthAwarePaginator(
+            $items->forPage($page, $perPage),
+            $items->count(),
+            $perPage,
+            $page,
+            $options
+        );
+    }
+
     public function SiteBuildingTypes(Request $request, $uuid)
     {
         try {
             $search = $request->search ?? '';
 
-            $site = Site::where('uuid', $uuid)->first();
+            $sort = $request->has('sort')
+                ? json_decode($request->sort)
+                : json_decode('{}');
 
+            $site = Site::where('uuid', $uuid)->first();
 
             $buildingTypes = HouseType::with('site.builder')
                 ->where('site_id', $site->id)
                 ->where(function ($query) use ($search) {
-                    $query
-                        ->where(
-                            'building_type_name',
-                            'LIKE',
-                            '%' . $search . '%'
-                        )
-                        ->orWhere('description', 'LIKE', '%' . $search . '%');
-                })
-                ->paginate(10);
+                    $query->where(
+                        'house_type_name',
+                        'LIKE',
+                        '%' . $search . '%'
+                    );
+                });
+
+            if ($sort) {
+                $orderKeys = get_object_vars($sort);
+                if ($orderKeys != []) {
+                    $key = key($orderKeys);
+                    $direction = $orderKeys[$key];
+                    $buildingTypes->orderBy($key, $direction);
+                }
+            }
+
+            $meta = $buildingTypes->paginate(10);
+
+            $buildingTypes = $buildingTypes->get();
 
             return response()->json([
                 'type' => 'success',
                 'message' => '',
-                'data' => ['building_types' => $buildingTypes],
+                'data' => $buildingTypes,
+                'meta' => $meta,
             ]);
         } catch (\Throwable $th) {
             $message = $th->getMessage();
@@ -82,8 +110,8 @@ class BuildingTypeController extends Controller
     {
         try {
             $validator = Validator::make($request->all(), [
-                'site_slug' => ['required'],
-                'building_type_name' => ['required', 'string', 'max:255'],
+                'site' => ['required'],
+                'house_type_name' => ['required', 'string', 'max:255'],
                 'description' => ['nullable'],
             ]);
 
@@ -97,12 +125,12 @@ class BuildingTypeController extends Controller
                 ]);
             }
 
-            $site = Site::where('slug', $request->site_slug)->first();
+            $site = Site::where('uuid', $request->site)->first();
 
             $data = [
                 'uuid' => Str::uuid(),
                 'site_id' => $site->id,
-                'building_type_name' => $request->building_type_name,
+                'house_type_name' => $request->house_type_name,
                 'description' => $request->description,
             ];
 
@@ -154,7 +182,7 @@ class BuildingTypeController extends Controller
         try {
             $validator = Validator::make($request->all(), [
                 'site_id' => ['required'],
-                'building_type_name' => ['required', 'string', 'max:255'],
+                'house_type_name' => ['required', 'string', 'max:255'],
                 'description' => ['nullable'],
             ]);
 
@@ -172,7 +200,7 @@ class BuildingTypeController extends Controller
 
             $data = [
                 'site_id' => $site->id,
-                'building_type_name' => $request->building_type_name,
+                'house_type_name' => $request->house_type_name,
                 'description' => $request->description,
             ];
 

@@ -66,10 +66,10 @@ class HuttonPermissionsSeeder extends ModuleSeeder
                 'browse',
                 'joiners:browse'
             ),
-            'builders-browse' => $this->insertPermission(
+            'builders-view' => $this->insertPermission(
                 'Browse Builder',
                 'builders',
-                'browse',
+                'view',
                 'builders:browse'
             ),
             'builders-create' => $this->insertPermission(
@@ -186,10 +186,10 @@ class HuttonPermissionsSeeder extends ModuleSeeder
                 'create',
                 'joiner_pricing:create'
             ),
-            'browse-fixes' => $this->insertPermission(
+            'view-fixes' => $this->insertPermission(
                 'Browse Fixes',
                 'fixes',
-                'browse',
+                'view',
                 'fixes:browse'
             ),
             'add-fixes' => $this->insertPermission(
@@ -216,11 +216,17 @@ class HuttonPermissionsSeeder extends ModuleSeeder
                 'admin-jobs',
                 'admin:jobs'
             ),
-            'wage-work' => $this->insertPermission(
-                'Wage Work',
-                'work',
+            'hutton-jobs-view' => $this->insertPermission(
+                'Hutton Jobs view',
+                'hutton-jobs',
+                'view',
+                'hutton-jobs:view'
+            ),
+            'wage-sheet-view' => $this->insertPermission(
+                'Wage Sheet View',
                 'wage-sheet',
-                'work:daily'
+                'wage-sheet',
+                'wagesheet:view'
             ),
             'admin-reports' => $this->insertPermission(
                 'Admin Reports',

@@ -69,11 +69,11 @@ class InstallHuttonScope extends Command
             '--class' => 'Sty\Hutton\Database\Seeders\ModulesSeeder',
         ]);
 
-        // $this->info('Adding Permissions...');
+        $this->info('Adding Permissions...');
 
-        // $this->call('db:seed', [
-        //     '--class' => 'Sty\Hutton\Database\Seeders\HuttonPermissionsSeeder',
-        // ]);
+        $this->call('db:seed', [
+            '--class' => 'Sty\Hutton\Database\Seeders\HuttonPermissionsSeeder',
+        ]);
 
         $this->info('Installed Successfully');
 

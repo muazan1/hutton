@@ -17,12 +17,12 @@ class ServicePricingController extends Controller
         try {
             $service = Service::where('uuid', $request->service)->first();
 
-            $building_type = HouseType::where(
+            $house_type = HouseType::where(
                 'uuid',
-                $request->building_type
+                $request->house_type
             )->first();
 
-            $sp = ServicePricing::where('building_type_id', $building_type->id)
+            $sp = ServicePricing::where('house_type_id', $house_type->id)
                 ->where('service_id', $service->id)
                 ->count();
 
@@ -38,9 +38,9 @@ class ServicePricingController extends Controller
 
             $data = [
                 'uuid' => Str::uuid(),
-                'building_type_id' => $building_type->id,
+                'house_type_id' => $house_type->id,
                 'service_id' => $service->id,
-                'price' => $request->price,
+                'price' => 0.0,
             ];
 
             $service = ServicePricing::create($data);
@@ -93,9 +93,9 @@ class ServicePricingController extends Controller
     public function destroy(Request $request, $uuid)
     {
         try {
-            $service = ServicePricing::where('uuid', $uuid)
-                ->first()
-                ->delete();
+            $service = ServicePricing::where('uuid', $uuid)->first();
+
+            $service->delete();
 
             $message = 'Service Removed for Pricing';
 
@@ -118,19 +118,37 @@ class ServicePricingController extends Controller
     public function servicePricings(Request $request, $uuid)
     {
         try {
-            $buildingType = HouseType::where('uuid', $uuid)->first();
+            $search = $request->search ?? '';
 
-            $pricings = ServicePricing::with('service')
-                ->where('building_type_id', $buildingType->id)
-                ->paginate(10);
+            $sort = $request->has('sort')
+                ? json_decode($request->sort)
+                : json_decode('{}');
+
+            $house_type = HouseType::where('uuid', $uuid)->first();
+
+            $pricings = ServicePricing::with('service')->where(
+                'house_type_id',
+                $house_type->id
+            );
+
+            if ($sort) {
+                $orderKeys = get_object_vars($sort);
+                if ($orderKeys != []) {
+                    $key = key($orderKeys);
+                    $direction = $orderKeys[$key];
+                    $pricings->orderBy($key, $direction);
+                }
+            }
+
+            $meta = $pricings->paginate(10);
+
+            $pricings = $pricings->get();
 
             return response()->json([
                 'type' => 'success',
                 'message' => '',
-                'data' => [
-                    'pricings' => $pricings,
-                    'buildingType' => $buildingType,
-                ],
+                'data' => $pricings,
+                'meta' => $meta,
             ]);
         } catch (\Throwable $th) {
             $message = $th->getMessage();
@@ -146,21 +164,40 @@ class ServicePricingController extends Controller
     public function servicesWithPricings(Request $request, $uuid)
     {
         try {
-            $buildingType = HouseType::where('uuid', $uuid)->first();
+            $search = $request->search ?? '';
+
+            $sort = $request->has('sort')
+                ? json_decode($request->sort)
+                : json_decode('{}');
+
+            $house_type = HouseType::where('uuid', $uuid)->first();
 
             $services = Service::with([
-                'pricings' => function ($query) use ($buildingType) {
-                    $query->where('building_type_id', $buildingType->id);
+                'pricings' => function ($query) use ($house_type) {
+                    $query->where('house_type_id', $house_type->id);
                 },
-            ])->paginate(10);
+            ])->where(function ($query) use ($search) {
+                $query->where('service_name', 'LIKE', '%' . $search . '%');
+            });
+
+            if ($sort) {
+                $orderKeys = get_object_vars($sort);
+                if ($orderKeys != []) {
+                    $key = key($orderKeys);
+                    $direction = $orderKeys[$key];
+                    $services->orderBy($key, $direction);
+                }
+            }
+
+            $meta = $services->paginate(10);
+
+            $services = $services->get();
 
             return response()->json([
                 'type' => 'success',
                 'message' => '',
-                'data' => [
-                    'pricings' => $services,
-                    'buildingType' => $buildingType,
-                ],
+                'data' => $services,
+                'meta' => $meta,
             ]);
         } catch (\Throwable $th) {
             $message = $th->getMessage();

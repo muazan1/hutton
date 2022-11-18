@@ -6,16 +6,11 @@ use Illuminate\Routing\Controller;
 
 use Illuminate\Http\Request;
 
-use Illuminate\Support\Facades\{Hash, Validator, Mail};
-use DataTables;
+use Illuminate\Support\Facades\{Validator};
 
 use DB;
 
 use Str;
-
-use Exception;
-
-use Illuminate\Validation\Rule;
 
 use Sty\Hutton\Models\{Plot, HouseType};
 
@@ -46,7 +41,7 @@ class PlotsController extends Controller
     {
         try {
             $validator = Validator::make($request->all(), [
-                'building_type_id' => ['required'],
+                'house_type' => ['required'],
                 'plots' => ['required', 'array'],
             ]);
 
@@ -62,16 +57,16 @@ class PlotsController extends Controller
 
             $plots = [];
 
-            $building_type = HouseType::where(
+            $house_type = HouseType::where(
                 'uuid',
-                $request->building_type_id
+                $request->house_type
             )->first();
 
             foreach ($request->plots as $plot) {
                 if ($plot) {
                     $plots[] = Plot::create([
                         'uuid' => Str::uuid(),
-                        'building_type_id' => $building_type->id,
+                        'house_type_id' => $house_type->id,
                         'plot_name' => $plot,
                     ]);
                 }
@@ -82,7 +77,7 @@ class PlotsController extends Controller
             return response()->json([
                 'type' => 'success',
                 'message' => $message,
-                'data' => $plots,
+                'data' => '',
             ]);
         } catch (\Throwable $th) {
             $message = $th->getMessage();
@@ -95,24 +90,41 @@ class PlotsController extends Controller
         }
     }
 
-    public function BuildingTypePlots(Request $request, $uuid)
+    public function HouseTypePlots(Request $request, $uuid)
     {
         try {
             $search = $request->search ?? '';
 
-            $building_type = HouseType::where('uuid', $uuid)->first();
+            $sort = $request->has('sort')
+                ? json_decode($request->sort)
+                : json_decode('{}');
+
+            $house_type = HouseType::where('uuid', $uuid)->first();
 
             $plots = Plot::with('job')
-                ->where('building_type_id', $building_type->id)
+                ->where('house_type_id', $house_type->id)
                 ->where(function ($query) use ($search) {
                     $query->where('plot_name', 'LIKE', '%' . $search . '%');
-                })
-                ->paginate(40);
+                });
+
+            if ($sort) {
+                $orderKeys = get_object_vars($sort);
+                if ($orderKeys != []) {
+                    $key = key($orderKeys);
+                    $direction = $orderKeys[$key];
+                    $plots->orderBy($key, $direction);
+                }
+            }
+
+            $meta = $plots->paginate(40);
+
+            $plots = $plots->get();
 
             return response()->json([
                 'type' => 'success',
                 'message' => '',
-                'data' => ['plots' => $plots],
+                'data' => $plots,
+                'meta' => $meta,
             ]);
         } catch (\Throwable $th) {
             $message = $th->getMessage();

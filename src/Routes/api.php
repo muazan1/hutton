@@ -44,7 +44,7 @@ Route::group(['prefix' => 'api/v1', 'as' => 'api/v1'], function () {
     Route::resource('sites', SiteController::class);
 
     // Routes for Buidling Types Crud
-    Route::resource('building-types', BuildingTypeController::class);
+    Route::resource('house-types', BuildingTypeController::class);
 
     // Routes for Plots Crud
     Route::resource('plots', PlotsController::class);
@@ -67,15 +67,15 @@ Route::group(['prefix' => 'api/v1', 'as' => 'api/v1'], function () {
     ])->name('customer.site');
 
     //Route for getting Building Types for specific site
-    Route::get('site/{slug}/building-types', [
+    Route::get('site/{uuid}/house-types', [
         BuildingTypeController::class,
         'SiteBuildingTypes',
     ])->name('sites.buildingTypes');
 
     //Route for getting plots for specific Building Types
-    Route::get('building-type/{btId}/plots', [
+    Route::get('house-type/{uuid}/plots', [
         PlotsController::class,
-        'BuildingTypePlots',
+        'HouseTypePlots',
     ])->name('buildingTypes.plots');
 
     Route::get('plot/{plotId}/services', [
@@ -84,15 +84,15 @@ Route::group(['prefix' => 'api/v1', 'as' => 'api/v1'], function () {
     ])->name('servicesbyPlots');
 
     // route for getting building types service pricing
-    Route::get('building-type/{btId}/pricings', [
+    Route::get('house-type/{uuid}/pricings', [
         ServicePricingController::class,
         'servicePricings',
-    ])->name('bt.sp');
+    ]);
 
-    Route::get('building-type/{btId}/pricings/services', [
+    Route::get('house-type/{uuid}/pricings/services', [
         ServicePricingController::class,
         'servicesWithPricings',
-    ])->name('bt.wsp');
+    ]);
 
     // route for getting building types service pricing
     Route::get('building-type//{builderId}/joiner-pricings', [
@@ -355,4 +355,7 @@ Route::group(['prefix' => 'api/v1', 'as' => 'api/v1'], function () {
             Route::post('part-complete', 'PartCompleteJob');
         });
     });
+
+    // route for site maps
+    Route::get('builder/{uuid}/sites/map', [SiteController::class, 'sitesMap']);
 });

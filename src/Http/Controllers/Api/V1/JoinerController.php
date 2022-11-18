@@ -2,19 +2,22 @@
 
 namespace Sty\Hutton\Http\Controllers\Api\V1;
 
-use App\Http\Resources\Customer\CustomerResource;
-use App\Http\Resources\Customer\CustomerSiteResource;
+use App\Http\Resources\Customer\{CustomerResource, CustomerSiteResource};
+
 use Illuminate\Http\Request;
+
 use Illuminate\Routing\Controller;
+
 use Illuminate\Support\Facades\{Hash, Mail, Validator};
 
-use DataTables;
-use DB;
 use Str;
-use Exception;
+
 use Illuminate\Validation\Rule;
+
 use Illuminate\Validation\Rules\Password;
+
 use Illuminate\Database\Eloquent\Collection;
+
 use App\Models\{User, Role, Site};
 
 use Sty\Hutton\Models\HuttonUser;
@@ -59,16 +62,48 @@ class JoinerController extends Controller
     public function index(Request $request)
     {
         try {
+            $search = $request->search ?? '';
+
+            $sort = $request->has('sort')
+                ? json_decode($request->sort)
+                : json_decode('{}');
+
             $role = Role::where('name', 'joiner')->first();
 
-            $joiners = User::where('role_id', $role->id)->get();
+            $joiners = User::where('role_id', $role->id)->where(function (
+                $query
+            ) use ($search) {
+                $query
+                    ->where('first_name', 'LIKE', '%' . $search . '%')
+                    ->orWhere('last_name', 'LIKE', '%' . $search . '%')
+                    ->orWhere('email', 'LIKE', '%' . $search . '%');
+            });
 
-            $meta = User::where('role_id', $role->id)->paginate(10);
+            if ($sort) {
+                $orderKeys = get_object_vars($sort);
+                if ($orderKeys != []) {
+                    $key = key($orderKeys);
+                    $direction = $orderKeys[$key];
+                    $joiners->orderBy($key, $direction);
+                }
+            }
+
+            $joiners = $joiners->get();
+
+            $meta = User::where('role_id', $role->id)
+                ->where(function ($query) use ($search) {
+                    $query
+                        ->where('first_name', 'LIKE', '%' . $search . '%')
+                        ->orWhere('last_name', 'LIKE', '%' . $search . '%')
+                        ->orWhere('email', 'LIKE', '%' . $search . '%');
+                })
+                ->paginate(10);
 
             return response()->json([
                 'type' => 'success',
                 'message' => '',
-                'data' => ['joiner' => $joiners, 'meta' => $meta],
+                'data' => $joiners,
+                'meta' => $meta,
             ]);
         } catch (\Throwable $th) {
             $message = $th->getMessage();

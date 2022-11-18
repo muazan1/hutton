@@ -6,20 +6,13 @@ use Illuminate\Http\Request;
 
 use Illuminate\Routing\Controller;
 
-use Illuminate\Support\Facades\{Http, Mail, Hash};
-
-use Illuminate\Support\Facades\Validator;
-use DataTables;
-
-use DB;
+use Illuminate\Support\Facades\{Http, Validator};
 
 use Str;
 
 use Exception;
 
-use Illuminate\Validation\Rule;
-
-use Sty\Hutton\Http\Requests\{CreateCustomerRequest, UpdateCustomerRequest};
+use Sty\Hutton\Http\Requests\{CreateCustomerRequest};
 
 use Sty\Hutton\Models\Customer;
 
@@ -29,13 +22,26 @@ class CustomerController extends Controller
     {
         $search = $request->search ?? '';
 
+        $sort = $request->has('sort')
+            ? json_decode($request->sort)
+            : json_decode('{}');
+
         $customers = Customer::where(function ($query) use ($search) {
             $query
                 ->where('customer_name', 'LIKE', '%' . $search . '%')
                 ->orWhere('email', 'LIKE', '%' . $search . '%');
-        })
-            ->orderBy('customer_name')
-            ->paginate(10);
+        });
+
+        if ($sort) {
+            $orderKeys = get_object_vars($sort);
+            if ($orderKeys != []) {
+                $key = key($orderKeys);
+                $direction = $orderKeys[$key];
+                $customers->orderBy($key, $direction);
+            }
+        }
+
+        $customers = $customers->paginate(20);
 
         $locations = collect(
             Customer::where('latitude', '!=', null)
@@ -60,18 +66,20 @@ class CustomerController extends Controller
 
         return response()->json([
             'type' => 'success',
-            'data' => [
-                'locations' => $locations,
-                'customers' => $customers,
-                'all_customers' => $all_customers,
-            ],
+            // 'data' => [
+            //     'locations' => $locations,
+            //     'customers' => $customers,
+            //     'all_customers' => $all_customers,
+            // ],
+            'data' => $all_customers,
+            'meta' => $customers,
         ]);
     }
 
     public function store(CreateCustomerRequest $request)
     {
         try {
-            $apiKey = env('GOOGLE_MAP_API_KEY');
+            // $apiKey = env('GOOGLE_MAP_API_KEY');
 
             $address =
                 $request->street_1 .
@@ -84,18 +92,18 @@ class CustomerController extends Controller
                 ', ' .
                 $request->postcode;
 
-            $location = Http::acceptJson()->get(
-                'https://maps.googleapis.com/maps/api/geocode/json?address=' .
-                    $address .
-                    '&key=' .
-                    $apiKey
-            );
+            // $location = Http::acceptJson()->get(
+            //     'https://maps.googleapis.com/maps/api/geocode/json?address=' .
+            //         $address .
+            //         '&key=' .
+            //         $apiKey
+            // );
 
-            $latitude = json_decode($location)->results[0]->geometry->location
-                ->lat;
+            // $latitude = json_decode($location)->results[0]->geometry->location
+            //     ->lat;
 
-            $longitude = json_decode($location)->results[0]->geometry->location
-                ->lng;
+            // $longitude = json_decode($location)->results[0]->geometry->location
+            //     ->lng;
 
             $data = [
                 'uuid' => $request->uuid,
@@ -106,8 +114,8 @@ class CustomerController extends Controller
                 'street_2' => $request->street_2,
                 'city' => $request->city,
                 'postcode' => $request->postcode,
-                'latitude' => $latitude,
-                'longitude' => $longitude,
+                'latitude' => $request->latitude,
+                'longitude' => $request->longitude,
                 'telephone_number' => $request->telephone_number,
                 'county' => $request->county,
             ];
