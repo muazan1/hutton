@@ -34,20 +34,18 @@ class ModulesSeeder extends ModuleSeeder
         // Reports Module
         $this->insertModule('reports', 'user-group', 'Reports');
 
-        /* Joiner Modules */
+        /* 
+            Joiner Modules Start here 
+        */
 
         // Joiner Jobs Module
         $this->insertModule('joiner-jobs', 'user-group', 'My Jobs');
 
         // Joiner Weekly Work Module
-        $this->insertModule(
-            'joiner-weekly-work',
-            'user-group',
-            'My Weekly Work'
-        );
+        $this->insertModule('my-weekly-work', 'user-group', 'My Weekly Work');
 
         // Joiner Daily Work Module
-        $this->insertModule('joiner-daily-work', 'user-group', 'My Daily Work');
+        $this->insertModule('my-daily-work', 'user-group', 'My Daily Work');
 
         // Joiner Work History Module
         $this->insertModule(
@@ -55,5 +53,9 @@ class ModulesSeeder extends ModuleSeeder
             'user-group',
             'My Work History'
         );
+
+        /* 
+            Joiner Modules End here 
+        */
     }
 }

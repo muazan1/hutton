@@ -78,7 +78,7 @@ Route::group(['prefix' => 'api/v1', 'as' => 'api/v1'], function () {
         'HouseTypePlots',
     ])->name('buildingTypes.plots');
 
-    Route::get('plot/{plotId}/services', [
+    Route::get('plot/{uuid}/services', [
         PlotJobsController::class,
         'servicesByPlot',
     ])->name('servicesbyPlots');
@@ -95,27 +95,24 @@ Route::group(['prefix' => 'api/v1', 'as' => 'api/v1'], function () {
     ]);
 
     // route for getting building types service pricing
-    Route::get('building-type//{builderId}/joiner-pricings', [
+    Route::get('house-type/{uuid}/joiner-pricings', [
         JoinerPricingController::class,
-        'builderJoinerPricings',
-    ])->name('bld.jp');
+        'JoinerPricings',
+    ]);
 
-    Route::get('building-type/{builderId}/joiner-pricings/services', [
+    Route::get('house-type/{uuid}/joiner-pricings/services', [
         JoinerPricingController::class,
-        'builderJoinerPricingsServices',
-    ])->name('bld.jps');
+        'JoinerPricingsServices',
+    ]);
 
     // Route for generating the Jobs || Tasks
-    Route::post('generate-jobs', [
-        PlotJobsController::class,
-        'GenerateJobs',
-    ])->name('generate.jobs');
+    Route::post('generate-jobs', [PlotJobsController::class, 'GenerateJobs']);
 
     // Route for generating Weekly work
     Route::post('generate-weekly-work', [
         WeeklyWorkController::class,
         'StartWeek',
-    ])->name('generate.weeklyWork');
+    ]);
 
     // Route for end Weeklky Work
     Route::post('end-weekly-work/{weekId}', [
@@ -153,14 +150,19 @@ Route::group(['prefix' => 'api/v1', 'as' => 'api/v1'], function () {
         'joinerWeeklyWork',
     ])->name('joiner.weeklyWork');
 
+    Route::get('joiner/{uuid}/week', [
+        WeeklyWorkController::class,
+        'joinerWeek',
+    ]);
+
     // Get Current week
-    Route::get('joiner/{joinerId}/current_week', [
+    Route::get('joiner/{uuid}/current_week', [
         WeeklyWorkController::class,
         'currentWeek',
     ]);
 
     // Get Current day
-    Route::get('joiner/{joinerId}/current_day', [
+    Route::get('joiner/{uuid}/current_day', [
         WeeklyWorkController::class,
         'currentDay',
     ]);

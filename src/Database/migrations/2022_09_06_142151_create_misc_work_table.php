@@ -24,7 +24,9 @@ class CreateMiscWorkTable extends Migration
 
             $table->string('title');
 
-            $table->text('work_carried')->nullable();
+            $table->text('fixes_performed')->nullable();
+
+            $table->text('additional_notes')->nullable();
 
             $table->time('time_taken');
 

@@ -124,14 +124,14 @@ class SiteController extends Controller
             }
         }
 
-        $meta = $sites->paginate(20);
+        $data = $sites->get();
 
-        $sites = $sites->get();
+        $meta = $sites->paginate(20);
 
         return response()->json([
             'type' => 'success',
             'message' => '',
-            'data' => $sites,
+            'data' => $data,
             'meta' => $meta,
         ]);
     }

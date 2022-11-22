@@ -30,7 +30,7 @@ class CreateDailyWorksTable extends Migration
 
             $table->integer('day')->nullable();
 
-            $table->text('work_carried')->nullable();
+            $table->text('fixes_performed')->nullable();
 
             $table->time('time_taken')->nullable();
 

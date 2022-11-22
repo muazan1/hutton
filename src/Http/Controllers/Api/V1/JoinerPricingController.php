@@ -29,16 +29,14 @@ class JoinerPricingController extends Controller
     public function store(Request $request)
     {
         try {
-            $building_type = HouseType::where(
+            $house_type = HouseType::where(
                 'uuid',
-                $request->builing_type
+                $request->house_type
             )->first();
 
-            $bid = $building_type->id;
+            $service = Service::where('uuid', $request->service)->first();
 
-            $service = Service::where('uuid', $request->service_id)->first();
-
-            $jp = JoinerPricing::where('building_type_id', $bid)
+            $jp = JoinerPricing::where('house_type_id', $house_type->id)
                 ->where('service_id', $service->id)
                 ->count();
 
@@ -54,9 +52,9 @@ class JoinerPricingController extends Controller
 
             $data = [
                 'uuid' => Str::uuid(),
-                'building_type_id' => $bid,
-                'service_id' => $request->service_id,
-                'price' => $request->price,
+                'house_type_id' => $house_type->id,
+                'service_id' => $service->id,
+                'price' => 0.0,
             ];
 
             $service = JoinerPricing::create($data);
@@ -131,22 +129,40 @@ class JoinerPricingController extends Controller
         }
     }
 
-    public function buildingTypeJoinerPricings(Request $request, $uuid)
+    public function JoinerPricings(Request $request, $uuid)
     {
         try {
-            $building_type = HouseType::where('uuid', $uuid)->first();
+            $house_type = HouseType::where('uuid', $uuid)->first();
 
-            $joinerPricings = JoinerPricing::with('service')
-                ->where('building_type_id', $building_type->id)
-                ->paginate(10);
+            $search = $request->search ?? '';
+
+            $sort = $request->has('sort')
+                ? json_decode($request->sort)
+                : json_decode('{}');
+
+            $data = JoinerPricing::with('service')->where(
+                'house_type_id',
+                $house_type->id
+            );
+
+            if ($sort) {
+                $orderKeys = get_object_vars($sort);
+                if ($orderKeys != []) {
+                    $key = key($orderKeys);
+                    $direction = $orderKeys[$key];
+                    $data->orderBy($key, $direction);
+                }
+            }
+
+            $joiners = $data->get();
+
+            $meta = $data->paginate(20);
 
             return response()->json([
                 'type' => 'success',
                 'message' => '',
-                'data' => [
-                    'joiner_pricing' => $joinerPricings,
-                    'building_type' => $building_type,
-                ],
+                'data' => $joiners,
+                'meta' => $meta,
             ]);
         } catch (\Throwable $th) {
             $message = $th->getMessage();
@@ -158,32 +174,45 @@ class JoinerPricingController extends Controller
             ]);
         }
     }
-    public function buildingTypeJoinerPricingsServices(Request $request, $uuid)
+    public function JoinerPricingsServices(Request $request, $uuid)
     {
         try {
             $search = $request->search ?? '';
 
-            $building_type = HouseType::where('uuid', $uuid)->first();
+            $sort = $request->has('sort')
+                ? json_decode($request->sort)
+                : json_decode('{}');
+
+            $house_type = HouseType::where('uuid', $uuid)->first();
 
             $services = Service::where(function ($query) use ($search) {
                 $query
                     ->where('service_name', 'LIKE', '%' . $search . '%')
                     ->orWhere('description', 'LIKE', '%' . $search . '%');
-            })
-                ->with([
-                    'joinerPricings' => function ($query) use ($building_type) {
-                        $query->where('building_type_id', $building_type->id);
-                    },
-                ])
-                ->paginate(10);
+            })->with([
+                'joinerPricings' => function ($query) use ($house_type) {
+                    $query->where('house_type_id', $house_type->id);
+                },
+            ]);
+
+            if ($sort) {
+                $orderKeys = get_object_vars($sort);
+                if ($orderKeys != []) {
+                    $key = key($orderKeys);
+                    $direction = $orderKeys[$key];
+                    $services->orderBy($key, $direction);
+                }
+            }
+
+            $meta = $services->paginate(20);
+
+            $services = $services->get();
 
             return response()->json([
                 'type' => 'success',
                 'message' => '',
-                'data' => [
-                    'services' => $services,
-                    'building_type' => $building_type,
-                ],
+                'data' => $services,
+                'meta' => $meta,
             ]);
         } catch (\Throwable $th) {
             $message = $th->getMessage();

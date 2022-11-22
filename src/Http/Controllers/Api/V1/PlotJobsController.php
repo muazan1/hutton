@@ -6,21 +6,13 @@ use Illuminate\Http\Request;
 
 use Illuminate\Routing\Controller;
 
-use Illuminate\Support\Facades\{Hash, Mail, Validator};
-
-use DataTables;
+use Illuminate\Support\Facades\{Validator};
 
 use DB;
 
 use Str;
 
 use Exception;
-
-use Illuminate\Validation\Rule;
-
-use Mockery\Container;
-
-use Sty\Hutton\Http\Requests\CreateSiteRequest;
 
 use Sty\Hutton\Models\{
     PlotJob,
@@ -37,7 +29,7 @@ use App\Models\{Role};
 
 use Illuminate\Pagination\LengthAwarePaginator;
 
-class HsJobsController extends Controller
+class PlotJobsController extends Controller
 {
     public function GenerateJobs(Request $request)
     {
@@ -55,12 +47,12 @@ class HsJobsController extends Controller
 
             $plots = $request->plots;
 
-            foreach ($plots as $plot) {
+            foreach (array_unique($plots) as $plot) {
                 $plot = Plot::where('uuid', $plot)->first();
 
                 $services = ServicePricing::where(
-                    'building_type_id',
-                    $plot->building_type_id
+                    'house_type_id',
+                    $plot->house_type_id
                 )->get();
 
                 foreach ($services as $service) {
@@ -361,7 +353,7 @@ class HsJobsController extends Controller
             return response()->json([
                 'type' => 'success',
                 'message' => '',
-                'data' => ['services' => $services],
+                'data' => $services,
             ]);
         } catch (\Throwable $th) {
             $message = $th->getMessage();
