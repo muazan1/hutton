@@ -181,10 +181,7 @@ Route::group(['prefix' => 'api/v1', 'as' => 'api/v1'], function () {
     /* Routes for jobs filters */
 
     //    Route for Jobs Main filter for admin
-    Route::post('admin/jobs/filter', [
-        JobFilterController::class,
-        'adminJobFilter',
-    ])->name('admin.job.filter');
+    Route::get('jobs/filter', [JobFilterController::class, 'adminJobFilter']);
 
     Route::get('joiner/jobs/filter', [
         JobFilterController::class,
@@ -197,7 +194,7 @@ Route::group(['prefix' => 'api/v1', 'as' => 'api/v1'], function () {
     ])->name('completed.jobs');
 
     // route for getting
-    Route::get('plot/{plot}/jobs', [
+    Route::get('plot/{uuid}/jobs', [
         PlotJobsController::class,
         'jobsOnPlot',
     ])->name('jobPlots');
@@ -217,7 +214,7 @@ Route::group(['prefix' => 'api/v1', 'as' => 'api/v1'], function () {
     ])->name('remove.joiner');
 
     // Route for Joiner Work History
-    Route::get('joiner/{joinerId}/work-history', [
+    Route::get('joiner/{uuid}/work-history', [
         WorkController::class,
         'JoinerWorkHistory',
     ])->name('work.history');
@@ -360,4 +357,6 @@ Route::group(['prefix' => 'api/v1', 'as' => 'api/v1'], function () {
 
     // route for site maps
     Route::get('builder/{uuid}/sites/map', [SiteController::class, 'sitesMap']);
+
+    Route::get('builders/sites/map', [CustomerController::class, 'builderMap']);
 });

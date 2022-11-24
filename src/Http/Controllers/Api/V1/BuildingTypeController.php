@@ -181,7 +181,7 @@ class BuildingTypeController extends Controller
     {
         try {
             $validator = Validator::make($request->all(), [
-                'site_id' => ['required'],
+                'site' => ['required'],
                 'house_type_name' => ['required', 'string', 'max:255'],
                 'description' => ['nullable'],
             ]);
@@ -196,7 +196,7 @@ class BuildingTypeController extends Controller
                 ]);
             }
 
-            $site = Site::where('slug', $request->site_slug)->first();
+            $site = Site::where('uuid', $request->site)->first();
 
             $data = [
                 'site_id' => $site->id,

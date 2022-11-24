@@ -117,16 +117,27 @@ class PlotJobsController extends Controller
         try {
             $search = $request->search ?? '';
 
+            $sort = $request->has('sort')
+                ? json_decode($request->sort)
+                : json_decode('{}');
+
             $plot = Plot::where('uuid', $uuid)->first();
 
             $alljobs = PlotJob::with('service', 'plot', 'joiners')
                 ->where('plot_id', $plot->id)
                 ->get();
 
-            $jobs = PlotJob::with('service', 'plot', 'joiners')
+            $jobs = PlotJob::with(
+                'service',
+                'plot.buildingType.site.builder',
+                'joiners'
+            )
                 ->where('plot_id', $plot->id)
-                ->orderBy('priority', 'asc')
-                ->paginate();
+                ->orderBy('priority', 'asc');
+
+            $meta = $jobs->paginate(20);
+
+            $jobs = $jobs->get();
 
             $min = collect($jobs->min('priority'))[0];
 
@@ -154,48 +165,48 @@ class PlotJobsController extends Controller
                 }
             }
 
-            $completed = $alljobs->where('status', 'completed')->count();
+            // $completed = $alljobs->where('status', 'completed')->count();
 
-            $partCompleted = $alljobs
-                ->where('status', 'partial-complete')
-                ->count();
+            // $partCompleted = $alljobs
+            //     ->where('status', 'partial-complete')
+            //     ->count();
 
-            $notStarted = $alljobs->where('status', 'not-started')->count();
+            // $notStarted = $alljobs->where('status', 'not-started')->count();
 
-            $totalAmount = $alljobs->sum('amount');
+            // $totalAmount = $alljobs->sum('amount');
 
-            $joinerPay = 0;
+            // $joinerPay = 0;
 
-            foreach ($alljobs as $job) {
-                $buidlingType = HouseType::find($job->plot->building_type_id);
+            // foreach ($alljobs as $job) {
+            //     $buidlingType = HouseType::find($job->plot->building_type_id);
 
-                $joinerPricing = JoinerPricing::where(
-                    'building_type_id',
-                    $buidlingType->id
-                )
-                    ->where('service_id', $job->service_id)
-                    ->first();
+            //     $joinerPricing = JoinerPricing::where(
+            //         'building_type_id',
+            //         $buidlingType->id
+            //     )
+            //         ->where('service_id', $job->service_id)
+            //         ->first();
 
-                $joinerPay +=
-                    $joinerPricing != null ? $joinerPricing->price : 0;
-            }
+            //     $joinerPay +=
+            //         $joinerPricing != null ? $joinerPricing->price : 0;
+            // }
 
-            $profit = $totalAmount - $joinerPay;
+            // $profit = $totalAmount - $joinerPay;
 
             return response()->json([
                 'type' => 'success',
                 'message' => '',
-                'data' => [
-                    'jobs' => $jobs,
-                    'alljobs' => $alljobs,
-                    'completed' => $completed,
-                    'partCompleted' => $partCompleted,
-                    'notStarted' => $notStarted,
-                    'totalAmount' => $totalAmount,
-                    'joinerPay' => $joinerPay,
-                    'profit' => $profit,
-                    'plot' => $plot,
-                ],
+                'meta' => $meta,
+                'alljobs' => $alljobs,
+                'data' => $jobs,
+                // 'completed' => $completed,
+                // 'partCompleted' => $partCompleted,
+                // 'notStarted' => $notStarted,
+                // 'totalAmount' => $totalAmount,
+                // 'joinerPay' => $joinerPay,
+                // 'profit' => $profit,
+
+                'plot' => $plot,
             ]);
         } catch (\Throwable $th) {
             $message = $th->getMessage();

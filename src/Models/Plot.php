@@ -18,19 +18,17 @@ class Plot extends Model
 
     public function buildingType()
     {
-        return $this->belongsTo(HouseType::class, 'building_type_id', 'id');
+        return $this->belongsTo(HouseType::class, 'house_type_id', 'id');
     }
 
-    public static function boot() {
+    public static function boot()
+    {
         parent::boot();
 
-        self::deleting(function($plot) {
-
-            $plot->job()->each(function($jobs) {
+        self::deleting(function ($plot) {
+            $plot->job()->each(function ($jobs) {
                 $jobs->delete();
             });
-
         });
     }
-
 }

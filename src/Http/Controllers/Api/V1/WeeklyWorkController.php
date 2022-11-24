@@ -120,19 +120,38 @@ class WeeklyWorkController extends Controller
     public function joinerWeeklyWork(Request $request, $uuid)
     {
         try {
-            $weeklyWork = WeeklyWork::with(
-                'dailyWork',
-                'dailyWork.site',
-                'dailyWork.plot',
-                'miscWork'
-            )
+            $search = $request->search ?? '';
+
+            $sort = $request->has('sort')
+                ? json_decode($request->sort)
+                : json_decode('{}');
+
+            $weeklyWork = WeeklyWork::with('dailyWork')
                 ->where('uuid', $uuid)
                 ->first();
+
+            if (request()->get('type') == 'misc_work') {
+                $data = MiscWork::with('site')->where(
+                    'week_id',
+                    $weeklyWork->id
+                );
+            } else {
+                $data = DailyWork::with('site', 'plot', 'service')->where(
+                    'week_id',
+                    $weeklyWork->id
+                );
+            }
+
+            $meta = $data->paginate(10);
+
+            $data = $data->get();
 
             return response()->json([
                 'type' => 'success',
                 'message' => '',
-                'data' => $weeklyWork,
+                'data' => $data,
+                'meta' => $meta,
+                'weeklyWork' => $weeklyWork,
             ]);
         } catch (\Throwable $th) {
             $message = $th->getMessage();
@@ -257,6 +276,7 @@ class WeeklyWorkController extends Controller
         try {
             $joiner = User::where('uuid', $uuid)->first();
 
+            // dd($joiner);
             $weeklyWork = WeeklyWork::where('user_id', $joiner->id)
                 ->where('status', 'in-progress')
                 ->first();

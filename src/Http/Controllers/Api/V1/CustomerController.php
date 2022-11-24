@@ -286,4 +286,21 @@ class CustomerController extends Controller
             ]);
         }
     }
+
+    public function builderMap(Request $request)
+    {
+        $customer = Customer::where('latitude', '>', '')
+            ->where('longitude', '>', '')
+            ->get();
+
+        $coords = $customer->map(function ($entry) {
+            return (object) [
+                'lat' => floatval($entry->latitude),
+                'lng' => floatval($entry->longitude),
+                'site' => new CustomerSiteResource($entry),
+            ];
+        });
+
+        return $coords;
+    }
 }
