@@ -17,19 +17,19 @@ class ModulesSeeder extends ModuleSeeder
         /* Admin Modules */
 
         // Fixes Module
-        $this->insertModule('fixes', 'user-group', 'Fixes');
+        $this->insertModule('fixes', 'screwdriver-wrench', 'Fixes');
 
         // Joiners Module
-        $this->insertModule('joiners', 'user-group', 'Joiners');
+        $this->insertModule('joiners', 'helmet-safety', 'Joiners');
 
         // Joiners Module
         $this->insertModule('builders', 'user-group', 'Builder');
 
         // Jobs Module
-        $this->insertModule('hutton-jobs', 'user-group', 'Hutton Jobs');
+        $this->insertModule('hutton-jobs', 'tasks', 'Hutton Jobs');
 
         // Jobs Module
-        $this->insertModule('wage-sheet', 'user-group', 'WageSheet');
+        $this->insertModule('wage-sheet', 'sheet-plastic', 'WageSheet');
 
         // Reports Module
         $this->insertModule('reports', 'user-group', 'Reports');
@@ -39,18 +39,22 @@ class ModulesSeeder extends ModuleSeeder
         */
 
         // Joiner Jobs Module
-        $this->insertModule('joiner-jobs', 'user-group', 'My Jobs');
+        $this->insertModule('joiner-jobs', 'tasks', 'My Jobs');
 
         // Joiner Weekly Work Module
-        $this->insertModule('my-weekly-work', 'user-group', 'My Weekly Work');
+        $this->insertModule('my-weekly-work', 'briefcase', 'My Weekly Work');
 
         // Joiner Daily Work Module
-        $this->insertModule('my-daily-work', 'user-group', 'My Daily Work');
+        $this->insertModule(
+            'my-daily-work',
+            'screwdriver-wrench',
+            'My Daily Work'
+        );
 
         // Joiner Work History Module
         $this->insertModule(
             'joiner-work-history',
-            'user-group',
+            'history',
             'My Work History'
         );
 

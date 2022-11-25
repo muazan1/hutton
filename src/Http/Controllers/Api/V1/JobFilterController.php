@@ -65,7 +65,17 @@ class JobFilterController extends Controller
     public function adminJobFilter(Request $request)
     {
         try {
-            $jobs = PlotJob::with('plot.buildingType.site.builder', 'service');
+            if (request()->get('type') == 'completed') {
+                $jobs = PlotJob::with(
+                    'plot.buildingType.site.builder',
+                    'service'
+                )->where('status', 'completed');
+            } else {
+                $jobs = PlotJob::with(
+                    'plot.buildingType.site.builder',
+                    'service'
+                );
+            }
 
             if ($request->builder != null) {
                 $jobs = $jobs->whereHas(

@@ -165,33 +165,33 @@ class PlotJobsController extends Controller
                 }
             }
 
-            // $completed = $alljobs->where('status', 'completed')->count();
+            $completed = $jobs->where('status', 'completed')->count();
 
-            // $partCompleted = $alljobs
-            //     ->where('status', 'partial-complete')
-            //     ->count();
+            $partCompleted = $jobs
+                ->where('status', 'partial-complete')
+                ->count();
 
-            // $notStarted = $alljobs->where('status', 'not-started')->count();
+            $notStarted = $jobs->where('status', 'not-started')->count();
 
-            // $totalAmount = $alljobs->sum('amount');
+            $totalAmount = $jobs->sum('amount');
 
-            // $joinerPay = 0;
+            $joinerPay = 0;
 
-            // foreach ($alljobs as $job) {
-            //     $buidlingType = HouseType::find($job->plot->building_type_id);
+            foreach ($jobs as $job) {
+                $houseType = HouseType::find($job->plot->house_type_id);
 
-            //     $joinerPricing = JoinerPricing::where(
-            //         'building_type_id',
-            //         $buidlingType->id
-            //     )
-            //         ->where('service_id', $job->service_id)
-            //         ->first();
+                $joinerPricing = JoinerPricing::where(
+                    'house_type_id',
+                    $houseType->id
+                )
+                    ->where('service_id', $job->service_id)
+                    ->first();
 
-            //     $joinerPay +=
-            //         $joinerPricing != null ? $joinerPricing->price : 0;
-            // }
+                $joinerPay +=
+                    $joinerPricing != null ? $joinerPricing->price : 0;
+            }
 
-            // $profit = $totalAmount - $joinerPay;
+            $profit = $totalAmount - $joinerPay;
 
             return response()->json([
                 'type' => 'success',
@@ -199,12 +199,12 @@ class PlotJobsController extends Controller
                 'meta' => $meta,
                 'alljobs' => $alljobs,
                 'data' => $jobs,
-                // 'completed' => $completed,
-                // 'partCompleted' => $partCompleted,
-                // 'notStarted' => $notStarted,
-                // 'totalAmount' => $totalAmount,
-                // 'joinerPay' => $joinerPay,
-                // 'profit' => $profit,
+                'completed' => $completed,
+                'partCompleted' => $partCompleted,
+                'notStarted' => $notStarted,
+                'totalAmount' => $totalAmount,
+                'joinerPay' => $joinerPay,
+                'profit' => $profit,
 
                 'plot' => $plot,
             ]);

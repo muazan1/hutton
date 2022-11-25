@@ -225,14 +225,14 @@ class HuttonPermissionsSeeder extends ModuleSeeder
             'wage-sheet-view' => $this->insertPermission(
                 'Wage Sheet View',
                 'wage-sheet',
-                'wage-sheet',
+                'view',
                 'wagesheet:view'
             ),
-            'admin-reports' => $this->insertPermission(
-                'Admin Reports',
+            'reports-view' => $this->insertPermission(
+                'Reports View',
                 'reports',
-                'reports',
-                'admin:reports'
+                'view',
+                'reports:view'
             ),
 
             'admin-notification' => $this->insertPermission(
@@ -269,7 +269,7 @@ class HuttonPermissionsSeeder extends ModuleSeeder
             //     'view',
             //     'joiner-work-history:view'
             // ),
-            'view' => $this->insertPermission(
+            'joiner-jobs-view' => $this->insertPermission(
                 'Joiner Jobs view',
                 'joiner-jobs',
                 'view'
@@ -287,7 +287,8 @@ class HuttonPermissionsSeeder extends ModuleSeeder
             'work-history-view' => $this->insertPermission(
                 'My Work History view',
                 'my-work-history',
-                'view'
+                'view',
+                'my-work-history:view'
             ),
             // 'view' => $this->insertPermission('Joiner Jobs view', 'joiner-jobs', 'view'),
         ];

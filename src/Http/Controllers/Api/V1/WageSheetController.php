@@ -38,6 +38,10 @@ class WageSheetController extends Controller
 
             $search = $request->search ?? '';
 
+            $sort = $request->has('sort')
+                ? json_decode($request->sort)
+                : json_decode('{}');
+
             $week_start = $request->week_start ?? '';
 
             $joiners = HuttonUser::with(
@@ -96,12 +100,22 @@ class WageSheetController extends Controller
                 return $item;
             });
 
+            if ($sort) {
+                $orderKeys = get_object_vars($sort);
+                if ($orderKeys != []) {
+                    $key = key($orderKeys);
+                    $direction = $orderKeys[$key];
+                    $meta->orderBy($key, $direction);
+                }
+            }
+
             $meta = $this->paginate($meta, 10);
 
             return response()->json([
                 'type' => 'success',
                 'message' => '',
-                'data' => ['joiner' => $joiners, 'meta' => $meta],
+                'data' => $joiners,
+                'meta' => $meta,
             ]);
         } catch (\Throwable $th) {
             $message = $th->getMessage();

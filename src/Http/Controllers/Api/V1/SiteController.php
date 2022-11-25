@@ -234,7 +234,7 @@ class SiteController extends Controller
             ]);
 
             $validator = Validator::make($request->all(), [
-                'customer_id' => ['required'],
+                'customer' => ['required'],
                 'site_name' => ['required'],
                 'slug' => ['required'],
                 'street_1' => ['required'],
@@ -242,7 +242,7 @@ class SiteController extends Controller
                 'city' => ['required'],
                 'postcode' => ['required'],
                 'county' => ['required'],
-                'telephone' => ['required'],
+                'telephone_number' => ['required'],
             ]);
 
             if ($validator->fails()) {
@@ -257,33 +257,9 @@ class SiteController extends Controller
 
             $site = Site::where('uuid', $uuid)->first();
 
-            $customer = Customer::where('uuid', $request->customer_id)->first();
+            $customer = Customer::where('uuid', $request->customer)->first();
 
             $apiKey = env('GOOGLE_MAP_API_KEY');
-
-            $address =
-                $request->street_1 .
-                ' ' .
-                $request->street_2 .
-                ', ' .
-                $request->city .
-                ', ' .
-                $request->county .
-                ', ' .
-                $request->postcode;
-
-            $location = Http::acceptJson()->get(
-                'https://maps.googleapis.com/maps/api/geocode/json?address=' .
-                    $address .
-                    '&key=' .
-                    $apiKey
-            );
-
-            $latitude = json_decode($location)->results[0]->geometry->location
-                ->lat;
-
-            $longitude = json_decode($location)->results[0]->geometry->location
-                ->lng;
 
             $data = [
                 'customer_id' => $customer->id,
@@ -293,10 +269,10 @@ class SiteController extends Controller
                 'street_2' => $request->street_2,
                 'city' => $request->city,
                 'postcode' => $request->postcode,
-                'latitude' => $latitude,
-                'longitude' => $longitude,
                 'county' => $request->county,
-                'telephone' => $request->telephone,
+                'telephone_number' => $request->telephone_number,
+                'latitude' => $request->latitude,
+                'longitude' => $request->longitude,
             ];
 
             $site->update($data);
