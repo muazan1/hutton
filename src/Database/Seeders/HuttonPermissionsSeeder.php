@@ -17,11 +17,10 @@ class HuttonPermissionsSeeder extends ModuleSeeder
     {
         /* Admin Role Permissions */
         $map = [
-            'admin-dashboard' => $this->insertPermission(
-                'Admin Dashboard',
-                'dashboard',
-                'adminDashboard',
-                'admin:dashboard'
+            'admin-dashboard-view' => $this->insertPermission(
+                'Admin Dashboard view',
+                'admin-dashboard',
+                'view'
             ),
             'builder-dashboard' => $this->insertPermission(
                 'Builder Dashboard',
@@ -269,6 +268,11 @@ class HuttonPermissionsSeeder extends ModuleSeeder
             //     'view',
             //     'joiner-work-history:view'
             // ),
+            'joiner-dashboard-view' => $this->insertPermission(
+                'Joiner Dashboard view',
+                'joiner-dashboard',
+                'view'
+            ),
             'joiner-jobs-view' => $this->insertPermission(
                 'Joiner Jobs view',
                 'joiner-jobs',
@@ -284,7 +288,7 @@ class HuttonPermissionsSeeder extends ModuleSeeder
                 'my-weekly-work',
                 'view'
             ),
-            'work-history-view' => $this->insertPermission(
+            'my-work-history' => $this->insertPermission(
                 'My Work History view',
                 'my-work-history',
                 'view',

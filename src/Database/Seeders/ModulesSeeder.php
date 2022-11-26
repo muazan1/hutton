@@ -17,6 +17,9 @@ class ModulesSeeder extends ModuleSeeder
         /* Admin Modules */
 
         // Fixes Module
+        $this->insertModule('admin-dashboard', 'dashboard', 'Admin Dashboard');
+
+        // Fixes Module
         $this->insertModule('fixes', 'screwdriver-wrench', 'Fixes');
 
         // Joiners Module
@@ -38,6 +41,13 @@ class ModulesSeeder extends ModuleSeeder
             Joiner Modules Start here 
         */
 
+        // joiner dashoboard
+        $this->insertModule(
+            'joiner-dashboard',
+            'dashboard',
+            'Joiner Dashboard'
+        );
+
         // Joiner Jobs Module
         $this->insertModule('joiner-jobs', 'tasks', 'My Jobs');
 
@@ -52,11 +62,7 @@ class ModulesSeeder extends ModuleSeeder
         );
 
         // Joiner Work History Module
-        $this->insertModule(
-            'joiner-work-history',
-            'history',
-            'My Work History'
-        );
+        $this->insertModule('my-work-history', 'history', 'My Work History');
 
         /* 
             Joiner Modules End here 

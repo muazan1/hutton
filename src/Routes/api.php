@@ -168,15 +168,13 @@ Route::group(['prefix' => 'api/v1', 'as' => 'api/v1'], function () {
     ]);
 
     //Route for Wage Sheet
-    Route::get('wage-sheet', [WageSheetController::class, 'wageSheet'])->name(
-        'wage-sheet'
-    );
+    Route::get('wage-sheet', [WageSheetController::class, 'wageSheet']);
 
     //route for weekly wage sheet
-    Route::post('weekly/wage-sheet', [
-        WageSheetController::class,
-        'wageSheetByWeek',
-    ])->name('weekly.wage-sheet');
+    // Route::get('weekly/wage-sheet', [
+    //     WageSheetController::class,
+    //     'wageSheetByWeek',
+    // ]);
 
     /* Routes for jobs filters */
 

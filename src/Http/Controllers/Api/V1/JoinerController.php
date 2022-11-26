@@ -70,39 +70,34 @@ class JoinerController extends Controller
 
             $role = Role::where('name', 'joiner')->first();
 
-            $joiners = User::where('role_id', $role->id)->where(function (
-                $query
-            ) use ($search) {
-                $query
-                    ->where('first_name', 'LIKE', '%' . $search . '%')
-                    ->orWhere('last_name', 'LIKE', '%' . $search . '%')
-                    ->orWhere('email', 'LIKE', '%' . $search . '%');
-            });
-
-            if ($sort) {
-                $orderKeys = get_object_vars($sort);
-                if ($orderKeys != []) {
-                    $key = key($orderKeys);
-                    $direction = $orderKeys[$key];
-                    $joiners->orderBy($key, $direction);
-                }
-            }
-
-            $joiners = $joiners->get();
-
-            $meta = User::where('role_id', $role->id)
+            $joiners = HuttonUser::with('currentWeek')
+                ->where('role_id', $role->id)
                 ->where(function ($query) use ($search) {
                     $query
                         ->where('first_name', 'LIKE', '%' . $search . '%')
                         ->orWhere('last_name', 'LIKE', '%' . $search . '%')
                         ->orWhere('email', 'LIKE', '%' . $search . '%');
-                })
-                ->paginate(10);
+                });
+
+            if ($sort) {
+                $orderKeys = get_object_vars($sort);
+                if ($orderKeys != []) {
+                    $key = key($orderKeys);
+
+                    $direction = $orderKeys[$key];
+
+                    $joiners->orderBy($key, $direction);
+                }
+            }
+
+            $data = $joiners->get();
+
+            $meta = $joiners->paginate(20);
 
             return response()->json([
                 'type' => 'success',
                 'message' => '',
-                'data' => $joiners,
+                'data' => $data,
                 'meta' => $meta,
             ]);
         } catch (\Throwable $th) {

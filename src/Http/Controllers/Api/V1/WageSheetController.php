@@ -44,17 +44,35 @@ class WageSheetController extends Controller
 
             $week_start = $request->week_start ?? '';
 
-            $joiners = HuttonUser::with(
-                'weeklyWork.dailyWork',
-                'weeklyWork.miscWork'
-            )
-                ->where(function ($query) use ($search) {
-                    $query
-                        ->where('first_name', 'LIKE', '%' . $search . '%')
-                        ->orWhere('last_name', 'LIKE', '%' . $search . '%');
-                })
-                ->where('role_id', $role->id)
-                ->get();
+            $weekCommencing = $request->get('week');
+
+            if ($weekCommencing != null) {
+                $joiners = HuttonUser::with([
+                    'weeklyWork' => function ($query) use ($weekCommencing) {
+                        return $query->whereDate('week_start', $weekCommencing);
+                    },
+                    'weeklyWork.dailyWork',
+                ])
+                    ->where(function ($query) use ($search) {
+                        $query
+                            ->where('first_name', 'LIKE', '%' . $search . '%')
+                            ->orWhere('last_name', 'LIKE', '%' . $search . '%');
+                    })
+                    ->where('role_id', $role->id)
+                    ->get();
+            } else {
+                $joiners = HuttonUser::with(
+                    'weeklyWork.dailyWork',
+                    'weeklyWork.miscWork'
+                )
+                    ->where(function ($query) use ($search) {
+                        $query
+                            ->where('first_name', 'LIKE', '%' . $search . '%')
+                            ->orWhere('last_name', 'LIKE', '%' . $search . '%');
+                    })
+                    ->where('role_id', $role->id)
+                    ->get();
+            }
 
             $meta = collect($joiners)->map(function ($item) use ($week_start) {
                 $item->dailyTotal = 0;
@@ -109,7 +127,7 @@ class WageSheetController extends Controller
                 }
             }
 
-            $meta = $this->paginate($meta, 10);
+            $meta = $this->paginate($meta, 20);
 
             return response()->json([
                 'type' => 'success',
@@ -128,35 +146,35 @@ class WageSheetController extends Controller
         }
     }
 
-    public function wageSheetByWeek(Request $request)
-    {
-        try {
-            $weekCommencing = $request->week;
+    // public function wageSheetByWeek(Request $request)
+    // {
+    //     try {
+    //         $weekCommencing = $request->get('week');
 
-            $role = Role::where('name', 'joiner')->first();
+    //         $role = Role::where('name', 'joiner')->first();
 
-            $joiners = HuttonUser::with([
-                'weeklyWork' => function ($query) use ($weekCommencing) {
-                    return $query->whereDate('week_start', $weekCommencing);
-                },
-                'weeklyWork.dailyWork',
-            ])
-                ->where('role_id', $role->id)
-                ->paginate();
+    //         $joiners = HuttonUser::with([
+    //             'weeklyWork' => function ($query) use ($weekCommencing) {
+    //                 return $query->whereDate('week_start', $weekCommencing);
+    //             },
+    //             'weeklyWork.dailyWork',
+    //         ])
+    //             ->where('role_id', $role->id)
+    //             ->paginate();
 
-            return response()->json([
-                'type' => 'success',
-                'message' => '',
-                'data' => ['joiners' => $joiners],
-            ]);
-        } catch (\Throwable $th) {
-            $message = $th->getMessage();
+    //         return response()->json([
+    //             'type' => 'success',
+    //             'message' => '',
+    //             'data' => ['joiners' => $joiners],
+    //         ]);
+    //     } catch (\Throwable $th) {
+    //         $message = $th->getMessage();
 
-            return response()->json([
-                'type' => 'error',
-                'message' => $message,
-                'data' => '',
-            ]);
-        }
-    }
+    //         return response()->json([
+    //             'type' => 'error',
+    //             'message' => $message,
+    //             'data' => '',
+    //         ]);
+    //     }
+    // }
 }
