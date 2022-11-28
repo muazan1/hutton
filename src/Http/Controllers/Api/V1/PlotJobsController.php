@@ -438,23 +438,44 @@ class PlotJobsController extends Controller
         }
     }
 
-    public function jobsOnBuilder(Request $request, $slug)
+    public function jobsOnBuilder(Request $request, $uuid)
     {
         try {
-            $jobs = PlotJob::with('service', 'plot.buildingType.site.builder')
-                ->whereHas('plot.buildingType.site.builder', function (
-                    $query
-                ) use ($slug) {
-                    $query->where('slug', $slug);
-                })
-                ->paginate(10);
+            $search = $request->search ?? '';
+
+            $sort = $request->has('sort')
+                ? json_decode($request->sort)
+                : json_decode('{}');
+
+            $jobs = PlotJob::with(
+                'service',
+                'plot.buildingType.site.builder'
+            )->whereHas('plot.buildingType.site.builder', function (
+                $query
+            ) use ($uuid) {
+                $query->where('uuid', $uuid);
+            });
+
+            if ($sort) {
+                $orderKeys = get_object_vars($sort);
+                if ($orderKeys != []) {
+                    $key = key($orderKeys);
+
+                    $direction = $orderKeys[$key];
+
+                    $jobs->orderBy($key, $direction);
+                }
+            }
+
+            $data = $jobs->get();
+
+            $meta = $jobs->paginate(20);
 
             $collection = collect(
                 Site::with('builder', 'buildingTypes.plots.job')
-                    ->whereHas('builder', function ($query) use ($slug) {
-                        $query->where('slug', $slug);
+                    ->whereHas('builder', function ($query) use ($uuid) {
+                        $query->where('uuid', $uuid);
                     })
-                    //                            ->where('slug',$slug)
                     ->get()
             )->map(function ($item) {
                 $site_name = $item->site_name;
@@ -466,7 +487,7 @@ class PlotJobsController extends Controller
                         if ($buildinType->plots != null) {
                             //
                             foreach ($buildinType->plots as $plot) {
-                                //                                                dump($plot->job->count());
+                                //   dump($plot->job->count());
                                 $completed += $plot->job
                                     ->where('status', 'completed')
                                     ->count();
@@ -487,16 +508,12 @@ class PlotJobsController extends Controller
                 return [$site_name, $completed, $not_completed];
             });
 
-            //            $completed = $collection->where('status','completed')->count();
-            //            $not_completed = $collection->where('status','!=','completed')->count();
-
             return response()->json([
                 'type' => 'success',
                 'message' => '',
-                'data' => [
-                    'collection' => $collection,
-                    'jobs' => $jobs,
-                ],
+                'data' => $data,
+                'meta' => $meta,
+                'collection' => $collection,
             ]);
         } catch (\Exception $e) {
             $message = $e->getMessage();

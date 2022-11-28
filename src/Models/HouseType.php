@@ -19,15 +19,11 @@ class HouseType extends Model
 
     public function plots()
     {
-        return $this->hasMany(Plot::class, 'building_type_id', 'id');
+        return $this->hasMany(Plot::class, 'house_type_id', 'id');
     }
 
     public function pricing()
     {
-        return $this->belongsTo(
-            ServicePricing::class,
-            'id',
-            'building_type_id'
-        );
+        return $this->belongsTo(ServicePricing::class, 'id', 'house_type_id');
     }
 }

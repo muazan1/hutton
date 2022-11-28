@@ -61,10 +61,10 @@ Route::group(['prefix' => 'api/v1', 'as' => 'api/v1'], function () {
     Route::resource('plot-jobs', PlotJobsController::class);
 
     // Route for builder sites || Customer sites
-    Route::get('builder/{customer}/sites', [
+    Route::get('builder/{uuid}/sites', [
         SiteController::class,
         'customerSites',
-    ])->name('customer.site');
+    ]);
 
     //Route for getting Building Types for specific site
     Route::get('site/{uuid}/house-types', [
@@ -124,7 +124,7 @@ Route::group(['prefix' => 'api/v1', 'as' => 'api/v1'], function () {
     Route::post('generate-daily-work', [
         DailyWorkController::class,
         'dailyWork',
-    ])->name('generate.dailyWork');
+    ]);
 
     //    route for saving daily miscellaneous work
     Route::post('generate-daily-misc-work', [
@@ -239,7 +239,7 @@ Route::group(['prefix' => 'api/v1', 'as' => 'api/v1'], function () {
     Route::get('joiner/{uuid}/recent-works', [
         DashboardController::class,
         'joinerRecentWork',
-    ])->name('joinerRecentWork.dashboard');
+    ]);
 
     //        get joiner by uuid
     Route::get('joiner/{uuid}', [
@@ -266,7 +266,7 @@ Route::group(['prefix' => 'api/v1', 'as' => 'api/v1'], function () {
     Route::get('site/{slug}/jobs', [PlotJobsController::class, 'jobsOnSite']);
 
     //    for jobs on each builder
-    Route::get('builder/{slug}/jobs', [
+    Route::get('builder/{uuid}/jobs', [
         PlotJobsController::class,
         'jobsOnBuilder',
     ]);

@@ -15,9 +15,20 @@ use Mockery\Container;
 
 use Sty\Hutton\Http\Requests\CreateSiteRequest;
 
-use Sty\Hutton\Models\{HouseType, HsJob, MiscWork, Customer, Plot, Service, Site, WeeklyWork, HuttonUser, DailyWork};
+use Sty\Hutton\Models\{
+    HouseType,
+    PlotJob,
+    MiscWork,
+    Customer,
+    Plot,
+    Service,
+    Site,
+    WeeklyWork,
+    HuttonUser,
+    DailyWork
+};
 
-use App\Models\{Role,User};
+use App\Models\{Role, User};
 
 use Carbon\Carbon;
 
@@ -26,15 +37,39 @@ class DashboardController extends Controller
     public function joinerRecentWork(Request $request, $uuid)
     {
         try {
+            $search = $request->search ?? '';
+
+            $sort = $request->has('sort')
+                ? json_decode($request->sort)
+                : json_decode('{}');
+
             $joiner = HuttonUser::where('uuid', $uuid)->first();
 
             $joinerId = $joiner->id;
 
-            $work = DailyWork::with('weeklyWork', 'site', 'plot')
-                ->whereHas('weeklyWork', function ($query) use ($joinerId) {
-                    $query->where('user_id', $joinerId);
-                })
-                ->paginate(10);
+            $work = DailyWork::with(
+                'weeklyWork',
+                'site',
+                'plot',
+                'service'
+            )->whereHas('weeklyWork', function ($query) use ($joinerId) {
+                $query->where('user_id', $joinerId);
+            });
+
+            if ($sort) {
+                $orderKeys = get_object_vars($sort);
+                if ($orderKeys != []) {
+                    $key = key($orderKeys);
+
+                    $direction = $orderKeys[$key];
+
+                    $work->orderBy($key, $direction);
+                }
+            }
+
+            $data = $work->get();
+
+            $meta = $work->paginate(20);
 
             $works = DailyWork::with('weeklyWork', 'site', 'plot')
                 ->whereHas('weeklyWork', function ($query) use ($joinerId) {
@@ -79,12 +114,11 @@ class DashboardController extends Controller
             return response()->json([
                 'type' => 'success',
                 'message' => '',
-                'data' => [
-                    'work' => $work,
-                    'allWork' => $allWork,
-                    'months' => $months,
-                    'amounts' => $amounts,
-                ],
+                'data' => $data,
+                'meta' => $meta,
+                'allWork' => $allWork,
+                'months' => $months,
+                'amounts' => $amounts,
             ]);
         } catch (\Throwable $th) {
             $message = $th->getMessage();
@@ -100,7 +134,6 @@ class DashboardController extends Controller
     public function adminDashboard(Request $request)
     {
         try {
-
             $builders = Customer::with('sites.buildingTypes.plots.job')->get();
 
             $collection = collect($builders)
@@ -185,22 +218,36 @@ class DashboardController extends Controller
         }
     }
 
-    public function recentlyCompletedWork()
+    public function recentlyCompletedWork(Request $request)
     {
         try {
+            $search = $request->search ?? '';
 
-            $recent_completed_work = PlotJob::where('status','completed')
-                ->with('plot','service','joiners','plot.buildingType.site.builder')
-                ->paginate(10);
+            $sort = $request->has('sort')
+                ? json_decode($request->sort)
+                : json_decode('{}');
+
+            $recent_completed_work = PlotJob::where(
+                'status',
+                'completed'
+            )->with(
+                'plot',
+                'service',
+                'joiners',
+                'plot.buildingType.site.builder'
+            );
+
+            $meta = $recent_completed_work->paginate(20);
+
+            $data = $recent_completed_work->get();
 
             return response()->json([
                 'type' => 'success',
                 'message' => '',
-                'data' => ['recent_completed_work' => $recent_completed_work],
+                'data' => $data,
+                'meta' => $meta,
             ]);
-
         } catch (\Throwable $th) {
-
             $message = $th->getMessage();
 
             return response()->json([
@@ -208,18 +255,19 @@ class DashboardController extends Controller
                 'message' => $message,
                 'data' => '',
             ]);
-
         }
     }
 
-    public function siteDashboard(Request $request,$slug) {
-
-        try{
-
-            $plots = PlotJob::with('plot.buildingType.site','service')
-                        ->whereHas('plot.buildingType.site', function ($query) use($slug) {
-                            $query->where('slug',$slug);
-                        })->paginate(10);
+    public function siteDashboard(Request $request, $slug)
+    {
+        try {
+            $plots = PlotJob::with('plot.buildingType.site', 'service')
+                ->whereHas('plot.buildingType.site', function ($query) use (
+                    $slug
+                ) {
+                    $query->where('slug', $slug);
+                })
+                ->paginate(10);
 
             return response()->json([
                 'type' => 'success',
@@ -228,9 +276,7 @@ class DashboardController extends Controller
                     'plots' => $plots,
                 ],
             ]);
-
-        }catch (\Exception $e)
-        {
+        } catch (\Exception $e) {
             $message = $e->getMessage();
 
             return response()->json([
@@ -238,24 +284,28 @@ class DashboardController extends Controller
                 'message' => $message,
                 'data' => '',
             ]);
-
         }
     }
 
-    public function siteDashboardBars (Request $request,$slug) {
-
-        try{
-            $collection = collect(Service::with('jobs.plot.buildingType.site')
-                ->whereHas('jobs.plot.buildingType.site', function ($query) use($slug) {
-                    $query->where('slug',$slug);
-                })->get()
+    public function siteDashboardBars(Request $request, $slug)
+    {
+        try {
+            $collection = collect(
+                Service::with('jobs.plot.buildingType.site')
+                    ->whereHas('jobs.plot.buildingType.site', function (
+                        $query
+                    ) use ($slug) {
+                        $query->where('slug', $slug);
+                    })
+                    ->get()
             )->map(function ($item) {
-
                 $name = $item->service_name;
-                $completed = ($item->jobs->where('status','completed')->count());
-                $not_completed = ($item->jobs->where('status','!=','completed')->count());
+                $completed = $item->jobs->where('status', 'completed')->count();
+                $not_completed = $item->jobs
+                    ->where('status', '!=', 'completed')
+                    ->count();
 
-                return [$name,$completed,$not_completed];
+                return [$name, $completed, $not_completed];
             });
 
             return response()->json([
@@ -265,9 +315,7 @@ class DashboardController extends Controller
                     'collection' => $collection,
                 ],
             ]);
-
-        }catch (\Exception $e)
-        {
+        } catch (\Exception $e) {
             $message = $e->getMessage();
 
             return response()->json([
@@ -275,26 +323,32 @@ class DashboardController extends Controller
                 'message' => $message,
                 'data' => '',
             ]);
-
         }
-
     }
 
-    public function siteDashboardCompletionChart (Request $request,$slug) {
+    public function siteDashboardCompletionChart(Request $request, $slug)
+    {
+        try {
+            $collect = collect(
+                PlotJob::with('plot.buildingType.site')
+                    ->whereHas('plot.buildingType.site', function ($item) use (
+                        $slug
+                    ) {
+                        $item->where('slug', $slug);
+                    })
+                    ->get()
+            );
 
-        try{
+            $completed = $collect->where('status', 'completed')->count();
 
-            $collect = collect(PlotJob::with('plot.buildingType.site')
-                        ->whereHas('plot.buildingType.site', function ($item) use($slug) {
-                            $item->where('slug',$slug);
-                        })
-                        ->get());
+            $not_completed = $collect
+                ->where('status', '!=', 'completed')
+                ->count();
 
-            $completed = $collect->where('status','completed')->count();
-
-            $not_completed = $collect->where('status','!=','completed')->count();
-
-            $collection = ['completed' => $completed,'not_completed' => $not_completed];
+            $collection = [
+                'completed' => $completed,
+                'not_completed' => $not_completed,
+            ];
 
             return response()->json([
                 'type' => 'success',
@@ -303,9 +357,7 @@ class DashboardController extends Controller
                     'collection' => $collection,
                 ],
             ]);
-
-        }catch (\Exception $e)
-        {
+        } catch (\Exception $e) {
             $message = $e->getMessage();
 
             return response()->json([
@@ -313,90 +365,46 @@ class DashboardController extends Controller
                 'message' => $message,
                 'data' => '',
             ]);
-
         }
-
     }
 
-    public function BuilderPieChart (Request $request,$slug) {
-
-        try{
-
-            $builder = Customer::where('slug',$slug)->first();
-
-            $collect = collect(
-                PlotJob::with([
-                'plot.buildingType.site.builder',
-                'plot.buildingType.pricing',
-                'service.pricings',
-                'service.joinerPricings' => function($query) use($builder) {
-                    $query->where('builder_id', $builder->id);
-                }])
-                ->whereHas('plot.buildingType.site.builder', function ($item) use($slug) {
-                    $item->where('slug',$slug);
-                })
-//                ->whereHas('service.joinerPricings',function ($query) use($builder) {
-//                    $query->where('builder_id', $builder->id);
-//                })
-                ->get()
-            );
-
-            $gross = $collect->where('status','completed')->map(function ($item) {
-               return  $item->plot->buildingType->pricing->price;
-            })->sum();
-
-            $joiner = $collect->where('status','completed')->map(function ($item) {
-                return  $item->service->joinerPricings[0]->price;
-            })->sum();
-
-            $profit = $gross - $joiner;
-
-//            $collection = ['gross' => $gross, 'joiner' => $joiner,'profit' => $profit];
-
-            return response()->json([
-                'type' => 'success',
-                'message' => '',
-                'data' => [
-                    'collection' =>  ['gross' => $gross, 'joiner' => $joiner,'profit' => $profit],
-                ],
-            ]);
-
-        }catch (\Exception $e)
-        {
-            $message = $e->getMessage();
-
-            return response()->json([
-                'type' => 'error',
-                'message' => $message,
-                'data' => '',
-            ]);
-
-        }
-
-    }
-
-
-
-    public function AdminPieChart (Request $request) {
-
-        try{
+    public function BuilderPieChart(Request $request, $uuid)
+    {
+        try {
+            $builder = Customer::where('uuid', $uuid)->first();
 
             $collect = collect(
                 PlotJob::with([
                     'plot.buildingType.site.builder',
                     'plot.buildingType.pricing',
                     'service.pricings',
-                    'service.joinerPricings'])
+                    'service.joinerPricings' => function ($query) use (
+                        $builder
+                    ) {
+                        $query->where('builder_id', $builder->id);
+                    },
+                ])
+                    ->whereHas('plot.buildingType.site.builder', function (
+                        $item
+                    ) use ($uuid) {
+                        $item->where('uuid', $uuid);
+                    })
                     ->get()
             );
 
-            $gross = $collect->where('status','completed')->map(function ($item) {
-                return  $item->plot->buildingType->pricing->price;
-            })->sum();
+            $gross = $collect
+                ->where('status', 'completed')
+                ->map(function ($item) {
+                    return $item->plot->buildingType->pricing->price;
+                })
+                ->sum();
 
-            $joiner = $collect->where('status','completed')->map(function ($item) {
-                return  $item->service->joinerPricings[0]->price;
-            })->sum();
+            $joiner = $collect
+                ->where('status', 'completed')
+                ->map(function ($item) {
+                    return $item->service->joinerPricings[0]->price;
+                })
+                ->sum();
 
             $profit = $gross - $joiner;
 
@@ -404,12 +412,14 @@ class DashboardController extends Controller
                 'type' => 'success',
                 'message' => '',
                 'data' => [
-                    'collection' =>  ['gross' => $gross, 'joiner' => $joiner,'profit' => $profit],
+                    'collection' => [
+                        'gross' => $gross,
+                        'joiner' => $joiner,
+                        'profit' => $profit,
+                    ],
                 ],
             ]);
-
-        }catch (\Exception $e)
-        {
+        } catch (\Exception $e) {
             $message = $e->getMessage();
 
             return response()->json([
@@ -417,28 +427,49 @@ class DashboardController extends Controller
                 'message' => $message,
                 'data' => '',
             ]);
-
         }
-
     }
 
-    public function getAdmins (Request $request) {
+    public function AdminPieChart(Request $request)
+    {
+        try {
+            $collect = collect(
+                PlotJob::with([
+                    'plot.buildingType.site.builder',
+                    'plot.buildingType.pricing',
+                    'service.pricings',
+                    'service.joinerPricings',
+                ])->get()
+            );
 
-        try{
+            $gross = $collect
+                ->where('status', 'completed')
+                ->map(function ($item) {
+                    return $item->plot->buildingType->pricing->price;
+                })
+                ->sum();
 
-            $role = Role::where('name','admin')->first();
+            $joiner = $collect
+                ->where('status', 'completed')
+                ->map(function ($item) {
+                    return $item->service->joinerPricings[0]->price;
+                })
+                ->sum();
 
-            $admins = User::select('id','uuid','first_name','last_name')->where('role_id',$role->id)->get();
+            $profit = $gross - $joiner;
 
             return response()->json([
                 'type' => 'success',
                 'message' => '',
-                'data' => ['admins'=> $admins],
+                'data' => [
+                    'collection' => [
+                        'gross' => $gross,
+                        'joiner' => $joiner,
+                        'profit' => $profit,
+                    ],
+                ],
             ]);
-
-        }
-        catch (\Exception $e)
-        {
+        } catch (\Exception $e) {
             $message = $e->getMessage();
 
             return response()->json([
@@ -446,8 +477,31 @@ class DashboardController extends Controller
                 'message' => $message,
                 'data' => '',
             ]);
-
         }
     }
 
+    public function getAdmins(Request $request)
+    {
+        try {
+            $role = Role::where('name', 'admin')->first();
+
+            $admins = User::select('id', 'uuid', 'first_name', 'last_name')
+                ->where('role_id', $role->id)
+                ->get();
+
+            return response()->json([
+                'type' => 'success',
+                'message' => '',
+                'data' => ['admins' => $admins],
+            ]);
+        } catch (\Exception $e) {
+            $message = $e->getMessage();
+
+            return response()->json([
+                'type' => 'error',
+                'message' => $message,
+                'data' => '',
+            ]);
+        }
+    }
 }

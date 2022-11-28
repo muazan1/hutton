@@ -41,6 +41,7 @@ class JoinerController extends Controller
     public function map(Request $request)
     {
         $sites = Site::with(['customer'])->get();
+
         $collection = [];
         foreach ($sites as $site) {
             if ($site->latitude && $site->longitude) {

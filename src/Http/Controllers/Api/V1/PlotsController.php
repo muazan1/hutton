@@ -116,6 +116,8 @@ class PlotsController extends Controller
                 }
             }
 
+            // dd($plots->get());
+
             $meta = $plots->paginate(40);
 
             $plots = $plots->get();
