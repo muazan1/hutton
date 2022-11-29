@@ -15,7 +15,6 @@
   ],
   "require": {
     "barryvdh/laravel-dompdf": "*",
-    "psr/simple-cache": "2.0",
     "maatwebsite/excel": "*"
   },
   "extra": {
