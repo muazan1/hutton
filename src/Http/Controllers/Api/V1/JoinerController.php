@@ -2,23 +2,24 @@
 
 namespace Sty\Hutton\Http\Controllers\Api\V1;
 
-use App\Http\Resources\Customer\CustomerResource;
-use App\Http\Resources\Customer\CustomerSiteResource;
+use App\Http\Resources\Customer\{CustomerResource, CustomerSiteResource};
+
 use Illuminate\Http\Request;
+
 use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Validator;
-use DataTables;
-use DB;
+
+use Illuminate\Support\Facades\{Hash, Mail, Validator};
+
 use Str;
-use Exception;
+
 use Illuminate\Validation\Rule;
+
 use Illuminate\Validation\Rules\Password;
+
 use Illuminate\Database\Eloquent\Collection;
-use App\Models\User;
-use App\Models\Role;
-use App\Models\Site;
+
+use App\Models\{User, Role, Site};
+
 use Sty\Hutton\Models\HuttonUser;
 
 class JoinerController extends Controller
@@ -40,6 +41,7 @@ class JoinerController extends Controller
     public function map(Request $request)
     {
         $sites = Site::with(['customer'])->get();
+
         $collection = [];
         foreach ($sites as $site) {
             if ($site->latitude && $site->longitude) {
@@ -61,16 +63,43 @@ class JoinerController extends Controller
     public function index(Request $request)
     {
         try {
+            $search = $request->search ?? '';
+
+            $sort = $request->has('sort')
+                ? json_decode($request->sort)
+                : json_decode('{}');
+
             $role = Role::where('name', 'joiner')->first();
 
-            $joiners = User::where('role_id', $role->id)->get();
+            $joiners = HuttonUser::with('currentWeek')
+                ->where('role_id', $role->id)
+                ->where(function ($query) use ($search) {
+                    $query
+                        ->where('first_name', 'LIKE', '%' . $search . '%')
+                        ->orWhere('last_name', 'LIKE', '%' . $search . '%')
+                        ->orWhere('email', 'LIKE', '%' . $search . '%');
+                });
 
-            $meta = User::where('role_id', $role->id)->paginate(10);
+            if ($sort) {
+                $orderKeys = get_object_vars($sort);
+                if ($orderKeys != []) {
+                    $key = key($orderKeys);
+
+                    $direction = $orderKeys[$key];
+
+                    $joiners->orderBy($key, $direction);
+                }
+            }
+
+            $data = $joiners->get();
+
+            $meta = $joiners->paginate(20);
 
             return response()->json([
                 'type' => 'success',
                 'message' => '',
-                'data' => ['joiner' => $joiners, 'meta' => $meta],
+                'data' => $data,
+                'meta' => $meta,
             ]);
         } catch (\Throwable $th) {
             $message = $th->getMessage();

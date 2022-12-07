@@ -8,21 +8,13 @@ use Illuminate\Routing\Controller;
 
 use Illuminate\Support\Facades\{Hash, Validator, Http, Mail};
 
-use DataTables;
-
-use DB;
-
 use Str;
-
-use Exception;
-
-use Illuminate\Validation\Rule;
-
-use Mockery\Container;
 
 use Sty\Hutton\Http\Requests\CreateSiteRequest;
 
 use Sty\Hutton\Models\{Site, Customer};
+
+use App\Http\Resources\Customer\CustomerSiteResource;
 
 class SiteController extends Controller
 {
@@ -30,9 +22,13 @@ class SiteController extends Controller
     {
         $search = $request->search ?? '';
 
+        $sort = $request->has('sort')
+            ? json_decode($request->sort)
+            : json_decode('{}');
+
         $customer = Customer::where('uuid', $uuid)->first();
 
-        $meta = Site::with('builder')
+        $sites = Site::with('builder')
             ->where('customer_id', $customer->id)
             ->where(function ($query) use ($search) {
                 $query
@@ -43,8 +39,20 @@ class SiteController extends Controller
                     ->orWhere('postcode', 'LIKE', '%' . $search . '%')
                     ->orWhere('county', 'LIKE', '%' . $search . '%')
                     ->orWhere('city', 'LIKE', '%' . $search . '%');
-            })
-            ->paginate(10);
+            });
+
+        if ($sort) {
+            $orderKeys = get_object_vars($sort);
+            if ($orderKeys != []) {
+                $key = key($orderKeys);
+                $direction = $orderKeys[$key];
+                $sites->orderBy($key, $direction);
+            }
+        }
+
+        $meta = $sites->paginate(20);
+
+        $sites = $sites->get();
 
         $locations = collect(
             Site::where('customer_id', $customer->id)
@@ -69,51 +77,95 @@ class SiteController extends Controller
         return response()->json([
             'type' => 'success',
             'message' => '',
-            'data' => ['meta' => $meta, 'locations' => $locations],
+            'data' => $sites,
+            'meta' => $meta,
         ]);
+    }
+
+    public function sitesMap(Request $request, $uuid)
+    {
+        $customer = Customer::where('uuid', $uuid)->first();
+
+        $sites = Site::with('builder')
+            ->where('customer_id', $customer->id)
+            ->where('latitude', '>', '')
+            ->where('longitude', '>', '')
+            ->get();
+
+        $coords = $sites->map(function ($entry) {
+            return (object) [
+                'lat' => floatval($entry->latitude),
+                'lng' => floatval($entry->longitude),
+                'site' => new CustomerSiteResource($entry),
+            ];
+        });
+
+        return $coords;
     }
 
     public function index(Request $request)
     {
-        $meta = Site::paginate(10);
+        $search = $request->search ?? '';
+
+        $sort = $request->has('sort')
+            ? json_decode($request->sort)
+            : json_decode('{}');
+
+        $sites = Site::where(function ($query) use ($search) {
+            $query->where('site_name', 'LIKE', '%' . $search . '%');
+        });
+
+        if ($sort) {
+            $orderKeys = get_object_vars($sort);
+            if ($orderKeys != []) {
+                $key = key($orderKeys);
+                $direction = $orderKeys[$key];
+                $sites->orderBy($key, $direction);
+            }
+        }
+
+        $data = $sites->get();
+
+        $meta = $sites->paginate(20);
 
         return response()->json([
             'type' => 'success',
             'message' => '',
-            'data' => ['meta' => $meta],
+            'data' => $data,
+            'meta' => $meta,
         ]);
     }
 
     public function store(CreateSiteRequest $request)
     {
         try {
-            $customer = Customer::where('uuid', $request->customer_id)->first();
+            $customer = Customer::where('uuid', $request->customer)->first();
 
-            $apiKey = env('GOOGLE_MAP_API_KEY');
+            // $apiKey = env('GOOGLE_MAP_API_KEY');
 
-            $address =
-                $request->street_1 .
-                ' ' .
-                $request->street_2 .
-                ', ' .
-                $request->city .
-                ', ' .
-                $request->county .
-                ', ' .
-                $request->postcode;
+            // $address =
+            //     $request->street_1 .
+            //     ' ' .
+            //     $request->street_2 .
+            //     ', ' .
+            //     $request->city .
+            //     ', ' .
+            //     $request->county .
+            //     ', ' .
+            //     $request->postcode;
 
-            $location = Http::acceptJson()->get(
-                'https://maps.googleapis.com/maps/api/geocode/json?address=' .
-                    $address .
-                    '&key=' .
-                    $apiKey
-            );
+            // $location = Http::acceptJson()->get(
+            //     'https://maps.googleapis.com/maps/api/geocode/json?address=' .
+            //         $address .
+            //         '&key=' .
+            //         $apiKey
+            // );
 
-            $latitude = json_decode($location)->results[0]->geometry->location
-                ->lat;
+            // $latitude = json_decode($location)->results[0]->geometry->location
+            //     ->lat;
 
-            $longitude = json_decode($location)->results[0]->geometry->location
-                ->lng;
+            // $longitude = json_decode($location)->results[0]->geometry->location
+            //     ->lng;
 
             $data = [
                 'uuid' => $request->uuid,
@@ -124,8 +176,8 @@ class SiteController extends Controller
                 'street_2' => $request->street_2,
                 'city' => $request->city,
                 'postcode' => $request->postcode,
-                'latitude' => $latitude,
-                'longitude' => $longitude,
+                'latitude' => $request->latitude,
+                'longitude' => $request->longitude,
                 'county' => $request->county,
                 'telephone_number' => $request->telephone_number,
             ];
@@ -182,7 +234,7 @@ class SiteController extends Controller
             ]);
 
             $validator = Validator::make($request->all(), [
-                'customer_id' => ['required'],
+                'customer' => ['required'],
                 'site_name' => ['required'],
                 'slug' => ['required'],
                 'street_1' => ['required'],
@@ -190,7 +242,7 @@ class SiteController extends Controller
                 'city' => ['required'],
                 'postcode' => ['required'],
                 'county' => ['required'],
-                'telephone' => ['required'],
+                'telephone_number' => ['required'],
             ]);
 
             if ($validator->fails()) {
@@ -205,33 +257,9 @@ class SiteController extends Controller
 
             $site = Site::where('uuid', $uuid)->first();
 
-            $customer = Customer::where('uuid', $request->customer_id)->first();
+            $customer = Customer::where('uuid', $request->customer)->first();
 
             $apiKey = env('GOOGLE_MAP_API_KEY');
-
-            $address =
-                $request->street_1 .
-                ' ' .
-                $request->street_2 .
-                ', ' .
-                $request->city .
-                ', ' .
-                $request->county .
-                ', ' .
-                $request->postcode;
-
-            $location = Http::acceptJson()->get(
-                'https://maps.googleapis.com/maps/api/geocode/json?address=' .
-                    $address .
-                    '&key=' .
-                    $apiKey
-            );
-
-            $latitude = json_decode($location)->results[0]->geometry->location
-                ->lat;
-
-            $longitude = json_decode($location)->results[0]->geometry->location
-                ->lng;
 
             $data = [
                 'customer_id' => $customer->id,
@@ -241,10 +269,10 @@ class SiteController extends Controller
                 'street_2' => $request->street_2,
                 'city' => $request->city,
                 'postcode' => $request->postcode,
-                'latitude' => $latitude,
-                'longitude' => $longitude,
                 'county' => $request->county,
-                'telephone' => $request->telephone,
+                'telephone_number' => $request->telephone_number,
+                'latitude' => $request->latitude,
+                'longitude' => $request->longitude,
             ];
 
             $site->update($data);

@@ -13,24 +13,22 @@ class Plot extends Model
 
     public function job()
     {
-        return $this->hasMany(HsJob::class, 'plot_id', 'id');
+        return $this->hasMany(PlotJob::class, 'plot_id', 'id');
     }
 
     public function buildingType()
     {
-        return $this->belongsTo(BuildingType::class, 'building_type_id', 'id');
+        return $this->belongsTo(HouseType::class, 'house_type_id', 'id');
     }
 
-    public static function boot() {
+    public static function boot()
+    {
         parent::boot();
 
-        self::deleting(function($plot) {
-
-            $plot->job()->each(function($jobs) {
+        self::deleting(function ($plot) {
+            $plot->job()->each(function ($jobs) {
                 $jobs->delete();
             });
-
         });
     }
-
 }

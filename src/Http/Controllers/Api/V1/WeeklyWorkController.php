@@ -6,23 +6,9 @@ use Illuminate\Http\Request;
 
 use Illuminate\Routing\Controller;
 
-use Illuminate\Support\Facades\{Hash, Mail, Validator};
-
-use DataTables;
-
-use DB;
-
-use Str;
-
-use Exception;
-
-use Illuminate\Validation\Rule;
-
-use Mockery\Container;
+use Illuminate\Support\Facades\{Mail, Validator};
 
 use Carbon\Carbon;
-
-use Sty\Hutton\Http\Requests\CreateSiteRequest;
 
 use Sty\Hutton\Mail\Work\WorkSend;
 
@@ -134,19 +120,38 @@ class WeeklyWorkController extends Controller
     public function joinerWeeklyWork(Request $request, $uuid)
     {
         try {
-            $weeklyWork = WeeklyWork::with(
-                'dailyWork',
-                'dailyWork.site',
-                'dailyWork.plot',
-                'miscWork'
-            )
+            $search = $request->search ?? '';
+
+            $sort = $request->has('sort')
+                ? json_decode($request->sort)
+                : json_decode('{}');
+
+            $weeklyWork = WeeklyWork::with('dailyWork')
                 ->where('uuid', $uuid)
                 ->first();
+
+            if (request()->get('type') == 'misc_work') {
+                $data = MiscWork::with('site')->where(
+                    'week_id',
+                    $weeklyWork->id
+                );
+            } else {
+                $data = DailyWork::with('site', 'plot', 'service')->where(
+                    'week_id',
+                    $weeklyWork->id
+                );
+            }
+
+            $meta = $data->paginate(10);
+
+            $data = $data->get();
 
             return response()->json([
                 'type' => 'success',
                 'message' => '',
-                'data' => $weeklyWork,
+                'data' => $data,
+                'meta' => $meta,
+                'weeklyWork' => $weeklyWork,
             ]);
         } catch (\Throwable $th) {
             $message = $th->getMessage();
@@ -164,28 +169,39 @@ class WeeklyWorkController extends Controller
         try {
             $joiner = User::where('uuid', $uuid)->first();
 
+            $search = $request->search ?? '';
+
+            $sort = $request->has('sort')
+                ? json_decode($request->sort)
+                : json_decode('{}');
+
             $weeklyWork = WeeklyWork::with('dailyWork')
                 ->where('user_id', $joiner->id)
                 ->where('status', 'in-progress')
                 ->first();
 
-            $dailyWork = DailyWork::with('site', 'plot', 'service')
-                ->where('week_id', $weeklyWork->id)
-                ->paginate(10);
+            if (request()->get('type') == 'misc_work') {
+                $data = MiscWork::with('site')->where(
+                    'week_id',
+                    $weeklyWork->id
+                );
+            } else {
+                $data = DailyWork::with('site', 'plot', 'service')->where(
+                    'week_id',
+                    $weeklyWork->id
+                );
+            }
 
-            $dailyMiscWork = MiscWork::where(
-                'week_id',
-                $weeklyWork->id
-            )->paginate(10);
+            $meta = $data->paginate(10);
+
+            $data = $data->get();
 
             return response()->json([
                 'type' => 'success',
                 'message' => '',
-                'data' => [
-                    'weeklyWork' => $weeklyWork,
-                    'dailyWork' => $dailyWork,
-                    'dailyMiscWork' => $dailyMiscWork,
-                ],
+                'weeklyWork' => $weeklyWork,
+                'data' => $data,
+                'meta' => $meta,
             ]);
         } catch (\Throwable $th) {
             $message = $th->getMessage();
@@ -203,36 +219,79 @@ class WeeklyWorkController extends Controller
         try {
             $joiner = User::where('uuid', $uuid)->first();
 
+            $search = $request->search ?? '';
+
+            $sort = $request->has('sort')
+                ? json_decode($request->sort)
+                : json_decode('{}');
+
             $weeklyWork = WeeklyWork::with('dailyWork')
                 ->where('user_id', $joiner->id)
                 ->where('status', 'in-progress')
                 ->first();
 
-            $dailyWork = DailyWork::with('site', 'plot', 'service')
-                ->where('week_id', $weeklyWork->id)
-                ->whereDate('created_at', Carbon::now())
-                ->paginate(10);
+            if (request()->get('type') == 'misc_work') {
+                $data = MiscWork::with('site')
+                    ->where('week_id', $weeklyWork->id)
+                    ->whereDate('created_at', Carbon::now());
+            } else {
+                $data = DailyWork::with('site', 'plot', 'service')
+                    ->where('week_id', $weeklyWork->id)
+                    ->whereDate('created_at', Carbon::now());
+            }
 
-            $dailyMiscWork = MiscWork::with('site')
-                ->where('week_id', $weeklyWork->id)
-                ->whereDate('created_at', Carbon::now())
-                ->paginate(10);
+            if ($sort) {
+                $orderKeys = get_object_vars($sort);
+                if ($orderKeys != []) {
+                    $key = key($orderKeys);
+                    $direction = $orderKeys[$key];
+                    $data->orderBy($key, $direction);
+                }
+            }
+
+            $meta = $data->paginate(10);
+
+            $data = $data->get();
 
             return response()->json([
                 'type' => 'success',
                 'message' => '',
-                'data' => [
-                    'weeklyWork' => $weeklyWork,
-                    'dailyWork' => $dailyWork,
-                    'dailyMiscWork' => $dailyMiscWork,
-                ],
+                'weeklyWork' => $weeklyWork,
+                'data' => $data,
+                'meta' => $meta,
             ]);
         } catch (\Throwable $th) {
             $message = $th->getMessage();
 
             return response()->json([
                 'type' => 'error',
-                'message' => 'Sorry! there no week Active',
+                'message' => $message,
+                'data' => '',
+            ]);
+        }
+    }
+
+    public function joinerWeek(Request $request, $uuid)
+    {
+        try {
+            $joiner = User::where('uuid', $uuid)->first();
+
+            // dd($joiner);
+            $weeklyWork = WeeklyWork::where('user_id', $joiner->id)
+                ->where('status', 'in-progress')
+                ->first();
+
+            return response()->json([
+                'type' => 'success',
+                'message' => '',
+                'data' => $weeklyWork,
+            ]);
+        } catch (\Throwable $th) {
+            $message = $th->getMessage();
+
+            return response()->json([
+                'type' => 'error',
+                'message' => $message,
                 'data' => '',
             ]);
         }

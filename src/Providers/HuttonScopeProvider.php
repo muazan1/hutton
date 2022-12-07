@@ -10,6 +10,13 @@ use Sty\Hutton\Console\Commands\InstallHuttonScope;
 
 class HuttonScopeProvider extends ServiceProvider
 {
+    protected $module = 'hutton';
+
+    protected $consoleCommands = [
+        InstallHuttonScope::class,
+        StartNewWeek::class,
+    ];
+
     /**
      * Register services.
      *
@@ -27,37 +34,64 @@ class HuttonScopeProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->loadMigrationsFrom(
-            __DIR__ . '/../Database/migrations',
-            'migrations'
+        $this->registerConfig();
+        $this->registerConsoleCommands();
+        $this->registerRoutes();
+        $this->registerViews();
+        $this->registerDatabaseMigrations();
+    }
+
+    public function registerConfig()
+    {
+        $this->mergeConfigFrom(
+            __DIR__ . "/../config/{$this->module}.php",
+            $this->module
         );
 
-        // $this->publishes([
-        //     __DIR__ . '/../publishable/database/migrations' => database_path(
-        //         'migrations'
-        //     ),
-        // ]);
+        $this->publishes(
+            [
+                __DIR__ . '/../config/' . $this->module . '.php' => config_path(
+                    "{$this->module}.php"
+                ),
+            ],
+            "{$this->module}-config"
+        );
+    }
 
+    public function registerRoutes()
+    {
         $this->loadRoutesFrom(__DIR__ . '/../Routes/api.php');
+    }
 
-        $this->loadViewsFrom(__DIR__ . '/../Resources/views', 'Hutton');
+    public function registerViews()
+    {
+        $this->loadViewsFrom(__DIR__ . '/../Resources/views', $this->module);
 
-        // $this->loadViewsFrom(__DIR__ . '/../resources/views', 'blogpackage');
+        $this->publishes([
+            __DIR__ . '/../../resources/views' => resource_path(
+                "views/vendor/{$this->module}"
+            ),
+        ]);
+    }
 
-        // $this->publishes([
-        //     __DIR__ . '/../publishable/database/seeders' => database_path(
-        //         'seeders'
-        //     ),
-        // ]);
-
-        if ($this->app->runningInConsole()) {
-            $this->commands([InstallHuttonScope::class]);
-
-            $this->commands([StartNewWeek::class]);
+    public function registerConsoleCommands()
+    {
+        if ($this->app->runningInConsole() && count($this->consoleCommands)) {
+            $this->commands($this->consoleCommands);
         }
+    }
 
-        $this->app->register(\Barryvdh\DomPDF\ServiceProvider::class);
+    public function registerDatabaseMigrations()
+    {
+        $this->loadMigrationsFrom(__DIR__ . '/../Database/migrations');
 
-        $this->app->register(\Maatwebsite\Excel\ExcelServiceProvider::class);
+        $this->publishes(
+            [
+                __DIR__ . '/../Database/migrations' => database_path(
+                    'migrations'
+                ),
+            ],
+            "{$this->module}-migrations"
+        );
     }
 }

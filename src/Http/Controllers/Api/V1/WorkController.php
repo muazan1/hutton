@@ -15,14 +15,34 @@ class WorkController extends Controller
     public function JoinerWorkHistory(Request $request, $uuid)
     {
         try {
+            $search = $request->search ?? '';
+
+            $sort = $request->has('sort')
+                ? json_decode($request->sort)
+                : json_decode('{}');
+
             $joiner = User::where('uuid', $uuid)->first();
 
-            $weeklyWorks = WeeklyWork::where('user_id', $joiner->id)->get();
+            $weeklyWorks = WeeklyWork::where('user_id', $joiner->id);
+
+            if ($sort) {
+                $orderKeys = get_object_vars($sort);
+                if ($orderKeys != []) {
+                    $key = key($orderKeys);
+                    $direction = $orderKeys[$key];
+                    $weeklyWorks->orderBy($key, $direction);
+                }
+            }
+
+            $data = $weeklyWorks->get();
+
+            $meta = $weeklyWorks->paginate(20);
 
             return response()->json([
                 'type' => 'success',
                 'message' => '',
-                'data' => ['weeklyWorks' => $weeklyWorks, 'joiner' => $joiner],
+                'data' => $data,
+                'meta' => $meta,
             ]);
         } catch (\Throwable $th) {
             $message = $th->getMessage();

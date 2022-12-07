@@ -20,13 +20,17 @@ class CreateDailyWorksTable extends Migration
 
             $table->integer('week_id');
 
+            $table->integer('plot_job_id');
+
             $table->integer('site_id');
 
             $table->integer('plot_id');
 
+            $table->integer('service_id');
+
             $table->integer('day')->nullable();
 
-            $table->text('work_carried')->nullable();
+            $table->text('fixes_performed')->nullable();
 
             $table->time('time_taken')->nullable();
 

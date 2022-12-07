@@ -20,8 +20,7 @@ class EditCustomersTable extends Migration
 
             $table
                 ->string('main_contact_number')
-                ->nullable()
-                ->after('main_contact');
+                ->nullable();
         });
     }
 

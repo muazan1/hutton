@@ -16,5 +16,12 @@
   "require": {
     "barryvdh/laravel-dompdf": "*",
     "maatwebsite/excel": "*"
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Sty\\Hutton\\Providers\\HuttonScopeProvider"
+      ]
+    }
   }
 }

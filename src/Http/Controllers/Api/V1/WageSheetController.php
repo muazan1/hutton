@@ -4,20 +4,10 @@ namespace Sty\Hutton\Http\Controllers\Api\V1;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\{Hash, Mail, Validator};
-
-use DataTables;
-use DB;
-use Str;
-use Exception;
-use Illuminate\Validation\Rule;
-use Mockery\Container;
-
-use Sty\Hutton\Http\Requests\CreateSiteRequest;
 
 use App\Models\{User, Role};
 
-use Sty\Hutton\Models\{HsJobs, HuttonUser, Plot, Site, WeeklyWork, DailyWork};
+use Sty\Hutton\Models\{HuttonUser};
 
 use Carbon\Carbon;
 
@@ -48,19 +38,41 @@ class WageSheetController extends Controller
 
             $search = $request->search ?? '';
 
+            $sort = $request->has('sort')
+                ? json_decode($request->sort)
+                : json_decode('{}');
+
             $week_start = $request->week_start ?? '';
 
-            $joiners = HuttonUser::with(
-                'weeklyWork.dailyWork',
-                'weeklyWork.miscWork'
-            )
-                ->where(function ($query) use ($search) {
-                    $query
-                        ->where('first_name', 'LIKE', '%' . $search . '%')
-                        ->orWhere('last_name', 'LIKE', '%' . $search . '%');
-                })
-                ->where('role_id', $role->id)
-                ->get();
+            $weekCommencing = $request->get('week');
+
+            if ($weekCommencing != null) {
+                $joiners = HuttonUser::with([
+                    'weeklyWork' => function ($query) use ($weekCommencing) {
+                        return $query->whereDate('week_start', $weekCommencing);
+                    },
+                    'weeklyWork.dailyWork',
+                ])
+                    ->where(function ($query) use ($search) {
+                        $query
+                            ->where('first_name', 'LIKE', '%' . $search . '%')
+                            ->orWhere('last_name', 'LIKE', '%' . $search . '%');
+                    })
+                    ->where('role_id', $role->id)
+                    ->get();
+            } else {
+                $joiners = HuttonUser::with(
+                    'weeklyWork.dailyWork',
+                    'weeklyWork.miscWork'
+                )
+                    ->where(function ($query) use ($search) {
+                        $query
+                            ->where('first_name', 'LIKE', '%' . $search . '%')
+                            ->orWhere('last_name', 'LIKE', '%' . $search . '%');
+                    })
+                    ->where('role_id', $role->id)
+                    ->get();
+            }
 
             $meta = collect($joiners)->map(function ($item) use ($week_start) {
                 $item->dailyTotal = 0;
@@ -106,12 +118,22 @@ class WageSheetController extends Controller
                 return $item;
             });
 
-            $meta = $this->paginate($meta, 10);
+            if ($sort) {
+                $orderKeys = get_object_vars($sort);
+                if ($orderKeys != []) {
+                    $key = key($orderKeys);
+                    $direction = $orderKeys[$key];
+                    $meta->orderBy($key, $direction);
+                }
+            }
+
+            $meta = $this->paginate($meta, 20);
 
             return response()->json([
                 'type' => 'success',
                 'message' => '',
-                'data' => ['joiner' => $joiners, 'meta' => $meta],
+                'data' => $joiners,
+                'meta' => $meta,
             ]);
         } catch (\Throwable $th) {
             $message = $th->getMessage();
@@ -124,35 +146,35 @@ class WageSheetController extends Controller
         }
     }
 
-    public function wageSheetByWeek(Request $request)
-    {
-        try {
-            $weekCommencing = $request->week;
+    // public function wageSheetByWeek(Request $request)
+    // {
+    //     try {
+    //         $weekCommencing = $request->get('week');
 
-            $role = Role::where('name', 'joiner')->first();
+    //         $role = Role::where('name', 'joiner')->first();
 
-            $joiners = HuttonUser::with([
-                'weeklyWork' => function ($query) use ($weekCommencing) {
-                    return $query->whereDate('week_start', $weekCommencing);
-                },
-                'weeklyWork.dailyWork',
-            ])
-                ->where('role_id', $role->id)
-                ->paginate();
+    //         $joiners = HuttonUser::with([
+    //             'weeklyWork' => function ($query) use ($weekCommencing) {
+    //                 return $query->whereDate('week_start', $weekCommencing);
+    //             },
+    //             'weeklyWork.dailyWork',
+    //         ])
+    //             ->where('role_id', $role->id)
+    //             ->paginate();
 
-            return response()->json([
-                'type' => 'success',
-                'message' => '',
-                'data' => ['joiners' => $joiners],
-            ]);
-        } catch (\Throwable $th) {
-            $message = $th->getMessage();
+    //         return response()->json([
+    //             'type' => 'success',
+    //             'message' => '',
+    //             'data' => ['joiners' => $joiners],
+    //         ]);
+    //     } catch (\Throwable $th) {
+    //         $message = $th->getMessage();
 
-            return response()->json([
-                'type' => 'error',
-                'message' => $message,
-                'data' => '',
-            ]);
-        }
-    }
+    //         return response()->json([
+    //             'type' => 'error',
+    //             'message' => $message,
+    //             'data' => '',
+    //         ]);
+    //     }
+    // }
 }

@@ -8,9 +8,7 @@ use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\{Hash, Mail, Validator};
 
-use Sty\Hutton\Models\BuildingType;
-
-use Sty\Hutton\Models\HsJob;
+use Sty\Hutton\Models\{HouseType, PlotJob, Plot, Service};
 
 use Illuminate\Database\Eloquent\Collection;
 
@@ -41,12 +39,17 @@ class JobFilterController extends Controller
     public function completedJobs(Request $request)
     {
         try {
-            $jobs = HsJob::where('status', 'completed')->paginate();
+            $jobs = PlotJob::where('status', 'completed');
+
+            $meta = $jobs->paginate(20);
+
+            $data = $jobs->get();
 
             return response()->json([
                 'type' => 'success',
                 'message' => '',
-                'data' => $jobs,
+                'data' => $data,
+                'meta' => $meta,
             ]);
         } catch (\Throwable $th) {
             $message = $th->getMessage();
@@ -62,13 +65,23 @@ class JobFilterController extends Controller
     public function adminJobFilter(Request $request)
     {
         try {
-            $jobs = HsJob::with('plot.buildingType.site.builder', 'service');
+            if (request()->get('type') == 'completed') {
+                $jobs = PlotJob::with(
+                    'plot.buildingType.site.builder',
+                    'service'
+                )->where('status', 'completed');
+            } else {
+                $jobs = PlotJob::with(
+                    'plot.buildingType.site.builder',
+                    'service'
+                );
+            }
 
             if ($request->builder != null) {
                 $jobs = $jobs->whereHas(
                     'plot.buildingType.site.builder',
                     function ($query) use ($request) {
-                        $query->where('slug', $request->builder);
+                        $query->where('uuid', $request->builder);
                     }
                 );
             }
@@ -77,94 +90,37 @@ class JobFilterController extends Controller
                 $jobs = $jobs->whereHas('plot.buildingType.site', function (
                     $query
                 ) use ($request) {
-                    $query->where('slug', $request->site);
+                    $query->where('uuid', $request->site);
                 });
             }
 
-            if ($request->buidling_type != null) {
+            if ($request->house_type != null) {
                 $jobs = $jobs->whereHas('plot.buildingType', function (
                     $query
                 ) use ($request) {
-                    $query->where('id', $request->building_type);
+                    $query->where('uuid', $request->house_type);
                 });
             }
 
             if ($request->plot != null) {
-                $jobs = $jobs->where('plot_id', $request->plot);
+                $plot = Plot::where('uuid', $request->plot)->first();
+
+                $jobs = $jobs->where('plot_id', $plot->id);
             }
 
             if ($request->service != null) {
-                $jobs = $jobs->where('service_id', $request->service);
+                $service = Service::where('uuid', $request->service)->first();
+
+                $jobs = $jobs->where('service_id', $service->id);
             }
 
             if ($request->status != null) {
                 $jobs = $jobs->where('status', $request->status);
             }
 
-            $jobs = $jobs->paginate(10);
+            $meta = $jobs->paginate(20);
 
-            return response()->json([
-                'type' => 'success',
-                'message' => '',
-                'data' => ['jobs' => $jobs],
-            ]);
-        } catch (\Throwable $th) {
-            $message = $th->getMessage();
-
-            return response()->json([
-                'type' => 'error',
-                'message' => $message,
-                'data' => '',
-            ]);
-        }
-    }
-
-    public function joinerJobFilter(Request $request)
-    {
-        try {
-            $jobs = HsJob::with('plot.buildingType.site', 'service');
-
-            if ($request->builder != null) {
-                $jobs = $jobs->whereHas(
-                    'plot.buildingType.site.builder',
-                    function ($query) use ($request) {
-                        $query->where('slug', $request->builder);
-                    }
-                );
-            }
-
-            if ($request->site != 'null' && $request->site != null) {
-                $jobs = $jobs->whereHas('plot.buildingType.site', function (
-                    $query
-                ) use ($request) {
-                    $query->where('slug', $request->get('site'));
-                });
-            }
-
-            if (
-                $request->building_type != 'null' &&
-                $request->building_type != null
-            ) {
-                $jobs = $jobs->whereHas('plot.buildingType', function (
-                    $query
-                ) use ($request) {
-                    $query->where('id', $request->get('building_type'));
-                });
-            }
-
-            if ($request->plot != 'null' && $request->plot != null) {
-                $jobs = $jobs->where('plot_id', $request->get('plot'));
-            }
-
-            if ($request->service != 'null' && $request->service != null) {
-                $jobs = $jobs->where('service_id', $request->get('service'));
-            }
-
-            if ($request->status != 'null' && $request->status != null) {
-                $jobs = $jobs->where('status', $request->get('status'));
-            }
-
-            $jobs = $jobs->paginate(10);
+            $jobs = $jobs->get();
 
             $min = collect($jobs->min('priority'))[0];
 
@@ -195,7 +151,8 @@ class JobFilterController extends Controller
             return response()->json([
                 'type' => 'success',
                 'message' => '',
-                'data' => ['jobs' => $jobs],
+                'data' => $jobs,
+                'meta' => $meta,
             ]);
         } catch (\Throwable $th) {
             $message = $th->getMessage();
@@ -207,4 +164,93 @@ class JobFilterController extends Controller
             ]);
         }
     }
+
+    // public function joinerJobFilter(Request $request)
+    // {
+    //     try {
+    //         $jobs = PlotJob::with('plot.buildingType.site', 'service');
+
+    //         if ($request->builder != null) {
+    //             $jobs = $jobs->whereHas(
+    //                 'plot.buildingType.site.builder',
+    //                 function ($query) use ($request) {
+    //                     $query->where('slug', $request->builder);
+    //                 }
+    //             );
+    //         }
+
+    //         if ($request->site != 'null' && $request->site != null) {
+    //             $jobs = $jobs->whereHas('plot.buildingType.site', function (
+    //                 $query
+    //             ) use ($request) {
+    //                 $query->where('slug', $request->get('site'));
+    //             });
+    //         }
+
+    //         if (
+    //             $request->house_type != 'null' &&
+    //             $request->house_type != null
+    //         ) {
+    //             $jobs = $jobs->whereHas('plot.buildingType', function (
+    //                 $query
+    //             ) use ($request) {
+    //                 $query->where('id', $request->get('house_type'));
+    //             });
+    //         }
+
+    //         if ($request->plot != 'null' && $request->plot != null) {
+    //             $jobs = $jobs->where('plot_id', $request->get('plot'));
+    //         }
+
+    //         if ($request->service != 'null' && $request->service != null) {
+    //             $jobs = $jobs->where('service_id', $request->get('service'));
+    //         }
+
+    //         if ($request->status != 'null' && $request->status != null) {
+    //             $jobs = $jobs->where('status', $request->get('status'));
+    //         }
+
+    //         $jobs = $jobs->paginate(10);
+
+    //         $min = collect($jobs->min('priority'))[0];
+
+    //         $max = collect($jobs->max('priority'))[0];
+
+    //         for ($i = $min; $i <= $max; $i++) {
+    //             $count = $jobs
+    //                 ->where('priority', $i)
+    //                 ->where('status', '!=', 'completed')
+    //                 ->count();
+
+    //             $updated = 0;
+
+    //             $jobs->map(function ($item) use ($i, &$updated) {
+    //                 if ($item->priority == $i && $item->status != 'completed') {
+    //                     $item->is_locked = 0;
+    //                     $updated++;
+    //                 }
+
+    //                 return $item;
+    //             });
+
+    //             if ($count > 0) {
+    //                 break;
+    //             }
+    //         }
+
+    //         return response()->json([
+    //             'type' => 'success',
+    //             'message' => '',
+    //             'data' => ['jobs' => $jobs],
+    //         ]);
+    //     } catch (\Throwable $th) {
+    //         $message = $th->getMessage();
+
+    //         return response()->json([
+    //             'type' => 'error',
+    //             'message' => $message,
+    //             'data' => '',
+    //         ]);
+    //     }
+    // }
 }

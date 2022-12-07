@@ -15,12 +15,12 @@ class HuttonPermissionsSeeder extends ModuleSeeder
      */
     public function run()
     {
+        /* Admin Role Permissions */
         $map = [
-            'admin-dashboard' => $this->insertPermission(
-                'Admin Dashboard',
-                'dashboard',
-                'adminDashboard',
-                'admin:dashboard'
+            'admin-dashboard-view' => $this->insertPermission(
+                'Admin Dashboard view',
+                'admin-dashboard',
+                'view'
             ),
             'builder-dashboard' => $this->insertPermission(
                 'Builder Dashboard',
@@ -65,10 +65,10 @@ class HuttonPermissionsSeeder extends ModuleSeeder
                 'browse',
                 'joiners:browse'
             ),
-            'builders-browse' => $this->insertPermission(
+            'builders-view' => $this->insertPermission(
                 'Browse Builder',
                 'builders',
-                'browse',
+                'view',
                 'builders:browse'
             ),
             'builders-create' => $this->insertPermission(
@@ -185,29 +185,29 @@ class HuttonPermissionsSeeder extends ModuleSeeder
                 'create',
                 'joiner_pricing:create'
             ),
-            'browse-services' => $this->insertPermission(
-                'Browse Services',
-                'services',
-                'browse',
-                'services:browse'
+            'view-fixes' => $this->insertPermission(
+                'Browse Fixes',
+                'fixes',
+                'view',
+                'fixes:browse'
             ),
-            'add-services' => $this->insertPermission(
-                'Add Services',
-                'services',
+            'add-fixes' => $this->insertPermission(
+                'Add fixes',
+                'fixes',
                 'create',
-                'services:create'
+                'fixes:create'
             ),
-            'edit-services' => $this->insertPermission(
-                'Edit Services',
-                'services',
+            'edit-fixes' => $this->insertPermission(
+                'Edit fixes',
+                'fixes',
                 'edit',
-                'services:edit'
+                'fixes:edit'
             ),
-            'delete-services' => $this->insertPermission(
-                'Delete Services',
-                'services',
+            'delete-fixes' => $this->insertPermission(
+                'Delete fixes',
+                'fixes',
                 'delete',
-                'services:delete'
+                'fixes:delete'
             ),
             'admin-jobs' => $this->insertPermission(
                 'Admin Jobs',
@@ -215,17 +215,23 @@ class HuttonPermissionsSeeder extends ModuleSeeder
                 'admin-jobs',
                 'admin:jobs'
             ),
-            'wage-work' => $this->insertPermission(
-                'Wage Work',
-                'work',
-                'wage-sheet',
-                'work:daily'
+            'hutton-jobs-view' => $this->insertPermission(
+                'Hutton Jobs view',
+                'hutton-jobs',
+                'view',
+                'hutton-jobs:view'
             ),
-            'admin-reports' => $this->insertPermission(
-                'Admin Reports',
+            'wage-sheet-view' => $this->insertPermission(
+                'Wage Sheet View',
+                'wage-sheet',
+                'view',
+                'wagesheet:view'
+            ),
+            'reports-view' => $this->insertPermission(
+                'Reports View',
                 'reports',
-                'reports',
-                'admin:reports'
+                'view',
+                'reports:view'
             ),
 
             'admin-notification' => $this->insertPermission(
@@ -236,150 +242,160 @@ class HuttonPermissionsSeeder extends ModuleSeeder
             ),
         ];
 
+        /* Joiner Role Permissions */
         $joinerMap = [
-            'joiner-dashboard' => $this->insertPermission(
-                'Joiner Dashboard',
-                'dashboard',
-                'joinerDashboard',
-                'joiner:dashboard'
+            // 'hutton-joiner-jobs-view' => $this->insertPermission(
+            //     'Hutton Joiner Jobs view',
+            //     'hutton-joiner-jobs',
+            //     'view',
+            //     'hutton-joiner-jobs:view'
+            // ),
+            // 'joiner-weekly-work-view' => $this->insertPermission(
+            //     'Joiner Weekly Work view',
+            //     'joiner-weekly-work',
+            //     'view',
+            //     'joiner-weekly-work:view'
+            // ),
+            // 'joiner-daily-work-view' => $this->insertPermission(
+            //     'My Daily Work view',
+            //     'joiner-daily-work',
+            //     'view',
+            //     'joiner-daily-work:view'
+            // ),
+            // 'joiner-work-history-view' => $this->insertPermission(
+            //     'Joiner Work History view',
+            //     'joiner-work-history',
+            //     'view',
+            //     'joiner-work-history:view'
+            // ),
+            'joiner-dashboard-view' => $this->insertPermission(
+                'Joiner Dashboard view',
+                'joiner-dashboard',
+                'view'
             ),
-            'joiner-jobs' => $this->insertPermission(
-                'Joiner Jobs',
-                'jobs',
+            'joiner-jobs-view' => $this->insertPermission(
+                'Joiner Jobs view',
                 'joiner-jobs',
-                'joiner:jobs'
+                'view'
             ),
-            'work-history' => $this->insertPermission(
-                'My Work History',
-                'work',
-                'my-work-history',
-                'work:history'
-            ),
-
-            'weekly-work' => $this->insertPermission(
-                'My Weekly Work',
-                'work',
-                'my-weekly-work',
-                'work:weekly'
-            ),
-            'joiner-message' => $this->insertPermission(
-                'Joiner message',
-                'message',
-                'message',
-                'message:message'
-            ),
-            'joiner-notification' => $this->insertPermission(
-                'Joiner Notification',
-                'joinerNotification',
-                'joinerNotification',
-                'joinerNotification:joinerNotification'
-            ),
-            'daily-work' => $this->insertPermission(
-                'My Daily Work',
-                'work',
+            'daily-work-view' => $this->insertPermission(
+                'My Daily Work view',
                 'my-daily-work',
-                'mywork:daily'
+                'view'
             ),
-        ];
-
-        $supervisorMap = [
-            'admin-dashboard' => $this->insertPermission(
-                'Admin Dashboard',
-                'dashboard',
-                'adminDashboard',
-                'admin:dashboard'
+            'weekly-work-view' => $this->insertPermission(
+                'My Weekly Work view',
+                'my-weekly-work',
+                'view'
             ),
-            'builder-dashboard' => $this->insertPermission(
-                'Builder Dashboard',
-                'dashboard',
-                'buildersDashboard',
-                'builder:dashboard'
-            ),
-            'site-dashboard' => $this->insertPermission(
-                'Site Dashboard',
-                'dashboard',
-                'buildersDashboard',
-                'builder:dashboard'
-            ),
-
-            'joiners-view' => $this->insertPermission(
-                'Joiners view',
-                'joiners',
+            'my-work-history' => $this->insertPermission(
+                'My Work History view',
+                'my-work-history',
                 'view',
-                'joiners:view'
+                'my-work-history:view'
             ),
-            'joiners-browse' => $this->insertPermission(
-                'Joiners browse',
-                'joiners',
-                'browse',
-                'joiners:browse'
-            ),
-            'builders-browse' => $this->insertPermission(
-                'Browse Builder',
-                'builders',
-                'browse',
-                'builders:browse'
-            ),
-            'browse-sites' => $this->insertPermission(
-                'Browse Sites',
-                'sites',
-                'browse-site',
-                'sites:browse'
-            ),
-            'browse-building' => $this->insertPermission(
-                'Browse Building Types',
-                'building_types',
-                'browse',
-                'building_types:browse'
-            ),
-            'browse-plots' => $this->insertPermission(
-                'Browse Plots',
-                'plots',
-                'browse',
-                'building_types:browse'
-            ),
-            'browse-service-price' => $this->insertPermission(
-                'Browse Service Pricing',
-                'service_pricing',
-                'browse',
-                'service_pricing:browse'
-            ),
-            'browse-joiner-pricing' => $this->insertPermission(
-                'Browse Joiner Pricing',
-                'joiner_pricing',
-                'browse',
-                'joiner_pricing:browse'
-            ),
-            'browse-services' => $this->insertPermission(
-                'Browse Services',
-                'services',
-                'browse',
-                'services:browse'
-            ),
-            'admin-jobs' => $this->insertPermission(
-                'Admin Jobs',
-                'jobs',
-                'admin-jobs',
-                'admin:jobs'
-            ),
-            'wage-work' => $this->insertPermission(
-                'Wage Work',
-                'work',
-                'wage-sheet',
-                'work:daily'
-            ),
-            'admin-reports' => $this->insertPermission(
-                'Admin Reports',
-                'reports',
-                'reports',
-                'admin:reports'
-            ),
+            // 'view' => $this->insertPermission('Joiner Jobs view', 'joiner-jobs', 'view'),
         ];
+
+        /* SuperVisor Role Permissions */
+        // $supervisorMap = [
+        //     'admin-dashboard' => $this->insertPermission(
+        //         'Admin Dashboard',
+        //         'dashboard',
+        //         'adminDashboard',
+        //         'admin:dashboard'
+        //     ),
+        //     'builder-dashboard' => $this->insertPermission(
+        //         'Builder Dashboard',
+        //         'dashboard',
+        //         'buildersDashboard',
+        //         'builder:dashboard'
+        //     ),
+        //     'site-dashboard' => $this->insertPermission(
+        //         'Site Dashboard',
+        //         'dashboard',
+        //         'buildersDashboard',
+        //         'builder:dashboard'
+        //     ),
+
+        //     'joiners-view' => $this->insertPermission(
+        //         'Joiners view',
+        //         'joiners',
+        //         'view',
+        //         'joiners:view'
+        //     ),
+        //     'joiners-browse' => $this->insertPermission(
+        //         'Joiners browse',
+        //         'joiners',
+        //         'browse',
+        //         'joiners:browse'
+        //     ),
+        //     'builders-browse' => $this->insertPermission(
+        //         'Browse Builder',
+        //         'builders',
+        //         'browse',
+        //         'builders:browse'
+        //     ),
+        //     'browse-sites' => $this->insertPermission(
+        //         'Browse Sites',
+        //         'sites',
+        //         'browse-site',
+        //         'sites:browse'
+        //     ),
+        //     'browse-building' => $this->insertPermission(
+        //         'Browse Building Types',
+        //         'building_types',
+        //         'browse',
+        //         'building_types:browse'
+        //     ),
+        //     'browse-plots' => $this->insertPermission(
+        //         'Browse Plots',
+        //         'plots',
+        //         'browse',
+        //         'building_types:browse'
+        //     ),
+        //     'browse-service-price' => $this->insertPermission(
+        //         'Browse Service Pricing',
+        //         'service_pricing',
+        //         'browse',
+        //         'service_pricing:browse'
+        //     ),
+        //     'browse-joiner-pricing' => $this->insertPermission(
+        //         'Browse Joiner Pricing',
+        //         'joiner_pricing',
+        //         'browse',
+        //         'joiner_pricing:browse'
+        //     ),
+        //     'browse-services' => $this->insertPermission(
+        //         'Browse Services',
+        //         'services',
+        //         'browse',
+        //         'services:browse'
+        //     ),
+        //     'admin-jobs' => $this->insertPermission(
+        //         'Admin Jobs',
+        //         'jobs',
+        //         'admin-jobs',
+        //         'admin:jobs'
+        //     ),
+        //     'wage-work' => $this->insertPermission(
+        //         'Wage Work',
+        //         'work',
+        //         'wage-sheet',
+        //         'work:daily'
+        //     ),
+        //     'admin-reports' => $this->insertPermission(
+        //         'Admin Reports',
+        //         'reports',
+        //         'reports',
+        //         'admin:reports'
+        //     ),
+        // ];
 
         $this->assignPermissionsToRole($map, 'admin');
 
         $this->assignPermissionsToRole($joinerMap, 'joiner');
 
-        $this->assignPermissionsToRole($supervisorMap, 'supervisor');
+        // $this->assignPermissionsToRole($supervisorMap, 'supervisor');
     }
 }

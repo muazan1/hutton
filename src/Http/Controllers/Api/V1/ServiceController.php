@@ -6,23 +6,11 @@ use Illuminate\Http\Request;
 
 use Illuminate\Routing\Controller;
 
-use Illuminate\Support\Facades\{Hash, Validator, Mail};
-
-use DataTables;
-
-use DB;
+use Illuminate\Support\Facades\{Validator};
 
 use Str;
 
-use Exception;
-
-use Illuminate\Validation\Rule;
-
-use Mockery\Container;
-
-use Sty\Hutton\Http\Requests\CreateSiteRequest;
-
-use Sty\Hutton\Models\{Site, Service, Customer};
+use Sty\Hutton\Models\{Service};
 
 class ServiceController extends Controller
 {
@@ -42,7 +30,8 @@ class ServiceController extends Controller
             return response()->json([
                 'type' => 'success',
                 'message' => '',
-                'data' => ['services' => $services, 'meta' => $meta],
+                'data' => $services,
+                'meta' => $meta,
             ]);
         } catch (\Throwable $th) {
             $message = $th->getMessage();

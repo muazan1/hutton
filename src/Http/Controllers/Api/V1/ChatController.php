@@ -14,7 +14,7 @@ use Illuminate\Database\Eloquent\Collection;
 
 use Exception;
 
-use Sty\Hutton\Models\{Chat, Message, MessageReplay, BuildingType};
+use Sty\Hutton\Models\{Chat, Message, MessageReplay, HouseType};
 
 use Str;
 

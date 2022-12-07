@@ -11,12 +11,13 @@ class Site extends Model
 
     protected $guarded = ['id', 'created_at', 'updated_at'];
 
-    public function buildingTypes ()
+    public function buildingTypes()
     {
-        return $this->hasMany(BuildingType::class,'site_id','id');
+        return $this->hasMany(HouseType::class, 'site_id', 'id');
     }
 
-    public function builder() {
-        return $this->belongsTo(Customer::class,'customer_id','id');
+    public function builder()
+    {
+        return $this->belongsTo(Customer::class, 'customer_id', 'id');
     }
 }

@@ -24,4 +24,11 @@ class HuttonUser extends Authenticatable
     {
         return $this->hasMany(WeeklyWork::class, 'user_id', 'id');
     }
+    public function currentWeek()
+    {
+        return $this->hasOne(WeeklyWork::class, 'user_id', 'id')->where(
+            'status',
+            'in-progress'
+        );
+    }
 }

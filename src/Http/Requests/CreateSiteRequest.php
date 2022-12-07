@@ -34,7 +34,7 @@ class CreateSiteRequest extends FormRequest
     {
         return [
             'uuid' => ['required'],
-            'customer_id' => ['required'],
+            'customer' => ['required'],
             'site_name' => ['required'],
             'slug' => ['required'],
             'street_1' => ['required'],

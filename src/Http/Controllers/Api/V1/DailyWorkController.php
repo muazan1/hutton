@@ -23,7 +23,7 @@ use Mockery\Container;
 use Sty\Hutton\Http\Requests\CreateSiteRequest;
 
 use Sty\Hutton\Models\{
-    HsJob,
+    PlotJob,
     MiscWork,
     Plot,
     Site,
@@ -31,9 +31,6 @@ use Sty\Hutton\Models\{
     DailyWork,
     Service
 };
-
-use Whoops\Util\Misc;
-use Sty\Hutton\Models\BuildingType;
 
 class DailyWorkController extends Controller
 {
@@ -64,7 +61,7 @@ class DailyWorkController extends Controller
                 'plot' => ['required'],
                 'service' => ['required'],
                 'day' => ['required'],
-                'work_carried' => ['required'],
+                'fixes_performed' => ['required'],
                 'time_taken' => ['required'],
                 'amount' => ['required'],
             ]);
@@ -79,7 +76,7 @@ class DailyWorkController extends Controller
                 ]);
             }
 
-            $plotJob = HsJob::where('plot_id', $plot->id)
+            $plotJob = PlotJob::where('plot_id', $plot->id)
                 ->where('service_id', $service->id)
                 ->first();
 
@@ -101,7 +98,7 @@ class DailyWorkController extends Controller
                 'plot_id' => $plot->id,
                 'service_id' => $service->id,
                 'day' => $request->day,
-                'work_carried' => $request->work_carried,
+                'fixes_performed' => $request->fixes_performed,
                 'time_taken' => $request->time_taken,
                 'amount' => $request->amount,
             ];
@@ -153,7 +150,7 @@ class DailyWorkController extends Controller
                 'week' => ['required'],
                 'site' => ['required'],
                 'title' => ['required'],
-                'work_carried' => ['required'],
+                'fixes_performed' => ['required'],
                 'time_taken' => ['required'],
                 'amount' => ['required'],
             ]);
@@ -175,10 +172,10 @@ class DailyWorkController extends Controller
                 'week_id' => $week->id,
                 'site_id' => $site->id,
                 'title' => $request->title,
-                'work_carried' => $request->work_carried,
+                'fixes_performed' => $request->fixes_performed,
                 'time_taken' => $request->time_taken,
                 'amount' => $request->amount,
-                'notes' => $request->notes,
+                'additional_notes' => $request->additional_notes,
             ];
 
             $message = 'Daily Work Added Successfully';
